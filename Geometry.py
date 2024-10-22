@@ -44,9 +44,7 @@ class Point:
         """
         return Point(self.x, self.y)
 
-    def rotate_over_point(
-        self, rotate_point: "Point", angle: float, dir: Directions
-    ) -> "Point":
+    def rotate_over_point(self, rotate_point: "Point", angle: float) -> "Point":
         """
         Rotate this point over some other point
 
@@ -55,22 +53,22 @@ class Point:
         :param dir: direction of the rotation
         :return: Point after the rotation
         """
-        if dir not in [Directions.LEFT, Directions.RIGHT]:
-            return self
         # if angle is always positive then there is a need to do
         # angle = math.pi * 2 - angle if dir == Directions.RIGHT else angle
         sin = math.sin(angle)
         cos = math.cos(angle)
 
         v = Vector(end=self, start=rotate_point)
-        v_rotated = Vector(Point(v.x * cos - v.y * sin, v.x * sin + v.y * cos))
+        v_rotated = Vector(
+            Point(v.x * cos - v.y * sin, v.x * sin + v.y * cos)
+        ).scale_to_len(v.len())
         rotated_point = rotate_point.copy().add_vector(v_rotated)
         self.x = rotated_point.x
         self.y = rotated_point.y
         return self
 
 
-class Vector:
+class Vector(Point):
     """
     Class representing a position vector in Cartesian coordinate system
 
