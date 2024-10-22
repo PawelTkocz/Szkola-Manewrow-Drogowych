@@ -119,16 +119,22 @@ class Vector(Point):
         :return: orthogonal vector with desired length
         """
         if dir not in [Directions.LEFT, Directions.RIGHT]:
-            return self
+            return self.copy()
         v = (
             Vector(Point(self.y, -1 * self.x))
             if dir == Directions.RIGHT
             else Vector(Point(-1 * self.y, self.x))
         )
-        return v.scale_to_len(len) if len else v
+        return v.scale_to_len(len) if len is not None else v
 
     def normalize(self) -> "Vector":
         """
         Scale the vector to the length of 1
         """
         return self.scale_to_len(1)
+
+    def copy(self) -> "Vector":
+        """
+        Get copy of vector
+        """
+        return Vector(self)
