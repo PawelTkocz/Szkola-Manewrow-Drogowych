@@ -10,7 +10,7 @@ def test_init():
 
 
 @pytest.mark.parametrize(
-    ["point2", "expected"],
+    ["point", "expected"],
     [
         (Point(10, 19), False),
         (Point(1, 3.5), False),
@@ -18,8 +18,8 @@ def test_init():
         (Point(1, 2.5), True),
     ],
 )
-def test_compare(point: Point, point2: Point, expected: bool):
-    assert Point(1, 2.5).compare(point2) == expected
+def test_compare(point: Point, expected: bool):
+    assert Point(1, 2.5).compare(point) == expected
 
 
 @pytest.mark.parametrize(

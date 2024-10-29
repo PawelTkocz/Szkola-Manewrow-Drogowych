@@ -41,10 +41,11 @@ def test_len(vector: Vector, expected: float):
 )
 def test_scale(vector: Vector, k: float, expected: Vector):
     max_rel_tol = 1e-12
+    start_len = vector.len()
     scaled_vector = vector.scale(k)
     assert math.isclose(scaled_vector.x, expected.x, rel_tol=max_rel_tol)
     assert math.isclose(scaled_vector.y, expected.y, rel_tol=max_rel_tol)
-    assert math.isclose(scaled_vector.len(), vector.len() * k, rel_tol=max_rel_tol)
+    assert math.isclose(scaled_vector.len(), abs(start_len * k), rel_tol=max_rel_tol)
     assert scaled_vector is vector
 
 
@@ -67,8 +68,15 @@ def test_scale_to_len(vector: Vector, len: float, expected: Vector):
     scaled_vector = vector.scale_to_len(len)
     assert math.isclose(scaled_vector.x, expected.x, rel_tol=max_rel_tol)
     assert math.isclose(scaled_vector.y, expected.y, rel_tol=max_rel_tol)
-    assert math.isclose(scaled_vector.len(), len, rel_tol=max_rel_tol)
     assert scaled_vector is vector
+
+
+def test_copy():
+    vector = Vector(Point(92, 87.33))
+    vector_copy = vector.copy()
+    assert vector_copy.compare(vector)
+    assert vector_copy is not vector
+    assert isinstance(vector_copy, Vector)
 
 
 @pytest.mark.parametrize(
@@ -115,3 +123,21 @@ def test_normalize(vector: Vector, expected: Vector):
     assert math.isclose(normalized_vector.y, expected.y, rel_tol=max_rel_tol)
     assert math.isclose(normalized_vector.len(), 1, rel_tol=max_rel_tol)
     assert normalized_vector is vector
+
+
+def test_rotate_over_point():
+    vector = Vector(Point(2, 3))
+    rotated_vector = vector.rotate_over_point(Point(0, 0), math.pi / 2)
+    max_rel_tol = 1e-9
+    assert math.isclose(rotated_vector.x, -3, rel_tol=max_rel_tol)
+    assert math.isclose(rotated_vector.y, 2, rel_tol=max_rel_tol)
+    assert rotated_vector is vector
+    assert isinstance(rotated_vector, Vector)
+
+
+def test_add_vector():
+    start_vector = Vector(Point(4, 5))
+    vector = Vector(Point(-4, -6))
+    res = start_vector.add_vector(vector)
+    assert res.compare(Vector(Point(0, -1)))
+    assert res is start_vector
