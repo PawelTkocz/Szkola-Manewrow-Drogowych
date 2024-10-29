@@ -15,6 +15,13 @@ class Point:
     """
 
     def __init__(self, x: float, y: float):
+        """
+        Initialize point with coordinates (x, y)
+
+        :param x: x coordinate
+        :param y: y coordinate
+        :return: Point with coordinates (x, y)
+        """
         self.x = x
         self.y = y
 
@@ -77,6 +84,13 @@ class Vector(Point):
     """
 
     def __init__(self, end: Point, start: Point = Point(0, 0)):
+        """
+        Initialize position vector of vector [start, end]
+
+        :param end: end point of the vector
+        :param start: start point of the vector
+        :return: position vector of vector [start, end]
+        """
         super().__init__(end.x - start.x, end.y - start.y)
 
     def len(self) -> float:
@@ -138,3 +152,63 @@ class Vector(Point):
         Get copy of vector
         """
         return Vector(self)
+
+
+class Direction(Vector):
+    """
+    Class representing direction as a normalized position vector
+    """
+
+    def __init__(self, end: Point, start: Point = Point(0, 0)):
+        super().__init__(end, start)
+        super().normalize()
+
+    def turn(self, angle: float) -> "Direction":
+        """
+        Change the direction
+
+        :param angle: angle (in radians) of the turn
+        :return: Direction after the turn
+        """
+        super().rotate_over_point(Point(0, 0), angle)
+        super().normalize()
+        return self
+
+
+class Rectangle:
+    """
+    Class representing 'directed' rectangle in Cartesian coordinate system
+
+    'Directed' rectangle has its front, left and right side, and rear
+    """
+
+    def __init__(
+        self, front_left: Point, width: float, length: float, direction: Direction
+    ):
+        """
+        Initialize directed rectangle
+
+        :param front_left: position of front left point of the rectangle
+        :param width: width of the rectangle (of front and rear sides)
+        :param length: length of the rectangle (of left and right sides)
+        :param direction: direction the rectangle is heading
+        :return: directed rectangle with specified width, length and position
+        """
+        self.width = width
+        self.length = length
+        self.direction = direction.copy()
+        self.front_left = front_left.copy()
+        width_vec = direction.get_orthogonal_vector(Directions.RIGHT, width)
+        length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, length)
+        self.front_right = self.front_left.copy().add_vector(width_vec)
+        self.rear_left = self.front_left.copy().add_vector(length_vec)
+        self.rear_right = self.rear_left.copy().add_vector(width_vec)
+
+    @property
+    def direction(self) -> Direction:
+        """
+        Get the current direction of the rectangle
+        """
+        return self.direction.copy()
+
+    # sth to make sure we can't destroy the rectangle by changing only some corners
