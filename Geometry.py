@@ -1,5 +1,6 @@
 from enum import Enum
 import math
+from typing import List
 
 
 class Directions(Enum):
@@ -210,5 +211,17 @@ class Rectangle:
         Get the current direction of the rectangle
         """
         return self._direction.copy()
+
+    @property
+    def corners_list(self) -> List[Point]:
+        """
+        Get the list of corners coordinates
+        """
+        return [
+            self.rear_left.copy(),
+            self.rear_right.copy(),
+            self.front_right.copy(),
+            self.front_left.copy(),
+        ]
 
     # sth to make sure we can't destroy the rectangle by changing only some corners

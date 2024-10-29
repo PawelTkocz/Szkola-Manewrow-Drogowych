@@ -45,14 +45,7 @@ class Car:
         return self.body.rear_right
 
     def draw(self, screen):
-        # czy screen nie mozna dodac przy init
-        corners = [
-            self.body.rear_left,
-            self.body.rear_right,
-            self.body.front_right,
-            self.body.front_left,
-        ]
-        self.brand.draw(corners, screen)
+        self.brand.draw(self.body, screen)
 
     def move(self):
         self.body.rear_left.add_vector(Vector(Point(1, 0)))
