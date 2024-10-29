@@ -196,7 +196,7 @@ class Rectangle:
         """
         self.width = width
         self.length = length
-        self.direction = direction.copy()
+        self._direction = direction.copy()
         self.front_left = front_left.copy()
         width_vec = direction.get_orthogonal_vector(Directions.RIGHT, width)
         length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, length)
@@ -209,6 +209,6 @@ class Rectangle:
         """
         Get the current direction of the rectangle
         """
-        return self.direction.copy()
+        return self._direction.copy()
 
     # sth to make sure we can't destroy the rectangle by changing only some corners
