@@ -142,6 +142,9 @@ class Vector(Point):
         )
         return v.scale_to_len(len) if len is not None else v
 
+    def get_negative_of_a_vector(self):
+        return self.copy().scale(-1)
+
     def normalize(self) -> "Vector":
         """
         Scale the vector to the length of 1
@@ -211,6 +214,7 @@ class Rectangle:
         Get the current direction of the rectangle
         """
         return self._direction.copy()
+        # remember to calculate it everytime position changes
 
     @property
     def corners_list(self) -> List[Point]:
