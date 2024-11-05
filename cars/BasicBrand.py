@@ -17,6 +17,7 @@ class BasicBrand(Brand):
     _width: float = 200.0
     _length: float = 360.0
     _max_wheels_turn: float = math.pi / 3
+    _wheels_turn_speed = 0.1
     _max_velocity: float = 10.0
     _max_acceleration: float = 1.0
     _max_brake: float = 1.0
@@ -28,8 +29,8 @@ class BasicBrand(Brand):
         self.color = color
         self.car_drafter = BasicBrandDrafter(color)
 
-    def draw(self, body: Rectangle, screen: Surface):
-        self.car_drafter.draw(body, screen)
+    def draw(self, body: Rectangle, wheels_angle: float, screen: Surface):
+        self.car_drafter.draw(body, wheels_angle, screen)
 
     @property
     def width(self):
@@ -42,6 +43,10 @@ class BasicBrand(Brand):
     @property
     def max_wheels_turn(self):
         return self._max_wheels_turn
+
+    @property
+    def wheels_turn_speed(self):
+        return self._wheels_turn_speed
 
     @property
     def max_velocity(self):

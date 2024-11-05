@@ -30,6 +30,11 @@ class Brand(ABC):
 
     @property
     @abstractmethod
+    def wheels_turn_speed(self):
+        pass
+
+    @property
+    @abstractmethod
     def max_velocity(self):
         pass
 
@@ -44,5 +49,5 @@ class Brand(ABC):
         pass
 
     @abstractmethod
-    def draw(self, body: Rectangle, screen: Surface):
+    def draw(self, body: Rectangle, wheels_angle: float, screen: Surface):
         pass

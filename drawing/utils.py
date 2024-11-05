@@ -47,3 +47,8 @@ def get_symmetrical_shape(
         PartRelativePosition(corner.length_pos, 2 * symmetry_axis - corner.width_pos)
         for corner in corners
     ]
+
+
+def get_corners_center(corners: List[Point]):
+    vector = Vector(corners[2], corners[0]).scale(0.5)
+    return corners[0].copy().add_vector(vector)

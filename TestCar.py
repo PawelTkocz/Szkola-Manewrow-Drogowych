@@ -18,6 +18,12 @@ class TestCar:
             self.screen_width, self.screen_height
         )
 
+    def turn_left(self):
+        self.c1.turn_left()
+
+    def turn_right(self):
+        self.c1.turn_right()
+
     def draw(self):
         self.background_drafter.draw(self.screen)
         self.c1.draw(self.screen)

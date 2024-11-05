@@ -178,6 +178,31 @@ class Direction(Vector):
         super().normalize()
         return self
 
+    def copy(self) -> "Direction":
+        """
+        Get copy of direction
+        """
+        return Direction(self)
+
+    @property
+    def sinus(self) -> float:
+        return min(self.y, 1) if self.y > 0 else max(self.y, -1)
+
+    @property
+    def cosinus(self) -> float:
+        return min(self.x, 1) if self.x > 0 else max(self.x, -1)
+
+    @property
+    def angle(self) -> float:
+        """
+        Returns the angle represented by direction vector
+
+        The angle is in range [0, pi] when direction.y >= 0
+        and in range [-pi, 0] when direction.y < 0
+        """
+        cos = math.acos(self.cosinus)
+        return cos if self.y > 0 else -1 * cos
+
 
 class Rectangle:
     """
@@ -237,3 +262,6 @@ class Rectangle:
         return self.front_left.copy().add_vector(vector)
 
     # sth to make sure we can't destroy the rectangle by changing only some corners
+
+
+# maybe create class Angle for wheels angle and class Direction whill extend this class

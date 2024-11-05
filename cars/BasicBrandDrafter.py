@@ -4,6 +4,7 @@ import pygame
 from Geometry import Directions, Point, Rectangle, Vector
 from drawing.utils import (
     PartRelativePosition,
+    get_corners_center,
     get_symmetrical_shape,
     tuples_list,
 )
@@ -22,7 +23,7 @@ class CarPartDrafter:
         self.color = color
         self.corners_positions = corners_positions
 
-    def get_current_corners_positions(self, body: Rectangle):
+    def get_current_corners_positions(self, body: Rectangle) -> List[Point]:
         corners = []
         length_vector = body.direction.get_negative_of_a_vector()
         width_vector = body.direction.get_orthogonal_vector(Directions.RIGHT)
@@ -55,7 +56,7 @@ class WheelDrafter(CarPartDrafter):
 
     def draw(self, screen: Surface, body: Rectangle, angle: float):
         corners = super().get_current_corners_positions(body)
-        rotation_point = body.center
+        rotation_point = get_corners_center(corners)
         rotated_corners = [
             corner.rotate_over_point(rotation_point, angle) for corner in corners
         ]
@@ -228,14 +229,14 @@ class BasicBrandDrafter:
         self.side_windows = SideWindows()
         self.back_window = BackWindow()
 
-    def draw(self, body: Rectangle, screen: Surface) -> None:
+    def draw(self, body: Rectangle, wheels_angle: float, screen: Surface) -> None:
         """
         Draw the car on the screen
 
         :param body: Rectangle representing position of the car body
         :param screen: pygame screen to draw the car on
         """
-        self.wheels.draw(screen, body, 0)
+        self.wheels.draw(screen, body, wheels_angle)
         self.body_panels.draw(screen, body)
         self.lights.draw(screen, body)
         self.side_mirrors.draw(screen, body)
