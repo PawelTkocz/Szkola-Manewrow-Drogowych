@@ -1,6 +1,12 @@
 from typing import List
 from Geometry import Point, Vector
-from cars.BasicBrandDrafter import PartRelativePosition
+
+
+class PartRelativePosition:
+    def __init__(self, length_pos: float, width_pos: float):
+        """ """
+        self.length_pos = length_pos
+        self.width_pos = width_pos
 
 
 def get_polygon_corners(n: int, start_point: Point, vectors: List[Vector]):

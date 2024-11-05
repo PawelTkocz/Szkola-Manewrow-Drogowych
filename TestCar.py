@@ -3,6 +3,7 @@ import math
 import pygame
 from Geometry import Point, Vector
 import TestBackgroundDrafter
+from cars.BasicBrand import BasicBrand
 from cars.Car import Car
 
 
@@ -11,8 +12,8 @@ class TestCar:
     screen_width = 1400
 
     def __init__(self):
-        self.c1 = Car(Point(400, 400), velocity=0)
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        self.c1 = Car(BasicBrand(), Point(400, 400), velocity=0)
         self.background_drafter = TestBackgroundDrafter.TestBackgroundDrafter(
             self.screen_width, self.screen_height
         )

@@ -26,7 +26,7 @@ class BasicBrand(Brand):
         Initialize parameters of basic brand car
         """
         self.color = color
-        self.car_drafter = BasicBrandDrafter(self.width, self.length, color)
+        self.car_drafter = BasicBrandDrafter(color)
 
     def draw(self, body: Rectangle, screen: Surface):
         self.car_drafter.draw(body, screen)

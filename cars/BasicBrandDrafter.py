@@ -3,16 +3,10 @@ from pygame import Surface
 import pygame
 from Geometry import Directions, Point, Rectangle, Vector
 from drawing.utils import (
+    PartRelativePosition,
     get_symmetrical_shape,
     tuples_list,
 )
-
-
-class PartRelativePosition:
-    def __init__(self, length_pos: float, width_pos: float):
-        """ """
-        self.length_pos = length_pos
-        self.width_pos = width_pos
 
 
 class CarPartDrafter:
@@ -22,16 +16,11 @@ class CarPartDrafter:
 
     def __init__(
         self,
-        screen: Surface,
         color: str,
         corners_positions: List[PartRelativePosition],
-        body: Rectangle,
     ):
-        self.screen = screen
         self.color = color
         self.corners_positions = corners_positions
-        self.length = body.length
-        self.width = body.width
 
     def get_current_corners_positions(self, body: Rectangle):
         corners = []
@@ -39,10 +28,10 @@ class CarPartDrafter:
         width_vector = body.direction.get_orthogonal_vector(Directions.RIGHT)
         for corner_position in self.corners_positions:
             length_position_vector = length_vector.copy().scale_to_len(
-                corner_position.length_pos * self.length
+                corner_position.length_pos * body.length
             )
             width_position_vector = width_vector.copy().scale_to_len(
-                corner_position.width_pos * self.width
+                corner_position.width_pos * body.width
             )
             corners.append(
                 body.front_left.copy()
@@ -51,28 +40,26 @@ class CarPartDrafter:
             )
         return corners
 
-    def draw(self, body: Rectangle):
+    def draw(self, screen: Surface, body: Rectangle):
         corners = self.get_current_corners_positions(body)
-        pygame.draw.polygon(self.screen, self.color, tuples_list(corners))
+        pygame.draw.polygon(screen, self.color, tuples_list(corners))
 
 
 class WheelDrafter(CarPartDrafter):
     def __init__(
         self,
-        body: Rectangle,
-        screen: Surface,
         corners_positions: List[PartRelativePosition],
         color,
     ):
-        super().__init__(screen, color, corners_positions, body)
+        super().__init__(color, corners_positions)
 
-    def draw(self, body: Rectangle, angle: float):
+    def draw(self, screen: Surface, body: Rectangle, angle: float):
         corners = super().get_current_corners_positions(body)
         rotation_point = body.center
         rotated_corners = [
             corner.rotate_over_point(rotation_point, angle) for corner in corners
         ]
-        pygame.draw.polygon(self.screen, self.color, tuples_list(rotated_corners))
+        pygame.draw.polygon(screen, self.color, tuples_list(rotated_corners))
 
 
 class Wheels:
@@ -88,15 +75,13 @@ class Wheels:
     ]
     corners_positions_rigth = get_symmetrical_shape(corners_positions_left)
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "#262626"):
-        self.left_wheel = WheelDrafter(body, screen, self.corners_positions_left, color)
-        self.right_wheel = WheelDrafter(
-            body, screen, self.corners_positions_rigth, color
-        )
+    def __init__(self, color: str = "#262626"):
+        self.left_wheel = WheelDrafter(self.corners_positions_left, color)
+        self.right_wheel = WheelDrafter(self.corners_positions_rigth, color)
 
-    def draw(self, body: Rectangle, angle: float):
-        self.left_wheel.draw(body, angle)
-        self.right_wheel.draw(body, angle)
+    def draw(self, screen: Surface, body: Rectangle, angle: float):
+        self.left_wheel.draw(screen, body, angle)
+        self.right_wheel.draw(screen, body, angle)
 
 
 class SideMirrors:
@@ -112,17 +97,13 @@ class SideMirrors:
     ]
     corners_positions_rigth = get_symmetrical_shape(corners_positions_left)
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
-        self.left_mirror = CarPartDrafter(
-            screen, color, self.corners_positions_left, body
-        )
-        self.right_mirror = CarPartDrafter(
-            screen, color, self.corners_positions_rigth, body
-        )
+    def __init__(self, color: str = "black"):
+        self.left_mirror = CarPartDrafter(color, self.corners_positions_left)
+        self.right_mirror = CarPartDrafter(color, self.corners_positions_rigth)
 
-    def draw(self, body: Rectangle):
-        self.left_mirror.draw(body)
-        self.right_mirror.draw(body)
+    def draw(self, screen: Surface, body: Rectangle):
+        self.left_mirror.draw(screen, body)
+        self.right_mirror.draw(screen, body)
 
 
 class FrontLights:
@@ -138,17 +119,13 @@ class FrontLights:
     ]
     corners_positions_rigth = get_symmetrical_shape(corners_positions_left)
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "yellow"):
-        self.left_light = CarPartDrafter(
-            screen, color, self.corners_positions_left, body
-        )
-        self.right_light = CarPartDrafter(
-            screen, color, self.corners_positions_rigth, body
-        )
+    def __init__(self, color: str = "yellow"):
+        self.left_light = CarPartDrafter(color, self.corners_positions_left)
+        self.right_light = CarPartDrafter(color, self.corners_positions_rigth)
 
-    def draw(self, body: Rectangle):
-        self.left_light.draw(body)
-        self.right_light.draw(body)
+    def draw(self, screen: Surface, body: Rectangle):
+        self.left_light.draw(screen, body)
+        self.right_light.draw(screen, body)
 
 
 class FrontWindow(CarPartDrafter):
@@ -163,8 +140,8 @@ class FrontWindow(CarPartDrafter):
         PartRelativePosition(3 / 7, 1 / 4),
     ]
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
-        super().__init__(screen, color, self.corners_positions, body)
+    def __init__(self, color: str = "black"):
+        super().__init__(color, self.corners_positions)
 
 
 class BackWindow(CarPartDrafter):
@@ -179,8 +156,8 @@ class BackWindow(CarPartDrafter):
         PartRelativePosition(11 / 14, 3 / 8),
     ]
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
-        super().__init__(screen, color, self.corners_positions, body)
+    def __init__(self, color: str = "black"):
+        super().__init__(color, self.corners_positions)
 
 
 class SideWindows:
@@ -196,17 +173,13 @@ class SideWindows:
     ]
     corners_positions_rigth = get_symmetrical_shape(corners_positions_left)
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
-        self.left_side_window = CarPartDrafter(
-            screen, color, self.corners_positions_left, body
-        )
-        self.right_side_window = CarPartDrafter(
-            screen, color, self.corners_positions_rigth, body
-        )
+    def __init__(self, color: str = "black"):
+        self.left_side_window = CarPartDrafter(color, self.corners_positions_left)
+        self.right_side_window = CarPartDrafter(color, self.corners_positions_rigth)
 
-    def draw(self, body: Rectangle):
-        self.left_side_window.draw(body)
-        self.right_side_window.draw(body)
+    def draw(self, screen: Surface, body: Rectangle):
+        self.left_side_window.draw(screen, body)
+        self.right_side_window.draw(screen, body)
 
 
 class BodyPanels(CarPartDrafter):
@@ -215,27 +188,23 @@ class BodyPanels(CarPartDrafter):
     """
 
     corners_positions = [
-        PartRelativePosition(0.1, 0.05),
-        PartRelativePosition(0.1, 0.95),
-        PartRelativePosition(0.9, 0.95),
-        PartRelativePosition(0.9, 0.05),
+        PartRelativePosition(1 / 15, 0.05),
+        PartRelativePosition(1 / 15, 0.95),
+        PartRelativePosition(29 / 30, 0.95),
+        PartRelativePosition(29 / 30, 0.05),
     ]
 
     def __init__(
         self,
-        body: Rectangle,
-        screen: Surface,
         color: str = "red",
         bumper_color: str = "black",
     ):
-        super().__init__(screen, color, self.corners_positions, body)
+        super().__init__(color, self.corners_positions)
         self.bumper_color = bumper_color
 
-    def draw(self, body: Rectangle):
-        pygame.draw.polygon(
-            self.screen, self.bumper_color, tuples_list(body.corners_list)
-        )
-        super().draw(body)
+    def draw(self, screen: Surface, body: Rectangle):
+        pygame.draw.polygon(screen, self.bumper_color, tuples_list(body.corners_list))
+        super().draw(screen, body)
 
 
 class BasicBrandDrafter:
@@ -243,7 +212,7 @@ class BasicBrandDrafter:
     Class responsible for drawing basic brand car on the screen
     """
 
-    def __init__(self, body: Rectangle, color: str, screen: Surface):
+    def __init__(self, color: str):
         """
         Initialize the drafter of basic brand cars
 
@@ -251,14 +220,13 @@ class BasicBrandDrafter:
         :param length: length of the car
         :param color: color of the car
         """
-        self.color = color
-        self.wheels = Wheels(body, screen)
-        self.body_panels = BodyPanels(body, screen)
-        self.lights = FrontLights(body, screen)
-        self.side_mirrors = SideMirrors(body, screen)
-        self.front_window = FrontWindow(body, screen)
-        self.side_windows = SideWindows(body, screen)
-        self.back_window = BackWindow(body, screen)
+        self.wheels = Wheels()
+        self.body_panels = BodyPanels(color)
+        self.lights = FrontLights()
+        self.side_mirrors = SideMirrors()
+        self.front_window = FrontWindow()
+        self.side_windows = SideWindows()
+        self.back_window = BackWindow()
 
     def draw(self, body: Rectangle, screen: Surface) -> None:
         """
@@ -267,10 +235,10 @@ class BasicBrandDrafter:
         :param body: Rectangle representing position of the car body
         :param screen: pygame screen to draw the car on
         """
-        self.wheels.draw(body, 0)
-        self.body_panels.draw(body)
-        self.lights.draw(body)
-        self.side_mirrors.draw(body)
-        self.front_window.draw(body)
-        self.side_windows.draw(body)
-        self.back_window.draw(body)
+        self.wheels.draw(screen, body, 0)
+        self.body_panels.draw(screen, body)
+        self.lights.draw(screen, body)
+        self.side_mirrors.draw(screen, body)
+        self.front_window.draw(screen, body)
+        self.side_windows.draw(screen, body)
+        self.back_window.draw(screen, body)

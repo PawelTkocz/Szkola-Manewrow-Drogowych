@@ -1,3 +1,4 @@
+from pygame import Surface
 from Geometry import Direction, Point, Rectangle, Vector
 from cars.BasicBrand import BasicBrand
 from cars.Brand import Brand
@@ -10,11 +11,11 @@ class Car:
 
     def __init__(
         self,
+        brand: Brand,
         front_left_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         reversing: bool = False,
-        brand: Brand = BasicBrand(),
     ):
         """
         Initialize car
@@ -48,7 +49,7 @@ class Car:
         self.brand.draw(self.body, screen)
 
     def move(self):
-        self.body.rear_left.add_vector(Vector(Point(1, 0)))
-        self.body.rear_right.add_vector(Vector(Point(1, 0)))
-        self.body.front_right.add_vector(Vector(Point(1, 0)))
-        self.body.front_left.add_vector(Vector(Point(1, 0)))
+        # self.body.rear_left.add_vector(Vector(Point(1, 0)))
+        # self.body.rear_right.add_vector(Vector(Point(1, 0)))
+        # self.body.front_right.add_vector(Vector(Point(1, 0)))
+        self.body.front_left.add_vector(Vector(Point(0, 0)))
