@@ -228,4 +228,12 @@ class Rectangle:
             self.front_left.copy(),
         ]
 
+    @property
+    def center(self) -> Point:
+        """
+        Get the center of rectangle
+        """
+        vector = Vector(self.rear_right, self.front_left).scale(0.5)
+        return self.front_left.copy().add_vector(vector)
+
     # sth to make sure we can't destroy the rectangle by changing only some corners

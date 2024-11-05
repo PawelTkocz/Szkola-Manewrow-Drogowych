@@ -2,71 +2,74 @@ from typing import List
 from pygame import Surface
 import pygame
 from Geometry import Directions, Point, Rectangle, Vector
-from drawing.utils import get_rectangle_corners
+from drawing.utils import get_rectangle_corners, tuples_list
 
 
-# change name
-def tuples_list(point_list: List[Point]):
+class PartRelativePosition:
+    def __init__(self, length_pos: float, width_pos: float):
+        """ """
+        self.length_pos = length_pos
+        self.width_pos = width_pos
+
+
+class CarPartDrafter:
     """
-    Convert list of points to list of tuples
-    """
-    return [(p.x, p.y) for p in point_list]
-
-
-class SideMirrors:
-    """
-    Class responsible for drawing side mirrors
+    Class responsible for providing basic functions for drawing car parts
     """
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
+    def __init__(
+        self,
+        screen: Surface,
+        color: str,
+        corners_positions: List[PartRelativePosition],
+        body: Rectangle,
+    ):
         self.screen = screen
         self.color = color
-        self.length = body.length / 20
-        self.width = body.width / 8
-        self.distance_to_front = body.length / 4
+        self.corners_positions = corners_positions
+        self.length = body.length
+        self.width = body.width
 
-    def draw_mirror(self, start_point: Point, body: Rectangle, direction: Directions):
-        width_vector = body.direction.get_orthogonal_vector(direction, self.width)
-        length_vector = width_vector.get_orthogonal_vector(direction, self.length)
-        corners_list = get_rectangle_corners(start_point, width_vector, length_vector)
-        pygame.draw.polygon(self.screen, self.color, tuples_list(corners_list))
-
-    def draw(self, body: Rectangle):
-        mirror_position_vector = body.direction.get_negative_of_a_vector().scale_to_len(
-            self.distance_to_front
-        )
-        self.draw_mirror(
-            body.front_left.copy().add_vector(mirror_position_vector),
-            body,
-            Directions.LEFT,
-        )
-        self.draw_mirror(
-            body.front_right.copy().add_vector(mirror_position_vector),
-            body,
-            Directions.RIGHT,
-        )
-
-
-class FrontLights:
-    """
-    Class responsible for drawing front lights
-    """
-
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "yellow"):
-        self.screen = screen
-        self.color = color
-        self.length = body.length / 15
-        self.width = body.width / 4
-
-    def draw_light(self, start_point: Point, body: Rectangle, direction: Directions):
-        width_vector = body.direction.get_orthogonal_vector(direction, self.width)
-        length_vector = width_vector.get_orthogonal_vector(direction, self.length)
-        corners_list = get_rectangle_corners(start_point, width_vector, length_vector)
-        pygame.draw.polygon(self.screen, self.color, tuples_list(corners_list))
+    def get_current_corners_positions(self, body: Rectangle):
+        corners = []
+        length_vector = body.direction.get_negative_of_a_vector()
+        width_vector = body.direction.get_orthogonal_vector(Directions.RIGHT)
+        for corner_position in self.corners_positions:
+            length_position_vector = length_vector.copy().scale_to_len(
+                corner_position.length_pos * self.length
+            )
+            width_position_vector = width_vector.copy().scale_to_len(
+                corner_position.width_pos * self.width
+            )
+            corners.append(
+                body.front_left.copy()
+                .add_vector(length_position_vector)
+                .add_vector(width_position_vector)
+            )
+        return corners
 
     def draw(self, body: Rectangle):
-        self.draw_light(body.front_left.copy(), body, Directions.RIGHT)
-        self.draw_light(body.front_right.copy(), body, Directions.LEFT)
+        corners = self.get_current_corners_positions(body)
+        pygame.draw.polygon(self.screen, self.color, tuples_list(corners))
+
+
+class WheelDrafter(CarPartDrafter):
+    def __init__(
+        self,
+        body: Rectangle,
+        screen: Surface,
+        corners_positions: List[PartRelativePosition],
+        color,
+    ):
+        super().__init__(screen, color, corners_positions, body)
+
+    def draw(self, body: Rectangle, angle: float):
+        corners = super().get_current_corners_positions(body)
+        rotation_point = body.center
+        rotated_corners = [
+            corner.rotate_over_point(rotation_point, angle) for corner in corners
+        ]
+        pygame.draw.polygon(self.screen, self.color, tuples_list(rotated_corners))
 
 
 class Wheels:
@@ -74,28 +77,125 @@ class Wheels:
     Class responsible for drawing front wheels
     """
 
-    def __init__(self, body: Rectangle, screen: Surface, color: str = "#262626"):
-        self.screen = screen
-        self.color = color
-        self.length = body.length / 4
-        self.width = body.width / 8
+    corners_positions_left = [
+        PartRelativePosition(0, 0),
+        PartRelativePosition(0, 1 / 8),
+        PartRelativePosition(1 / 4, 1 / 8),
+        PartRelativePosition(1 / 4, 0),
+    ]
+    corners_positions_rigth = [
+        PartRelativePosition(0, 7 / 8),
+        PartRelativePosition(0, 1),
+        PartRelativePosition(1 / 4, 1),
+        PartRelativePosition(1 / 4, 7 / 8),
+    ]
 
-    def draw_wheel(
-        self, start_point: Point, body: Rectangle, direction: Directions, angle: float
-    ):
-        width_vector = body.direction.get_orthogonal_vector(direction, self.width)
-        length_vector = width_vector.get_orthogonal_vector(direction, self.length)
-        corners_list = get_rectangle_corners(start_point, width_vector, length_vector)
-        rotation_point_vector = Vector(corners_list[2], corners_list[0]).scale(0.5)
-        rotation_point = start_point.copy().add_vector(rotation_point_vector)
-        rotated_corners = [
-            corner.rotate_over_point(rotation_point, angle) for corner in corners_list
-        ]
-        pygame.draw.polygon(self.screen, self.color, tuples_list(rotated_corners))
+    def __init__(self, body: Rectangle, screen: Surface, color: str = "#262626"):
+        self.left_wheel = WheelDrafter(body, screen, self.corners_positions_left, color)
+        self.right_wheel = WheelDrafter(
+            body, screen, self.corners_positions_rigth, color
+        )
 
     def draw(self, body: Rectangle):
-        self.draw_wheel(body.front_left.copy(), body, Directions.RIGHT)
-        self.draw_wheel(body.front_right.copy(), body, Directions.LEFT)
+        self.left_wheel.draw()
+        self.right_wheel.draw()
+
+
+class SideMirrors:
+    """
+    Class responsible for drawing side mirrors
+    """
+
+    corners_positions_left = [
+        PartRelativePosition(0.25, 0),
+        PartRelativePosition(0.3, 0),
+        PartRelativePosition(0.3, -1 / 8),
+        PartRelativePosition(0.25, -1 / 8),
+    ]
+    corners_positions_rigth = [
+        PartRelativePosition(0.25, 1),
+        PartRelativePosition(0.25, 1.125),
+        PartRelativePosition(0.3, 1.125),
+        PartRelativePosition(0.3, 1),
+    ]
+
+    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
+        self.left_mirror = CarPartDrafter(
+            screen, color, self.corners_positions_left, body
+        )
+        self.right_mirror = CarPartDrafter(
+            screen, color, self.corners_positions_rigth, body
+        )
+
+    def draw(self, body: Rectangle):
+        self.left_mirror.draw()
+        self.right_mirror.draw()
+
+
+class FrontLights:
+    """
+    Class responsible for drawing front lights
+    """
+
+    corners_positions_left = [
+        PartRelativePosition(0, 0),
+        PartRelativePosition(0, 0.25),
+        PartRelativePosition(1 / 15, 0.25),
+        PartRelativePosition(1 / 15, 0),
+    ]
+    corners_positions_rigth = [
+        PartRelativePosition(0, 0.75),
+        PartRelativePosition(0, 1),
+        PartRelativePosition(1 / 15, 1),
+        PartRelativePosition(1 / 15, 0.75),
+    ]
+
+    def __init__(self, body: Rectangle, screen: Surface, color: str = "yellow"):
+        self.left_light = CarPartDrafter(
+            screen, color, self.corners_positions_left, body
+        )
+        self.right_light = CarPartDrafter(
+            screen, color, self.corners_positions_rigth, body
+        )
+
+    def draw(self, body: Rectangle):
+        self.left_light.draw()
+        self.right_light.draw()
+
+
+class FrontWindow(CarPartDrafter):
+    """
+    Class responsible for drawing front window
+    """
+
+    corners_positions = [
+        PartRelativePosition(2 / 7, 1 / 8),
+        PartRelativePosition(2 / 7, 7 / 8),
+        PartRelativePosition(3 / 7, 3 / 4),
+        PartRelativePosition(3 / 7, 1 / 4),
+    ]
+
+    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
+        super().__init__(screen, color, self.corners_positions, body)
+
+
+class BackWindows(CarPartDrafter):
+    """
+    Class responsible for drawing back window
+    """
+
+    corners_positions = [
+        PartRelativePosition(6 / 7, 1 / 4),
+        PartRelativePosition(6 / 7, 3 / 4),
+        PartRelativePosition(11 / 14, 5 / 8),
+        PartRelativePosition(11 / 14, 3 / 8),
+    ]
+
+    def __init__(self, body: Rectangle, screen: Surface, color: str = "black"):
+        super().__init__(screen, color, self.corners_positions, body)
+
+
+# maybe implement function to generate list of corners position symetric to given in array
 
 
 class BasicBrandDrafter:
@@ -114,36 +214,6 @@ class BasicBrandDrafter:
         self.width = width
         self.length = length
         self.color = color
-
-    def draw_front_window(self):
-        pts = [Point(0, 0) for i in range(4)]
-
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length * 4 // 15, TurnDir.RIGHT
-        )
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 8, TurnDir.RIGHT
-        )
-
-        pts[0] = self.front_left.add_vector(length_vec).add_vector(width_vec)
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width * 0.75, TurnDir.RIGHT
-        )
-        pts[1] = pts[0].add_vector(width_vec)
-
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length // 7, TurnDir.RIGHT
-        )
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 8, TurnDir.RIGHT
-        )
-        pts[3] = pts[0].add_vector(width_vec).add_vector(length_vec)
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width // 2, TurnDir.RIGHT
-        )
-        pts[2] = pts[3].add_vector(width_vec)
-
-        pygame.draw.polygon(self.screen, "black", tuples_list(pts))
 
     def draw_side_windows(self):
         pts_left = [Point(0, 0) for i in range(4)]
@@ -189,87 +259,6 @@ class BasicBrandDrafter:
 
         pygame.draw.polygon(self.screen, "black", tuples_list(pts_left))
         pygame.draw.polygon(self.screen, "black", tuples_list(pts_right))
-
-    def draw_back_window(self):
-        pts = [Point(0, 0) for i in range(4)]
-
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length // 7, TurnDir.LEFT
-        )
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 4, TurnDir.RIGHT
-        )
-        pts[0] = self.rear_left.add_vector(length_vec).add_vector(width_vec)
-
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 2, TurnDir.RIGHT
-        )
-        pts[1] = pts[0].add_vector(width_vec)
-
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length // 15, TurnDir.LEFT
-        )
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 8, TurnDir.RIGHT
-        )
-        pts[3] = pts[0].add_vector(width_vec).add_vector(length_vec)
-
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width // 4, TurnDir.RIGHT
-        )
-        pts[2] = pts[3].add_vector(width_vec)
-
-        pygame.draw.polygon(self.screen, "black", tuples_list(pts))
-
-    def draw_wheels(self):
-        wheel_left_pts = [Point(0, 0) for i in range(4)]
-        wheel_right_pts = [Point(0, 0) for i in range(4)]
-
-        wheel_left_pts[0].copy_coordinates_from(self.front_left)
-        wheel_right_pts[0].copy_coordinates_from(self.front_right)
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length // 4, TurnDir.RIGHT
-        )
-        wheel_left_pts[1] = self.front_left.add_vector(length_vec)
-        wheel_right_pts[1] = self.front_right.add_vector(length_vec)
-
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width // 8, TurnDir.RIGHT
-        )
-        wheel_left_pts[3] = wheel_left_pts[0].add_vector(width_vec)
-        wheel_left_pts[2] = wheel_left_pts[1].add_vector(width_vec)
-
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width // 8, TurnDir.LEFT
-        )
-        wheel_right_pts[3] = wheel_right_pts[0].add_vector(width_vec)
-        wheel_right_pts[2] = wheel_right_pts[1].add_vector(width_vec)
-
-        length_vec = Vector(self.front_left, self.front_right).orthogonal_vector(
-            self.length // 8, TurnDir.RIGHT
-        )
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width / 16, TurnDir.RIGHT
-        )
-        rotate_point_left = self.front_left.add_vector(length_vec).add_vector(width_vec)
-
-        width_vec = Vector(self.rear_left, self.front_left).orthogonal_vector(
-            self.width // 16, TurnDir.LEFT
-        )
-        rotate_point_right = self.front_right.add_vector(length_vec).add_vector(
-            width_vec
-        )
-
-        for p1, p2 in zip(wheel_left_pts, wheel_right_pts):
-            p1.rotate_over_point(
-                rotate_point_left, self.wheels_angle, self.cur_turn_side
-            )
-            p2.rotate_over_point(
-                rotate_point_right, self.wheels_angle, self.cur_turn_side
-            )
-
-        pygame.draw.polygon(self.screen, "#262626", tuples_list(wheel_left_pts))
-        pygame.draw.polygon(self.screen, "#262626", tuples_list(wheel_right_pts))
 
     def draw_inside(self):
         pts = [Point(0, 0) for i in range(4)]

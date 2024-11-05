@@ -23,3 +23,11 @@ def get_rectangle_corners(
     corner3 = corner2.copy().add_vector(side_vector)
     corner4 = corner1.copy().add_vector(side_vector)
     return [corner1, corner2, corner3, corner4]
+
+
+# change name
+def tuples_list(point_list: List[Point]):
+    """
+    Convert list of points to list of tuples
+    """
+    return [(p.x, p.y) for p in point_list]
