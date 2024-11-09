@@ -25,6 +25,7 @@ class Car:
         self.brand = brand
         self.reversing = reversing
         self.velocity = velocity
+        self.resistance = 0.03
         self.body = Rectangle(front_left_position, brand.width, brand.length, direction)
         self.wheels = Wheels(self.brand.max_wheels_turn)
 
@@ -76,9 +77,18 @@ class Car:
     def speed_up_reverse(self, limit=None):
         self.velocity -= self.brand.max_acceleration
 
+    def slow_down(self, value):
+        self.velocity = max(self.velocity - value, 0)
+
+    def _calculate_rear_movement_vector2(self, front_movement_vector: Vector):
+        """ """
+        # dziala calkiem dobrze nawet dla 10000
+        return Vector(Point(0, 0))
+
     def _calculate_rear_movement_vector(self, front_movement_vector: Vector):
         """ """
         # jesli bedzie za dlugo liczylo sprobowac wrocic do starej wersji
+        # dla 1000 wykonan wydoczne lagowanie, dla 2000 dziala bardzo wolno
         front_corner_final_position = self.front_left.add_vector(front_movement_vector)
         rear_corner_start_position = self.rear_left
         x1, y1 = rear_corner_start_position.x, rear_corner_start_position.y
@@ -103,13 +113,13 @@ class Car:
         front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
             self.velocity
         )
-        rear_movement_vec = self._calculate_rear_movement_vector(front_movement_vector)
+        rear_movement_vec = self._calculate_rear_movement_vector2(front_movement_vector)
         if self.turn_direction == Directions.RIGHT:
             self.body.move_right_side(front_movement_vector, rear_movement_vec)
         else:
             self.body.move_left_side(front_movement_vector, rear_movement_vec)
         # check if changing move_right_side with move_left_side improves the experience
-        # self.slow_down(self.resistance)
+        self.slow_down(self.resistance)
 
     def draw(self, screen):
         self.brand.draw(self.body, self.wheels.direction.angle, screen)
