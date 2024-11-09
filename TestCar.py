@@ -5,6 +5,9 @@ from Geometry import Directions, Point
 import TestBackgroundDrafter
 from cars.BasicBrand import BasicBrand
 from cars.Car import Car
+import numpy as np
+from scipy.interpolate import CubicSpline
+from scipy.spatial import KDTree
 
 
 class TestCar:
@@ -27,6 +30,32 @@ class TestCar:
     def draw(self):
         self.background_drafter.draw(self.screen)
         self.c1.draw(self.screen)
+        points = [(100, 300), (200, 100), (400, 500), (600, 150), (700, 400)]
+        x_points, y_points = zip(*points)  # Separate x and y coordinates
+
+        # Create a cubic spline that passes through the specified points
+        spline_x = np.linspace(
+            min(x_points), max(x_points), 500
+        )  # X values for smooth curve
+        spline = CubicSpline(x_points, y_points)  # Create the spline
+        spline_y = spline(spline_x)  # Evaluate Y values along the spline
+
+        # Convert spline points to integer coordinates for Pygame
+        curve_points = [(int(x), int(y)) for x, y in zip(spline_x, spline_y)]
+        tree = KDTree(curve_points)
+        for point in points:
+            pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
+        for i in range(len(curve_points) - 1):
+            pygame.draw.line(
+                self.screen, (0, 255, 0), curve_points[i], curve_points[i + 1], 2
+            )
+
+        distance, index = tree.query([self.c1.front_left.x, self.c1.front_left.y])
+        closest_point = curve_points[index]
+        pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
+        font = pygame.font.Font(None, 36)
+        text = font.render(f"Distance to curve: {int(distance)}", True, (255, 255, 255))
+        self.screen.blit(text, (10, 10))
 
     def next_frame(self):
         self.c1.move()

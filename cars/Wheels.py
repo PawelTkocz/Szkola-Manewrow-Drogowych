@@ -39,6 +39,8 @@ class Wheels:
         return True
 
     def turn(self, angle: float, turn_direction: Directions) -> bool:
+        if turn_direction not in [Directions.LEFT, Directions.RIGHT]:
+            return
         return (
             self.turn_left(angle)
             if turn_direction == Directions.LEFT

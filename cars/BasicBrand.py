@@ -14,8 +14,8 @@ class BasicBrand(Brand):
     Class representing basic car brand
     """
 
-    _width: float = 200.0  # 200.0
-    _length: float = 360.0  # 360
+    _width: float = 100.0  # 200.0
+    _length: float = 180.0  # 360
     _max_wheels_turn: float = math.pi / 4
     _wheels_turn_speed = 0.05
     _max_velocity: float = 10.0
