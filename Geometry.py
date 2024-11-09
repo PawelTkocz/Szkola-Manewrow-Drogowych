@@ -277,9 +277,8 @@ class Rectangle:
         vector = Vector(self.rear_right, self.front_left).scale(0.5)
         return self.front_left.add_vector(vector)
 
-    def move_left_side(self, front_vector: Vector, rear_vector: Vector):
+    def move_left_side(self, front_vector: Vector):
         self._front_left.add_vector(front_vector)
-        self._rear_left.add_vector(rear_vector)
         length_vector = Vector(self.front_left, self.rear_left).scale_to_len(
             self.length
         )
@@ -293,9 +292,8 @@ class Rectangle:
         )
         self._direction = Direction(self.front_left, self.rear_left)
 
-    def move_right_side(self, front_vector: Vector, rear_vector: Vector):
+    def move_right_side(self, front_vector: Vector):
         self._front_right.add_vector(front_vector)
-        self._rear_right.add_vector(rear_vector)
         length_vector = Vector(self.front_right, self.rear_right).scale_to_len(
             self.length
         )

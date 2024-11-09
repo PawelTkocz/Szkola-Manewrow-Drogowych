@@ -106,32 +106,6 @@ class Car:
     def brake(self):
         self.slow_down(self.max_brake)
 
-    def _calculate_rear_movement_vector2(self, front_movement_vector: Vector):
-        """ """
-        # dziala calkiem dobrze nawet dla 10000
-        return Vector(Point(0, 0))
-
-    def _calculate_rear_movement_vector(self, front_movement_vector: Vector):
-        """ """
-        # jesli bedzie za dlugo liczylo sprobowac wrocic do starej wersji
-        # dla 1000 wykonan wydoczne lagowanie, dla 2000 dziala bardzo wolno
-        front_corner_final_position = self.front_left.add_vector(front_movement_vector)
-        rear_corner_start_position = self.rear_left
-        x1, y1 = rear_corner_start_position.x, rear_corner_start_position.y
-        x2, y2 = self.direction.x, self.direction.y
-        x3, y3 = front_corner_final_position.x, front_corner_final_position.y
-        delta_a = x2**2 + y2**2
-        delta_b = 2 * (x1 * x2 + y1 * y2 - x2 * x3 - y2 * y3)
-        delta_c = (
-            x1**2 + y1**2 + x3**2 + y3**2 - 2 * (x1 * x3 + y1 * y3) - self.length**2
-        )
-        delta = delta_b**2 - 4 * delta_a * delta_c
-        if delta < 0:
-            return Vector(Point(0, 0))
-        res1 = (-delta_b - math.sqrt(delta)) / (2 * delta_a)
-        res2 = (math.sqrt(delta) - delta_b) / (2 * delta_a)
-        return self.direction.scale(min(res1, res2))
-
     def move(self):
         if self.velocity == 0:
             return
@@ -139,11 +113,10 @@ class Car:
         front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
             self.velocity
         )
-        rear_movement_vec = self._calculate_rear_movement_vector2(front_movement_vector)
         if self.turn_direction == Directions.RIGHT:
-            self.body.move_right_side(front_movement_vector, rear_movement_vec)
+            self.body.move_right_side(front_movement_vector)
         else:
-            self.body.move_left_side(front_movement_vector, rear_movement_vec)
+            self.body.move_left_side(front_movement_vector)
         self.slow_down(self.brand.resistance)
 
     def draw(self, screen):
