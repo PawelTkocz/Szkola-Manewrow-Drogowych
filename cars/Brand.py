@@ -48,6 +48,11 @@ class Brand(ABC):
     def max_brake(self):
         pass
 
+    @property
+    @abstractmethod
+    def resistance(self):
+        pass
+
     @abstractmethod
     def draw(self, body: Rectangle, wheels_angle: float, screen: Surface):
         pass

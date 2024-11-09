@@ -1,7 +1,5 @@
 import math
-from pygame import Surface
 from Geometry import Direction, Directions, Point, Rectangle, Vector
-from cars.BasicBrand import BasicBrand
 from cars.Brand import Brand
 from cars.Wheels import Wheels
 
@@ -17,68 +15,96 @@ class Car:
         front_left_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
-        reversing: bool = False,
     ):
         """
         Initialize car
         """
         self.brand = brand
-        self.reversing = reversing
         self.velocity = velocity
-        self.resistance = 0.03
         self.body = Rectangle(front_left_position, brand.width, brand.length, direction)
         self.wheels = Wheels(self.brand.max_wheels_turn)
 
     @property
-    def direction(self):
+    def direction(self) -> Direction:
         return self.body.direction
 
     @property
-    def front_left(self):
+    def front_left(self) -> Point:
         return self.body.front_left
 
     @property
-    def front_right(self):
+    def front_right(self) -> Point:
         return self.body.front_right
 
     @property
-    def rear_left(self):
+    def rear_left(self) -> Point:
         return self.body.rear_left
 
     @property
-    def rear_right(self):
+    def rear_right(self) -> Point:
         return self.body.rear_right
 
     @property
-    def wheels_angle(self):
-        return self.wheels.direction.angle
+    def wheels_angle(self) -> float:
+        return self.wheels.angle
 
     @property
-    def turn_direction(self):
+    def turn_direction(self) -> Directions:
         return self.wheels.current_direction
 
     @property
-    def length(self):
+    def length(self) -> float:
         return self.brand.length
 
     @property
-    def width(self):
+    def width(self) -> float:
         return self.brand.width
 
-    def turn_left(self):
-        self.wheels.turn(self.brand.wheels_turn_speed, Directions.LEFT)
+    @property
+    def max_acceleration(self) -> float:
+        return self.brand.max_acceleration
 
-    def turn_right(self):
-        self.wheels.turn(self.brand.wheels_turn_speed, Directions.RIGHT)
+    @property
+    def max_velocity(self) -> float:
+        return self.brand.max_velocity
 
-    def speed_up_front(self, limit=None):
-        self.velocity += self.brand.max_acceleration
+    @property
+    def max_brake(self) -> float:
+        return self.brand.max_brake
 
-    def speed_up_reverse(self, limit=None):
-        self.velocity -= self.brand.max_acceleration
+    def turn(self, direction: Directions):
+        self.wheels.turn(self.brand.wheels_turn_speed, direction)
+
+    def speed_up(self, direction: Directions, limit=None):
+        if (self.velocity > 0 and direction == Directions.BACK) or (
+            self.velocity < 0 and direction == Directions.FRONT
+        ):
+            return
+        if limit is not None and abs(self.velocity) > limit:
+            self.brake()
+            return
+        if direction == Directions.FRONT:
+            self.velocity = min(
+                self.velocity + self.max_acceleration,
+                self.max_velocity,
+                limit if limit is not None else self.max_velocity,
+            )
+        elif direction == Directions.BACK:
+            self.velocity = max(
+                self.velocity - self.max_acceleration,
+                -1 * self.max_velocity,
+                limit if limit is not None else -1 * self.max_velocity,
+            )
 
     def slow_down(self, value):
-        self.velocity = max(self.velocity - value, 0)
+        self.velocity = (
+            max(self.velocity - value, 0)
+            if self.velocity > 0
+            else min(self.velocity + value, 0)
+        )
+
+    def brake(self):
+        self.slow_down(self.max_brake)
 
     def _calculate_rear_movement_vector2(self, front_movement_vector: Vector):
         """ """
@@ -118,8 +144,10 @@ class Car:
             self.body.move_right_side(front_movement_vector, rear_movement_vec)
         else:
             self.body.move_left_side(front_movement_vector, rear_movement_vec)
-        # check if changing move_right_side with move_left_side improves the experience
-        self.slow_down(self.resistance)
+        self.slow_down(self.brand.resistance)
 
     def draw(self, screen):
-        self.brand.draw(self.body, self.wheels.direction.angle, screen)
+        self.brand.draw(self.body, self.wheels_angle, screen)
+
+    def collides(self, obj):
+        pass

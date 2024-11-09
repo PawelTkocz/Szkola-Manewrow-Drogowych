@@ -26,6 +26,10 @@ class Wheels:
             return Directions.FRONT
         return Directions.LEFT if angle > 0 else Directions.RIGHT
 
+    @property
+    def angle(self) -> float:
+        return self.direction.angle
+
     def turn_right(self, angle: float) -> bool:
         if self.direction.compare(self.max_right_direction):
             return False

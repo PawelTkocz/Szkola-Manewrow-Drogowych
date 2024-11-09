@@ -1,7 +1,7 @@
 import math
 
 import pygame
-from Geometry import Point, Vector
+from Geometry import Directions, Point
 import TestBackgroundDrafter
 from cars.BasicBrand import BasicBrand
 from cars.Car import Car
@@ -19,10 +19,10 @@ class TestCar:
         )
 
     def turn_left(self):
-        self.c1.turn_left()
+        self.c1.turn(Directions.LEFT)
 
     def turn_right(self):
-        self.c1.turn_right()
+        self.c1.turn(Directions.RIGHT)
 
     def draw(self):
         self.background_drafter.draw(self.screen)
@@ -32,10 +32,13 @@ class TestCar:
         self.c1.move()
 
     def speed_up_front(self):
-        self.c1.speed_up_front()
+        self.c1.speed_up(Directions.FRONT)
 
     def speed_up_reverse(self):
-        self.c1.speed_up_reverse()
+        self.c1.speed_up(Directions.BACK)
+
+    def brake(self):
+        self.c1.brake()
 
 
 pygame.init()
