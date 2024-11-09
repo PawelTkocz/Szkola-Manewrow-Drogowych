@@ -54,8 +54,8 @@ class BasicBrand(Brand):
 
     @property
     def max_acceleration(self):
-        return self.max_acceleration
+        return self._max_acceleration
 
     @property
     def max_brake(self):
-        return self.max_brake
+        return self._max_brake

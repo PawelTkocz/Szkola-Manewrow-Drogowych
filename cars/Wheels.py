@@ -19,6 +19,13 @@ class Wheels:
             self.direction = self.max_left_direction.copy()
         return True
 
+    @property
+    def current_direction(self) -> Directions:
+        angle = self.direction.angle
+        if angle == 0:
+            return Directions.FRONT
+        return Directions.LEFT if angle > 0 else Directions.RIGHT
+
     def turn_right(self, angle: float) -> bool:
         if self.direction.compare(self.max_right_direction):
             return False

@@ -226,12 +226,12 @@ class Rectangle:
         self.width = width
         self.length = length
         self._direction = direction.copy()
-        self.front_left = front_left.copy()
+        self._front_left = front_left.copy()
         width_vec = direction.get_orthogonal_vector(Directions.RIGHT, width)
         length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, length)
-        self.front_right = self.front_left.copy().add_vector(width_vec)
-        self.rear_left = self.front_left.copy().add_vector(length_vec)
-        self.rear_right = self.rear_left.copy().add_vector(width_vec)
+        self._front_right = self._front_left.copy().add_vector(width_vec)
+        self._rear_left = self._front_left.copy().add_vector(length_vec)
+        self._rear_right = self._rear_left.copy().add_vector(width_vec)
 
     @property
     def direction(self) -> Direction:
@@ -242,15 +242,31 @@ class Rectangle:
         # remember to calculate it everytime position changes
 
     @property
+    def front_left(self) -> Point:
+        return self._front_left.copy()
+
+    @property
+    def front_right(self) -> Point:
+        return self._front_right.copy()
+
+    @property
+    def rear_left(self) -> Point:
+        return self._rear_left.copy()
+
+    @property
+    def rear_right(self) -> Point:
+        return self._rear_right.copy()
+
+    @property
     def corners_list(self) -> List[Point]:
         """
         Get the list of corners coordinates
         """
         return [
-            self.rear_left.copy(),
-            self.rear_right.copy(),
-            self.front_right.copy(),
-            self.front_left.copy(),
+            self.rear_left,
+            self.rear_right,
+            self.front_right,
+            self.front_left,
         ]
 
     @property
@@ -259,9 +275,39 @@ class Rectangle:
         Get the center of rectangle
         """
         vector = Vector(self.rear_right, self.front_left).scale(0.5)
-        return self.front_left.copy().add_vector(vector)
+        return self.front_left.add_vector(vector)
 
-    # sth to make sure we can't destroy the rectangle by changing only some corners
+    def move_left_side(self, front_vector: Vector, rear_vector: Vector):
+        self._front_left.add_vector(front_vector)
+        self._rear_left.add_vector(rear_vector)
+        length_vector = Vector(self.front_left, self.rear_left).scale_to_len(
+            self.length
+        )
+        width_vector = length_vector.get_orthogonal_vector(Directions.RIGHT, self.width)
+        self._front_right = self.front_left.add_vector(width_vector)
+        self._rear_right = self.front_right.add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        self._rear_left = self.front_left.add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        self._direction = Direction(self.front_left, self.rear_left)
+
+    def move_right_side(self, front_vector: Vector, rear_vector: Vector):
+        self._front_right.add_vector(front_vector)
+        self._rear_right.add_vector(rear_vector)
+        length_vector = Vector(self.front_right, self.rear_right).scale_to_len(
+            self.length
+        )
+        width_vector = length_vector.get_orthogonal_vector(Directions.LEFT, self.width)
+        self._front_left = self.front_right.add_vector(width_vector)
+        self._rear_left = self.front_left.add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        self._rear_right = self.front_right.add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        self._direction = Direction(self.front_left, self.rear_left)
 
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class

@@ -31,6 +31,12 @@ class TestCar:
     def next_frame(self):
         self.c1.move()
 
+    def speed_up_front(self):
+        self.c1.speed_up_front()
+
+    def speed_up_reverse(self):
+        self.c1.speed_up_reverse()
+
 
 pygame.init()
 clock = pygame.time.Clock()
