@@ -122,5 +122,5 @@ class Car:
     def draw(self, screen):
         self.brand.draw(self.body, self.wheels_angle, screen)
 
-    def collides(self, obj):
+    def collides(self, obj: Rectangle):
         pass

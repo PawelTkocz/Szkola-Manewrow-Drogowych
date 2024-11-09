@@ -307,5 +307,8 @@ class Rectangle:
         )
         self._direction = Direction(self.front_left, self.rear_left)
 
+    def collides(self, obj: "Rectangle"):
+        pass
+
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class
