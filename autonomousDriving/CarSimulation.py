@@ -6,12 +6,12 @@ class CarSimulation(Car):
 
     def set_state(self, state: dict):
         self.velocity = state["velocity"]
-        self.wheels.direction = state["wheels"]
-        self.body._direction = state["body"]["direction"]
-        self.body._front_left = state["body"]["front_left"]
-        self.body._front_right = state["body"]["front_right"]
-        self.body._rear_left = state["body"]["rear_left"]
-        self.body._rear_right = state["body"]["rear_right"]
+        self.wheels.direction = state["wheels"].copy()
+        self.body._direction = state["body"]["direction"].copy()
+        self.body._front_left = state["body"]["front_left"].copy()
+        self.body._front_right = state["body"]["front_right"].copy()
+        self.body._rear_left = state["body"]["rear_left"].copy()
+        self.body._rear_right = state["body"]["rear_right"].copy()
 
     def get_state(self):
         return {

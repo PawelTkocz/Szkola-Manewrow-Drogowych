@@ -16,7 +16,7 @@ class TestAutonomusTurn:
     screen_width = 1400
 
     def __init__(self):
-        self.turn_points = [(400, 400), (800, 500), (1200, 400)]
+        self.turn_points = [(400, 800), (500, 800), (700, 500), (1200, 800)]
         x_points, y_points = zip(*self.turn_points)  # Separate x and y coordinates
 
         # Create a cubic spline that passes through the specified points
@@ -31,7 +31,7 @@ class TestAutonomusTurn:
         self.tree = KDTree(self.curve_points)
 
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        self.car = Car(BasicBrand(), Point(400, 400), velocity=0)
+        self.car = Car(BasicBrand(), Point(400, 800), velocity=0)
         self.background_drafter = TestBackgroundDrafter.TestBackgroundDrafter(
             self.screen_width, self.screen_height
         )
@@ -63,7 +63,7 @@ class TestAutonomusTurn:
         self.screen.blit(text, (10, 10))
 
     def next_frame(self):
-        self.autonomous_driving.simulate_move()
+        self.autonomous_driving.move()
 
 
 pygame.init()
@@ -79,4 +79,4 @@ while True:
     game.draw()
     game.next_frame()
     pygame.display.update()
-    clock.tick(50)
+    clock.tick(60)
