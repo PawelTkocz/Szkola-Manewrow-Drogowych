@@ -14,14 +14,15 @@ class BasicBrand(Brand):
     Class representing basic car brand
     """
 
-    _width: float = 100.0  # 200.0
-    _length: float = 180.0  # 360
+    _width: float = 50.0
+    _length_to_width_ratio = 1.8
+    _length: float = _width * _length_to_width_ratio
     _max_wheels_turn: float = math.pi / 4
     _wheels_turn_speed = 0.05
-    _max_velocity: float = 10.0
-    _max_acceleration: float = 0.1
-    _max_brake: float = 1.0
-    _resistance: float = 0.03
+    _max_velocity: float = _width / 10
+    _max_acceleration: float = _width * 0.001
+    _max_brake: float = _width * 0.002
+    _resistance: float = _width * 0.0003
 
     def __init__(self, color: str = "red"):
         """
