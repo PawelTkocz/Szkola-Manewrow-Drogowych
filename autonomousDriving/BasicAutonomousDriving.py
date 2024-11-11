@@ -7,12 +7,13 @@ from autonomousDriving.CarSimulation import CarSimulation
 from cars.Car import Car
 
 
+# zmiana planow
+# zamiast funkcji heurystycznej zrobic tak:
+# kierunek skretu definiujemy symulujac trzy sytuacje: lewo, prawo, bez skretu (z predkoscia obecna) i patrzymy gdzie odleglosc jest najmniejsza
+# znajac kierunek skretu trzeba jeszcze dobrac zmiane predkosci: rowniez symulujemy sytuacje: przyspiesz, bez zmian, hamuj. Przemiesc sie do przodu i sprawdz,
+# czy wykonujac n krokow postaci "skrec w opdowiednia strone i hamuj" jestes w stanie nie przekroczyc w żadnym kroku pewnego maksymalnego dystansu od krzywej.
+# Jesli tak to okej, jesli nie to rozwaz wolniejsza opcje.
 class BasicAutonomousDriving:
-
-    turn_options = [Directions.LEFT, Directions.FRONT, Directions.RIGHT]
-    turn_options_description = ["turn left", "no turn", "turn right"]
-    speed_options_description = ["brake", "speed front", "speed reverse"]
-
     def __init__(self, car: Car, curve_points):
         self.car = car
         self.curve_points = curve_points
@@ -20,118 +21,112 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(
             car.brand, car.front_left, car.direction, car.velocity
         )
-        self.wheels_modifications = dict(
-            map(
-                lambda car_data: (
-                    car_data[0],
-                    list(
-                        map(
-                            lambda direction: {
-                                "method": car_data[1].turn,
-                                "params": [direction],
-                            },
-                            self.turn_options,
-                        )
-                    ),
-                ),
-                [("real_car", self.car), ("simulation_car", self.car_simulation)],
-            )
-        )
-        self.speed_modifications = dict(
-            map(
-                lambda car_data: (
-                    car_data[0],
-                    [
-                        {"method": car_data[1].brake, "params": []},
-                        {"method": car_data[1].speed_up, "params": [Directions.FRONT]},
-                        {"method": car_data[1].speed_up, "params": [Directions.BACK]},
-                    ],
-                ),
-                [("real_car", self.car), ("simulation_car", self.car_simulation)],
-            )
-        )
+        self.max_distance_to_track = 10
+        self.steps_into_the_future = 1
+        self.wheels_modifications = {
+            "turn_left": {
+                "real_car_method": self.car.turn,
+                "simulation_car_method": self.car_simulation.turn,
+                "params": [Directions.LEFT],
+            },
+            "go_straight": {
+                "real_car_method": self.car.turn,
+                "simulation_car_method": self.car_simulation.turn,
+                "params": [Directions.FRONT],
+            },
+            "turn_right": {
+                "real_car_method": self.car.turn,
+                "simulation_car_method": self.car_simulation.turn,
+                "params": [Directions.RIGHT],
+            },
+        }
+        self.speed_modifications = {
+            "brake": {
+                "real_car_method": self.car.brake,
+                "simulation_car_method": self.car_simulation.brake,
+                "params": [],
+            },
+            "speed_front": {
+                "real_car_method": self.car.speed_up,
+                "simulation_car_method": self.car_simulation.speed_up,
+                "params": [Directions.FRONT],
+            },
+            "speed_reverse": {
+                "real_car_method": self.car.speed_up,
+                "simulation_car_method": self.car_simulation.speed_up,
+                "params": [Directions.BACK],
+            },
+        }
 
-    def apply_modifications(
-        self, car_name, wheels_modification_index, speed_modification_index
-    ):
-        wheels_modification = self.wheels_modifications[car_name][
-            wheels_modification_index
-        ]
-        wheels_modification["method"](*wheels_modification["params"])
-        speed_modification = self.speed_modifications[car_name][
-            speed_modification_index
-        ]
-        speed_modification["method"](*speed_modification["params"])
+    def find_best_wheels_modification(self):
+        min_distance = None
+        best_wheels_modification = None
+        for wheels_modification in self.wheels_modifications.values():
+            start_state = self.car_simulation.get_state()
+            wheels_modification["simulation_car_method"](*wheels_modification["params"])
+            self.car_simulation.move()
+            distance = self.find_distance(self.car_simulation)
+            if min_distance is None or distance < min_distance:
+                best_wheels_modification = wheels_modification
+                min_distance = distance
+            self.car_simulation.set_state(start_state)
+        return best_wheels_modification
+
+    def will_go_off_track(self):
+        start_state = self.car_simulation.get_state()
+        went_off_track = False
+        for _ in range(self.steps_into_the_future):
+            self.car_simulation.brake()
+            best_wheels_modification = self.find_best_wheels_modification()
+            best_wheels_modification["simulation_car_method"](
+                *best_wheels_modification["params"]
+            )
+            self.car_simulation.move()
+            if self.find_distance(self.car_simulation) > self.max_distance_to_track:
+                went_off_track = True
+                break
+            if self.car_simulation.velocity == 0:
+                break
+        self.car_simulation.set_state(start_state)
+        return went_off_track
+
+    def find_best_speed_modification(self, best_wheels_modification):
+        speed_modification_names = (
+            ["speed_front", "speed_reverse", "brake"]
+            if self.car_simulation.velocity > 0
+            else ["speed_reverse", "speed_front", "brake"]
+        )
+        for speed_modification_name in speed_modification_names:
+            speed_modification = self.speed_modifications[speed_modification_name]
+            start_state = self.car_simulation.get_state()
+            speed_modification["simulation_car_method"](*speed_modification["params"])
+            best_wheels_modification["simulation_car_method"](
+                *best_wheels_modification["params"]
+            )
+            self.car_simulation.move()
+            will_go_off_track = self.will_go_off_track()
+            self.car_simulation.set_state(start_state)
+            if not will_go_off_track:
+                return speed_modification
+        return self.speed_modifications["brake"]
 
     def move(self):
-        min_res = None
-        best_wheels_modification_index = None
-        best_speed_modification_index = None
-        for wheels_modification_index, wheels_modification in enumerate(
-            self.wheels_modifications["simulation_car"]
-        ):
-            start_state = self.car_simulation.get_state()
-            for speed_modification_index, speed_modification in enumerate(
-                self.speed_modifications["simulation_car"]
-            ):
-                wheels_modification["method"](*wheels_modification["params"])
-                speed_modification["method"](*speed_modification["params"])
-                self.car_simulation.move()
-                res = self.evaluate_situation(self.car_simulation)
-                if min_res is None or res < min_res:
-                    best_wheels_modification_index = wheels_modification_index
-                    best_speed_modification_index = speed_modification_index
-                    min_res = res
-                self.car_simulation.set_state(start_state)
-
-        if best_speed_modification_index != 1:
-            print(self.speed_options_description[best_speed_modification_index])
-
-        self.apply_modifications(
-            "real_car", best_wheels_modification_index, best_speed_modification_index
+        best_wheels_modification = self.find_best_wheels_modification()
+        best_speed_modification = self.find_best_speed_modification(
+            best_wheels_modification
         )
-        self.car.move()
 
-        self.apply_modifications(
-            "simulation_car",
-            best_wheels_modification_index,
-            best_speed_modification_index,
+        best_wheels_modification["simulation_car_method"](
+            *best_wheels_modification["params"]
+        )
+        best_speed_modification["simulation_car_method"](
+            *best_speed_modification["params"]
         )
         self.car_simulation.move()
+        best_wheels_modification["real_car_method"](*best_wheels_modification["params"])
+        best_speed_modification["real_car_method"](*best_speed_modification["params"])
+        self.car.move()
 
-    def evaluate_velocity_heuristic_points(self, car: Car):
-        v = car.velocity
-        max_v = car.max_velocity
-        value = v / max_v
-        # returned value in range [0, 10]
-        if value < 0.2:
-            return 10 - 30 * value  # [4, 10]
-        elif value < 0.7:  # [0.2, 0.7]
-            return 4 - 6 * (value - 0.2)  # [1, 4]
-        else:  # [0.7, 1]
-            return 1 - 10 / 3 * (value - 0.7)  # [0, 1]
-
-    def evaluate_distance_heuristic_points(self, car: Car):
+    def find_distance(self, car: Car):
         distance, _ = self.tree.query([car.front_left.x, car.front_left.y])
-        value = distance / car.width  # distance in car widths
-        if value < 0.1:  # less than 0.1 width
-            return 10 * value  # [0, 1]
-        elif value < 0.2:  # [0.1 widht, 0.2 width]
-            return 1 + 20 * (value - 0.1)  # [1, 3]
-        elif value < 0.5:  # [0.2 width, 0.5 widht]
-            return 3 + 60 * (value - 0.2)  # [3, 21]
-        elif value < 1:  # [0.5 width, 1 width]
-            return 21 + 150 * (value - 0.5)  # [21, 96]
-        else:  # more than 1 car width
-            return 96 + 500 * (value - 1)  # [96, inf]
-
-    def evaluate_situation(self, car: Car):
-        # jesli velocity jest jakas mala to moze nie przejmuj sie tak dystansem zeby zachecic do zwiekzenia v
-        distance_importance = 5
-        velocity_importance = 1
-        distance_points = self.evaluate_distance_heuristic_points(car)  # [0, inf]
-        velocity_points = self.evaluate_velocity_heuristic_points(car)  # [0, 10]
-        return (
-            distance_importance * distance_points
-            + velocity_importance * velocity_points
-        )
+        return distance
