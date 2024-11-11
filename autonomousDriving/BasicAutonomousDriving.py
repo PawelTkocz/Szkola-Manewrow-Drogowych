@@ -76,7 +76,7 @@ class BasicAutonomousDriving:
             ):
                 wheels_modification["method"](*wheels_modification["params"])
                 speed_modification["method"](*speed_modification["params"])
-                self.car_simulation.move()  # z jakiegos powodu w tym miejscu zmienia sie wartosc w start_state.body.front_left
+                self.car_simulation.move()
                 res = self.evaluate_situation(self.car_simulation)
                 if min_res is None or res < min_res:
                     best_wheels_modification_index = wheels_modification_index
@@ -84,18 +84,12 @@ class BasicAutonomousDriving:
                     min_res = res
                 self.car_simulation.set_state(start_state)
 
-        print(
-            self.turn_options_description[best_wheels_modification_index],
-            self.speed_options_description[best_speed_modification_index],
-            self.car_simulation.velocity,
-        )
+        if best_speed_modification_index != 1:
+            print(self.speed_options_description[best_speed_modification_index])
+
         self.apply_modifications(
             "real_car", best_wheels_modification_index, best_speed_modification_index
         )
-        # print(self.car.body.front_left.x, self.car.body.front_left.y)
-        # print(self.car.body.front_right.x, self.car.body.front_right.y)
-        # print(self.car.body.rear_left.x, self.car.body.rear_left.y)
-        # print(self.car.body.rear_right.x, self.car.body.rear_right.y)
         self.car.move()
 
         self.apply_modifications(
@@ -105,9 +99,39 @@ class BasicAutonomousDriving:
         )
         self.car_simulation.move()
 
-    def evaluate_situation(self, car: Car):
-        distance, index = self.tree.query([car.front_left.x, car.front_left.y])
-        # print(distance, car.front_left.x, car.front_left.y)
+    def evaluate_velocity_heuristic_points(self, car: Car):
+        v = car.velocity
+        max_v = car.max_velocity
+        value = v / max_v
+        # returned value in range [0, 10]
+        if value < 0.2:
+            return 10 - 30 * value  # [4, 10]
+        elif value < 0.7:  # [0.2, 0.7]
+            return 4 - 6 * (value - 0.2)  # [1, 4]
+        else:  # [0.7, 1]
+            return 1 - 10 / 3 * (value - 0.7)  # [0, 1]
 
-        velocity = (car.max_velocity - car.velocity) * 100
-        return distance * 50 + velocity
+    def evaluate_distance_heuristic_points(self, car: Car):
+        distance, _ = self.tree.query([car.front_left.x, car.front_left.y])
+        value = distance / car.width  # distance in car widths
+        if value < 0.1:  # less than 0.1 width
+            return 10 * value  # [0, 1]
+        elif value < 0.2:  # [0.1 widht, 0.2 width]
+            return 1 + 20 * (value - 0.1)  # [1, 3]
+        elif value < 0.5:  # [0.2 width, 0.5 widht]
+            return 3 + 60 * (value - 0.2)  # [3, 21]
+        elif value < 1:  # [0.5 width, 1 width]
+            return 21 + 150 * (value - 0.5)  # [21, 96]
+        else:  # more than 1 car width
+            return 96 + 500 * (value - 1)  # [96, inf]
+
+    def evaluate_situation(self, car: Car):
+        # jesli velocity jest jakas mala to moze nie przejmuj sie tak dystansem zeby zachecic do zwiekzenia v
+        distance_importance = 5
+        velocity_importance = 1
+        distance_points = self.evaluate_distance_heuristic_points(car)  # [0, inf]
+        velocity_points = self.evaluate_velocity_heuristic_points(car)  # [0, 10]
+        return (
+            distance_importance * distance_points
+            + velocity_importance * velocity_points
+        )

@@ -37,6 +37,7 @@ class TestAutonomusTurn:
         )
 
         self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
+        self.counter = 0
 
     def draw(self):
         self.background_drafter.draw(self.screen)
@@ -63,6 +64,8 @@ class TestAutonomusTurn:
         self.screen.blit(text, (10, 10))
 
     def next_frame(self):
+        print(self.counter)
+        self.counter += 1
         self.autonomous_driving.move()
 
 
