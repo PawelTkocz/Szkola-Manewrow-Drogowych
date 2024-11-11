@@ -10,6 +10,8 @@ from cars.Car import Car
 class BasicAutonomousDriving:
 
     turn_options = [Directions.LEFT, Directions.FRONT, Directions.RIGHT]
+    turn_options_description = ["turn left", "no turn", "turn right"]
+    speed_options_description = ["brake", "speed front", "speed reverse"]
 
     def __init__(self, car: Car, curve_points):
         self.car = car
@@ -82,8 +84,11 @@ class BasicAutonomousDriving:
                     min_res = res
                 self.car_simulation.set_state(start_state)
 
-        # print(best_wheels_modification_index, best_speed_modification_index)
-        best_wheels_modification_index = 1
+        print(
+            self.turn_options_description[best_wheels_modification_index],
+            self.speed_options_description[best_speed_modification_index],
+            self.car_simulation.velocity,
+        )
         self.apply_modifications(
             "real_car", best_wheels_modification_index, best_speed_modification_index
         )
@@ -104,7 +109,5 @@ class BasicAutonomousDriving:
         distance, index = self.tree.query([car.front_left.x, car.front_left.y])
         # print(distance, car.front_left.x, car.front_left.y)
 
-        velocity = (
-            0 if car.velocity != 0 else 100000
-        )  # wyglada jakby co klatke przyspieszal i hamowal
-        return distance + velocity
+        velocity = (car.max_velocity - car.velocity) * 100
+        return distance * 50 + velocity
