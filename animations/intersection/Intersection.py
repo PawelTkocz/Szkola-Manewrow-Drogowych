@@ -2,7 +2,7 @@ import math
 
 from Geometry import Directions, Point
 from animations.intersection.IntersectionDrafter import IntersectionDrafter
-from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT
+from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from autonomousDriving.BasicAutonomousDriving import BasicAutonomousDriving
 from cars.BasicBrand import BasicBrand
 from cars.Car import Car
@@ -13,35 +13,64 @@ from scipy.interpolate import CubicSpline
 from scipy.spatial import KDTree
 
 
+def cubic_bezier(t, p0, p1, p2, p3):
+    x = (
+        (1 - t) ** 3 * p0[0]
+        + 3 * (1 - t) ** 2 * t * p1[0]
+        + 3 * (1 - t) * t**2 * p2[0]
+        + t**3 * p3[0]
+    )
+    y = (
+        (1 - t) ** 3 * p0[1]
+        + 3 * (1 - t) ** 2 * t * p1[1]
+        + 3 * (1 - t) * t**2 * p2[1]
+        + t**3 * p3[1]
+    )
+    return x, y
+
+
+# if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
 class TestAutonomusTurn:
     screen_height = 800
     screen_width = 1400
 
     def __init__(self):
         # self.turn_points = [(200, 700), (300, 700), (500, 400), (850, 400), (1200, 400)]
-        self.turn_points = [(250, 500), (1200, 500)]
-        x_points, y_points = zip(*self.turn_points)  # Separate x and y coordinates
-
-        # Create a cubic spline that passes through the specified points
-        spline_x = np.linspace(
-            min(x_points), max(x_points), 500
-        )  # X values for smooth curve
-        spline = CubicSpline(x_points, y_points)  # Create the spline
-        spline_y = spline(spline_x)  # Evaluate Y values along the spline
-
-        # Convert spline points to integer coordinates for Pygame
-        self.curve_points = [(int(x), int(y)) for x, y in zip(spline_x, spline_y)]
+        margin = 30
+        self.turn_points = [
+            (SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
+            (4 * margin + SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
+            (
+                1 * margin + SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,
+                SCREEN_HEIGHT / 2 + 0 * margin,
+            ),
+            (
+                1 * margin + SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,
+                SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2,
+            ),
+        ]
+        p0, p1, p2, p3 = self.turn_points
+        t_values = np.linspace(0, 1, 100)
+        self.curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
+        for i in range(-300, SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2):
+            self.curve_points.append(
+                (SCREEN_WIDTH / 2 + ROAD_WIDTH / 4 + margin / 2, i)
+            )
+        print(self.curve_points)
         self.tree = KDTree(self.curve_points)
 
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         self.car = Car(
-            BasicBrand(), Point(250, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4), velocity=0
+            BasicBrand(),
+            Point(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4
+            ),
+            velocity=0,
         )
         self.background_drafter = IntersectionDrafter(
             self.screen_width, self.screen_height
         )
-
-        # self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
+        self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
         self.counter = 0
 
     def draw(self):
@@ -50,13 +79,12 @@ class TestAutonomusTurn:
 
         for point in self.turn_points:
             pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
-        for i in range(len(self.curve_points) - 1):
-            pygame.draw.line(
+        for i in range(len(self.curve_points)):
+            pygame.draw.circle(
                 self.screen,
                 (0, 255, 0),
-                self.curve_points[i],
-                self.curve_points[i + 1],
-                2,
+                (self.curve_points[i]),
+                5,
             )
 
         distance, index = self.tree.query(
@@ -70,8 +98,8 @@ class TestAutonomusTurn:
 
     def next_frame(self):
         self.counter += 1
-        # self.autonomous_driving.move()
-        self.car.move()
+        self.autonomous_driving.move()
+        # self.car.move()
 
     def speed_up_front(self):
         self.car.speed_up(Directions.FRONT)
