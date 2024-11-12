@@ -12,7 +12,7 @@ class Car:
     def __init__(
         self,
         brand: Brand,
-        front_left_position: Point,
+        front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
     ):
@@ -21,7 +21,9 @@ class Car:
         """
         self.brand = brand
         self.velocity = velocity
-        self.body = Rectangle(front_left_position, brand.width, brand.length, direction)
+        self.body = Rectangle(
+            front_middle_position, brand.width, brand.length, direction
+        )
         self.wheels = Wheels(self.brand.max_wheels_turn)
 
     @property

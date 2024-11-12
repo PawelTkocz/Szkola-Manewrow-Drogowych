@@ -212,12 +212,12 @@ class Rectangle:
     """
 
     def __init__(
-        self, front_left: Point, width: float, length: float, direction: Direction
+        self, front_middle: Point, width: float, length: float, direction: Direction
     ):
         """
         Initialize directed rectangle
 
-        :param front_left: position of front left point of the rectangle
+        :param front_middle: position of front middle point of the rectangle
         :param width: width of the rectangle (of front and rear sides)
         :param length: length of the rectangle (of left and right sides)
         :param direction: direction the rectangle is heading
@@ -226,13 +226,15 @@ class Rectangle:
         self.width = width
         self.length = length
         self._direction = direction.copy()
-        self._front_left = front_left.copy()
+        self._front_middle = front_middle.copy()
         width_vec = direction.get_orthogonal_vector(Directions.RIGHT, width)
         length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, length)
+        self._front_left = front_middle.copy().add_vector(
+            width_vec.copy().scale(0.5).get_negative_of_a_vector()
+        )
         self._front_right = self._front_left.copy().add_vector(width_vec)
         self._rear_left = self._front_left.copy().add_vector(length_vec)
         self._rear_right = self._rear_left.copy().add_vector(width_vec)
-        self._front_middle = self._front_left.copy().add_vector(width_vec.scale(0.5))
 
     @property
     def direction(self) -> Direction:
