@@ -23,7 +23,7 @@ class BasicAutonomousDriving:
             car.brand, car.front_left, car.direction, car.velocity
         )
         self.max_distance_to_track = 20
-        self.steps_into_the_future = 30
+        self.steps_into_the_future = 50
         self.wheels_modifications = {
             "turn_left": {
                 "real_car_method": self.car.turn,
@@ -158,5 +158,5 @@ class BasicAutonomousDriving:
         self.car.move()
 
     def find_distance(self, car: Car):
-        distance, _ = self.tree.query([car.front_left.x, car.front_left.y])
+        distance, _ = self.tree.query([car.front_middle.x, car.front_middle.y])
         return distance

@@ -25,6 +25,10 @@ class Car:
         self.wheels = Wheels(self.brand.max_wheels_turn)
 
     @property
+    def front_middle(self) -> Point:
+        return self.body.front_middle
+
+    @property
     def direction(self) -> Direction:
         return self.body.direction
 

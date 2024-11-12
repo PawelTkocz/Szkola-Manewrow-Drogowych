@@ -232,6 +232,7 @@ class Rectangle:
         self._front_right = self._front_left.copy().add_vector(width_vec)
         self._rear_left = self._front_left.copy().add_vector(length_vec)
         self._rear_right = self._rear_left.copy().add_vector(width_vec)
+        self._front_middle = self._front_left.copy().add_vector(width_vec.scale(0.5))
 
     @property
     def direction(self) -> Direction:
@@ -240,6 +241,10 @@ class Rectangle:
         """
         return self._direction.copy()
         # remember to calculate it everytime position changes
+
+    @property
+    def front_middle(self) -> Point:
+        return self._front_middle.copy()
 
     @property
     def front_left(self) -> Point:
@@ -291,6 +296,7 @@ class Rectangle:
             length_vector.get_negative_of_a_vector()
         )
         self._direction = Direction(self.front_left, self.rear_left)
+        self._front_middle = self.front_left.add_vector(width_vector.scale(0.5))
 
     def move_right_side(self, front_vector: Vector):
         self._front_right.add_vector(front_vector)
@@ -306,6 +312,7 @@ class Rectangle:
             length_vector.get_negative_of_a_vector()
         )
         self._direction = Direction(self.front_left, self.rear_left)
+        self._front_middle = self.front_right.add_vector(width_vector.scale(0.5))
 
     def collides(self, obj: "Rectangle"):
         pass

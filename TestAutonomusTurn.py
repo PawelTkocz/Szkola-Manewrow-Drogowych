@@ -31,7 +31,7 @@ class TestAutonomusTurn:
         self.tree = KDTree(self.curve_points)
 
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        self.car = Car(BasicBrand(), Point(400, 700), velocity=0)
+        self.car = Car(BasicBrand(), Point(400, 725), velocity=0)
         self.background_drafter = TestBackgroundDrafter.TestBackgroundDrafter(
             self.screen_width, self.screen_height
         )
@@ -55,7 +55,7 @@ class TestAutonomusTurn:
             )
 
         distance, index = self.tree.query(
-            [self.car.front_left.x, self.car.front_left.y]
+            [self.car.front_middle.x, self.car.front_middle.y]
         )
         closest_point = self.curve_points[index]
         pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
