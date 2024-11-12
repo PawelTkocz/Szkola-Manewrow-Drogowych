@@ -25,15 +25,15 @@ class BasicAutonomousDriving:
         self.max_distance_to_track = 20
         self.steps_into_the_future = 50
         self.wheels_modifications = {
-            "turn_left": {
-                "real_car_method": self.car.turn,
-                "simulation_car_method": self.car_simulation.turn,
-                "params": [Directions.LEFT],
-            },
             "go_straight": {
                 "real_car_method": self.car.turn,
                 "simulation_car_method": self.car_simulation.turn,
                 "params": [Directions.FRONT],
+            },
+            "turn_left": {
+                "real_car_method": self.car.turn,
+                "simulation_car_method": self.car_simulation.turn,
+                "params": [Directions.LEFT],
             },
             "turn_right": {
                 "real_car_method": self.car.turn,
