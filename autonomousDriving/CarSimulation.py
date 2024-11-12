@@ -23,5 +23,5 @@ class CarSimulation(Car):
                 "rear_left": self.rear_left,
                 "rear_right": self.rear_right,
             },
-            "wheels": self.wheels.direction,
+            "wheels": self.wheels.direction.copy(),
         }
