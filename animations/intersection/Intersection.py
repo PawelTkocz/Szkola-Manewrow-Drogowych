@@ -29,7 +29,7 @@ def cubic_bezier(t, p0, p1, p2, p3):
     return x, y
 
 
-def get_points():
+def get_points_left_turn():
     margin = 0
     track_points = [
         (x, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4)
@@ -57,6 +57,40 @@ def get_points():
     return turn_points, track_points
 
 
+def get_points_right_turn():
+    margin = 100
+    track_points = [
+        (x, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4)
+        for x in np.linspace(0, SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 - margin, 500)
+    ]
+    turn_points = [
+        (
+            SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 - margin,
+            SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4,
+        ),
+        (
+            SCREEN_WIDTH / 2 - ROAD_WIDTH * 3 / 8 + margin * 0.2,
+            SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4,
+        ),
+        (
+            SCREEN_WIDTH / 2 - ROAD_WIDTH / 4 + margin * 0.2,
+            SCREEN_HEIGHT / 2 + ROAD_WIDTH * 3 / 8,
+        ),
+        (
+            SCREEN_WIDTH / 2 - ROAD_WIDTH / 4 + margin * 0.2,
+            SCREEN_HEIGHT // 2 + ROAD_WIDTH // 2 + margin,
+        ),
+    ]
+    p0, p1, p2, p3 = turn_points
+    t_values = np.linspace(0, 1, 200)
+    curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
+    track_points.extend(curve_points)
+    t_values = np.linspace(0, margin, 200)
+    for i in range(SCREEN_HEIGHT // 2 + ROAD_WIDTH // 2 + margin, SCREEN_HEIGHT + 1000):
+        track_points.append((SCREEN_WIDTH / 2 - ROAD_WIDTH / 4 + 0.2 * margin, i))
+    return turn_points, track_points
+
+
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
 class TestAutonomusTurn:
     screen_height = 800
@@ -64,7 +98,7 @@ class TestAutonomusTurn:
 
     def __init__(self):
         # self.turn_points = [(200, 700), (300, 700), (500, 400), (850, 400), (1200, 400)]
-        self.turn_points, self.curve_points = get_points()
+        self.turn_points, self.curve_points = get_points_right_turn()
         self.tree = KDTree(self.curve_points)
 
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
@@ -83,15 +117,15 @@ class TestAutonomusTurn:
         self.background_drafter.draw(self.screen)
         self.car.draw(self.screen)
 
-        for i in range(len(self.curve_points)):
-            pygame.draw.circle(
-                self.screen,
-                (0, 255, 0),
-                (self.curve_points[i]),
-                5,
-            )
-        for point in self.turn_points:
-            pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
+        # for i in range(len(self.curve_points)):
+        #     pygame.draw.circle(
+        #         self.screen,
+        #         (0, 255, 0),
+        #         (self.curve_points[i]),
+        #         5,
+        #     )
+        # for point in self.turn_points:
+        #     pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
 
         distance, index = self.tree.query(
             [self.car.front_middle.x, self.car.front_middle.y]
