@@ -1,8 +1,10 @@
+import math
 import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.spatial import KDTree
 
 from Geometry import Directions, Rectangle
+from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT
 from autonomousDriving.CarSimulation import CarSimulation
 from cars.Car import Car
 from drawing.utils import tuples_list
@@ -15,14 +17,14 @@ from drawing.utils import tuples_list
 # czy wykonujac n krokow postaci "skrec w opdowiednia strone i hamuj" jestes w stanie nie przekroczyc w żadnym kroku pewnego maksymalnego dystansu od krzywej.
 # Jesli tak to okej, jesli nie to rozwaz wolniejsza opcje.
 class BasicAutonomousDriving:
-    def __init__(self, car: Car, curve_points):
+    def __init__(self, car: Car, curve_points: list[tuple[float, float]]):
         self.car = car
         self.curve_points = curve_points
         self.tree = KDTree(self.curve_points)
         self.car_simulation = CarSimulation(
             car.brand, car.front_middle, car.direction, car.velocity
         )
-        self.max_distance_to_track = 40
+        self.max_distance_to_track = 30
         self.steps_into_the_future = 30
         self.wheels_modifications = {
             "go_straight": {
@@ -67,6 +69,7 @@ class BasicAutonomousDriving:
             wheels_modification = self.wheels_modifications[wheels_modification_name]
             wheels_modification["simulation_car_method"](*wheels_modification["params"])
             self.car_simulation.move()
+            # distance = self.find_distance_heuristic(self.car_simulation)
             distance = self.find_distance(self.car_simulation)
             if prints:
                 print(wheels_modification_name, distance)
@@ -157,6 +160,18 @@ class BasicAutonomousDriving:
         best_wheels_modification["real_car_method"](*best_wheels_modification["params"])
         best_speed_modification["real_car_method"](*best_speed_modification["params"])
         self.car.move()
+
+    def find_distance_heuristic(self, car: Car):
+        point = car.front_middle.add_vector(
+            # car.direction.scale(car.velocity * car.velocity + 10)
+            car.direction.scale(0)
+        )
+        _, index = self.tree.query([point.x, point.y])
+        closest_point = self.curve_points[index]
+        x1, y1 = closest_point[0], closest_point[1]
+        # x2, y2 = car.front_middle.x, car.front_middle.y
+        x2, y2 = point.x, point.y
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
     def find_distance(self, car: Car):
         distance, _ = self.tree.query([car.front_middle.x, car.front_middle.y])
