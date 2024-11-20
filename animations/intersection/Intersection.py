@@ -200,7 +200,11 @@ class TestAutonomusTurn:
         pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
 
         _, index = self.tree.query([self.car.front_middle.x, self.car.front_middle.y])
-        goal_point_index = self.autonomous_driving.furthest_point_indexes_in_line[index]
+        goal_point_index = (
+            self.autonomous_driving.car_simulation.track.furthest_point_indexes_in_line[
+                index
+            ]
+        )
         pygame.draw.circle(
             self.screen, (200, 100, 0), self.curve_points[goal_point_index], 5
         )

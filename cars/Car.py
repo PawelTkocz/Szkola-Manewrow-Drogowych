@@ -5,6 +5,12 @@ from cars.Brand import Brand
 from cars.Wheels import Wheels
 
 
+class SpeedModifications(Enum):
+    SPEED_UP = 1
+    NO_CHANGE = 2
+    BRAKE = 3
+
+
 class CarParts(Enum):
     BUMPERS = 1  # obwod samochodu
     BODY = 2  # karoseria
@@ -123,6 +129,15 @@ class Car:
 
     def brake(self):
         self.slow_down(self.max_brake)
+
+    def apply_speed_modification(self, modification: SpeedModifications):
+        if modification == SpeedModifications.SPEED_UP:
+            direction = Directions.FRONT if self.velocity >= 0 else Directions.BACK
+            self.speed_up(direction)
+        elif modification == SpeedModifications.NO_CHANGE:
+            pass
+        elif modification == SpeedModifications.BRAKE:
+            self.brake()
 
     def move(self):
         if self.velocity == 0:
