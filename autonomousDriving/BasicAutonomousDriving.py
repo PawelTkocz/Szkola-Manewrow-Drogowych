@@ -167,6 +167,13 @@ class BasicAutonomousDriving:
             [self.car_simulation.front_middle.x, self.car_simulation.front_middle.y]
         )
         goal_point_index = self.furthest_point_indexes_in_line[index]
+        # if prints:
+        #     print(
+        #         self.curve_points[goal_point_index],
+        #         goal_point_index,
+        #         index,
+        #         len(self.curve_points),
+        #     )
         for wheels_modification_name in self.wheels_modifications:
             start_state = self.car_simulation.get_state()
             wheels_modification = self.wheels_modifications[wheels_modification_name]

@@ -141,8 +141,13 @@ def get_points_left_turn():
     curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
     track_points.extend(curve_points)
     t_values = np.linspace(0, margin, 200)
-    for i in range(-1000, SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2):
-        track_points.append((SCREEN_WIDTH / 2 + ROAD_WIDTH / 4 + 0 * margin, i))
+    for y in range(1, SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2 + 1000):
+        track_points.append(
+            (
+                SCREEN_WIDTH / 2 + ROAD_WIDTH / 4 + 0 * margin,
+                SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2 - y,
+            )
+        )
     return turn_points, track_points
 
 
