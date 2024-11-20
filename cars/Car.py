@@ -1,7 +1,19 @@
+from enum import Enum
 import math
 from Geometry import Direction, Directions, Point, Rectangle, Vector
 from cars.Brand import Brand
 from cars.Wheels import Wheels
+
+
+class CarParts(Enum):
+    BUMPERS = 1  # obwod samochodu
+    BODY = 2  # karoseria
+    FRONT_WHEELS = 3
+    FRONT_LIGHTS = 4
+    SIDE_MIRRORS = 5
+    FRONT_WINDOW = 6
+    SIDE_WINDOW = 7
+    BACK_WINDOW = 8
 
 
 class Car:

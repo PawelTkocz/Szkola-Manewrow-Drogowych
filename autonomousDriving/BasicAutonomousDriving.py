@@ -123,8 +123,8 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(
             car.brand, car.front_middle, car.direction, car.velocity
         )
-        self.max_distance_to_track = 100
-        self.steps_into_the_future = 30
+        self.max_distance_to_track = 50
+        self.steps_into_the_future = 340  # max speed / resistance
         self.wheels_modifications = {
             "go_straight": {
                 "real_car_method": self.car.turn,
@@ -198,6 +198,9 @@ class BasicAutonomousDriving:
         return best_wheels_modification
 
     def will_go_off_track(self):
+        """
+        Check if car will go off track if without hitting brakes or accelerator
+        """
         if (
             self.find_distance_to_track(self.car_simulation)
             > self.max_distance_to_track
@@ -206,7 +209,7 @@ class BasicAutonomousDriving:
         start_state = self.car_simulation.get_state()
         went_off_track = False
         for _ in range(self.steps_into_the_future):
-            self.car_simulation.brake()
+            # self.car_simulation.brake()
             best_wheels_modification_name = self.find_best_wheels_modification()
             best_wheels_modification = self.wheels_modifications[
                 best_wheels_modification_name
@@ -244,7 +247,6 @@ class BasicAutonomousDriving:
             )
             self.car_simulation.move()
             will_go_off_track = self.will_go_off_track()
-            # print(speed_modification_name, will_go_off_track)
             self.car_simulation.set_state(start_state)
             if not will_go_off_track:
                 return speed_modification_name

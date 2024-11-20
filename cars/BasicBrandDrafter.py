@@ -9,6 +9,12 @@ from drawing.utils import (
     tuples_list,
 )
 
+# remember to change:
+# each brand should specify the position of each car part
+# the car should also have same property with info about each part color
+# then, the clas CarDrafter could be initialized with Brand class and Coloristics info
+# and then draw the car based on this info
+
 
 class CarPartDrafter:
     """
