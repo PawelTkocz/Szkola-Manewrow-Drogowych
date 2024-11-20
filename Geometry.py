@@ -7,7 +7,9 @@ class Directions(Enum):
     RIGHT = 1
     LEFT = 2
     FRONT = 3
+    UP = 3
     BACK = 4
+    DOWN = 4
 
 
 class Point:
@@ -321,3 +323,15 @@ class Rectangle:
 
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class
+
+
+def calculate_line(p1, p2):
+    # ax + by + c = 0
+    a = p2[1] - p1[1]
+    b = p1[0] - p2[0]
+    c = p2[0] * p1[1] - p1[0] * p2[1]
+    return a, b, c
+
+
+def distance_of_point_to_line(p, a, b, c):
+    return abs(a * p[0] + b * p[1] + c) / math.sqrt(a**2 + b**2)

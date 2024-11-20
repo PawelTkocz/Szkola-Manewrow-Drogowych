@@ -120,9 +120,11 @@ class Car:
             self.velocity
         )
         if self.turn_direction == Directions.RIGHT:
-            self.body.move_right_side(front_movement_vector)
-        else:
             self.body.move_left_side(front_movement_vector)
+        else:
+            self.body.move_right_side(front_movement_vector)
+        # czemu zmiana z left na right i odwrotnie rozwiazuje problem z tym, ze jadac prosto
+        # zblizalismy sie wolniej do celu niz skrecajac
         self.slow_down(self.brand.resistance)
 
     def draw(self, screen):
