@@ -5,7 +5,11 @@ from animations.intersection.IntersectionDrafter import IntersectionDrafter
 from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from autonomousDriving.BasicAutonomousDriving import (
     BasicAutonomousDriving,
+    closest_to_track_turning_policy,
+    straight_lines_turning_policy,
 )
+from autonomousDriving.CarSimulation import CarSimulation
+from autonomousDriving.CarSimulation2 import CarSimulation2
 from cars.BasicBrand import BasicBrand
 from cars.Car import Car
 
@@ -160,24 +164,27 @@ def get_points_straight_track():
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
-class Intersection:
+class TestAutonomusTurn:
     screen_height = 800
     screen_width = 1400
 
     def __init__(self):
-        self.turn_points, self.curve_points = get_short_turn_points()
-        self.tree = KDTree(self.curve_points)
+        self.show_future = False
+        self.counter = 0
+        self.future_animation_started = False
+
+        self.turn_points, self.curve_points = get_points_left_turn()
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         self.car = Car(
             BasicBrand(),
             Point(50, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
             velocity=0,
         )
+        self.future_car_simulation = CarSimulation2(self.car, self.curve_points)
         self.background_drafter = IntersectionDrafter(
             self.screen_width, self.screen_height
         )
         self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
-        self.counter = 0
 
     def draw(self):
         self.background_drafter.draw(self.screen)
@@ -190,53 +197,66 @@ class Intersection:
                 (self.curve_points[i]),
                 1,
             )
-        for point in self.turn_points:
-            pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
 
-        distance, index = self.tree.query(
-            [self.car.front_middle.x, self.car.front_middle.y]
+        distance = self.autonomous_driving.car_simulation.find_distance_to_track()
+        index = (
+            self.autonomous_driving.car_simulation.find_index_of_closest_point_on_track()
         )
-        closest_point = self.curve_points[index]
-        pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
-
-        _, index = self.tree.query([self.car.front_middle.x, self.car.front_middle.y])
-        # goal_point_index = (
-        #     self.autonomous_driving.car_simulation.track.furthest_point_indexes_in_line[
-        #         index
-        #     ]
-        # )
-        # pygame.draw.circle(
-        #     self.screen, (200, 100, 0), self.curve_points[goal_point_index], 5
-        # )
+        goal_point = self.autonomous_driving.car_simulation.find_straight_line_end_point_on_track(
+            index
+        )
+        pygame.draw.circle(self.screen, (200, 100, 0), goal_point, 5)
 
         font = pygame.font.Font(None, 36)
         text = font.render(f"Distance to curve: {int(distance)}", True, (255, 255, 255))
         self.screen.blit(text, (10, 10))
 
     def next_frame(self):
-        self.counter += 1
-        self.autonomous_driving.move()
+        if self.show_future == False:
+            self.autonomous_driving.move()
+        else:
+            if self.future_animation_started:
+                turn_direction = closest_to_track_turning_policy(
+                    self.future_car_simulation
+                )
+                self.future_car_simulation.turn(turn_direction)
+                self.future_car_simulation.move()
+                self.future_car_simulation.draw(self.screen)
+                if self.future_car_simulation.velocity == 0:
+                    self.show_future = False
+                    self.future_animation_started = False
+
+                closest_point_on_track_index = (
+                    self.future_car_simulation.find_index_of_closest_point_on_track()
+                )
+                straight_line_end_point = (
+                    self.future_car_simulation.find_straight_line_end_point_on_track(
+                        closest_point_on_track_index
+                    )
+                )
+                distance = self.future_car_simulation.find_distance_to_point(
+                    straight_line_end_point
+                )
+                font = pygame.font.Font(None, 36)
+                text = font.render(
+                    f"Distance: {int(distance)} ({straight_line_end_point[0]}, {straight_line_end_point[1]})",
+                    True,
+                    (255, 255, 255),
+                )
+                self.screen.blit(text, (10, 10))
+
+            else:
+                self.show_future = True
+                self.future_car_simulation.set_state(
+                    self.autonomous_driving.car_simulation.get_state()
+                )
+                self.future_animation_started = True
         # self.car.move()
-
-    def speed_up_front(self):
-        self.car.speed_up(Directions.FRONT)
-
-    def speed_up_reverse(self):
-        self.car.speed_up(Directions.BACK)
-
-    def brake(self):
-        self.car.brake()
-
-    def turn_left(self):
-        self.car.turn(Directions.LEFT)
-
-    def turn_right(self):
-        self.car.turn(Directions.RIGHT)
 
 
 pygame.init()
 clock = pygame.time.Clock()
-game = Intersection()
+game = TestAutonomusTurn()
 
 while True:
     for event in pygame.event.get():
@@ -244,19 +264,16 @@ while True:
             pygame.quit()
             exit()
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        game.turn_left()
-    elif keys[pygame.K_RIGHT]:
-        game.turn_right()
-    if keys[pygame.K_UP]:
-        game.speed_up_front()
-    elif keys[pygame.K_SPACE]:
-        game.brake()
-    elif keys[pygame.K_DOWN]:
-        game.speed_up_reverse()
-
     game.draw()
-    game.next_frame()
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        game.next_frame()
+    elif keys[pygame.K_DOWN]:
+        # game.speed_up_reverse()
+        game.show_future = True
+        game.next_frame()
+
+    # game.next_frame()
     pygame.display.update()
     clock.tick(30)

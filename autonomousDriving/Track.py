@@ -12,9 +12,10 @@ class Track:
         self.track = track
         self.kd_tree = KDTree(track)
         self.max_distance_in_straight_line = max_distance_in_straight_line
-        self.furthest_point_indexes_in_line = (
-            self.calculate_furthest_point_indexes_in_line(max_distance_in_straight_line)
-        )
+        self.furthest_point_indexes_in_line = []
+        # (
+        #    self.calculate_furthest_point_indexes_in_line(max_distance_in_straight_line)
+        # )
 
     def calculate_furthest_point_index_in_line(self, start_index, max_distance):
         track_points_number = len(self.track)
@@ -48,7 +49,7 @@ class Track:
 
     def calculate_furthest_point_indexes_in_line(self, max_distance):
         res = []
-        jump = 2 * max_distance
+        jump = 10 * max_distance
         res.append(self.calculate_furthest_point_index_in_line(0, max_distance))
         cur_index = 0  # indeks ostatniego uzupelnionego
         while cur_index < len(self.track) - 1:

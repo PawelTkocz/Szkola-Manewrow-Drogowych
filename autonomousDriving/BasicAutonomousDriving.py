@@ -10,7 +10,24 @@ from cars.Car import Car, SpeedModifications
 from drawing.utils import tuples_list
 
 
-def basic_turning_policy(car_simulation: CarSimulation):
+def closest_to_track_turning_policy(car_simulation: CarSimulation):
+    min_distance = None
+    best_turn_direction = None
+
+    for turn_direction in [Directions.FRONT, Directions.LEFT, Directions.RIGHT]:
+        start_state = car_simulation.get_state()
+        car_simulation.turn(turn_direction)
+        car_simulation.move()
+        distance = car_simulation.find_distance_to_track()
+        if min_distance is None or distance < min_distance:
+            best_turn_direction = turn_direction
+            min_distance = distance
+        car_simulation.set_state(start_state)
+
+    return best_turn_direction
+
+
+def straight_lines_turning_policy(car_simulation: CarSimulation):
     min_distance = None
     best_turn_direction = None
 
@@ -37,9 +54,9 @@ class BasicAutonomousDriving:
         self.car = car
         self.track = track
         self.car_simulation = CarSimulation(car, track)
-        self.turning_policy = basic_turning_policy
-        self.max_distance_to_track = 50
-        self.max_steps_into_future = 100  # 340 max speed / resistance
+        self.turning_policy = closest_to_track_turning_policy
+        self.max_distance_to_track = 10
+        self.max_steps_into_future = 1  # 340 max speed / resistance
 
     def find_best_speed_modification(self):
         for speed_modification in [
@@ -52,7 +69,7 @@ class BasicAutonomousDriving:
             will_go_off_track = self.car_simulation.will_go_off_track(
                 self.max_distance_to_track,
                 self.max_steps_into_future,
-                basic_turning_policy,
+                self.turning_policy,
                 None,
             )
             self.car_simulation.set_state(start_state)
