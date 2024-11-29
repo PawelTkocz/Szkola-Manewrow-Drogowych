@@ -107,60 +107,86 @@ def get_straight_track(start_point: Point, end_point: Point):
     return list(zip(x_values, y_values))
 
 
-def get_short_turn_track(start_side: Directions, end_side: Directions):
-    margin = 180  # car length ?
+def get_turn_track(start_side: Directions, end_side: Directions, turn_points_vectors):
     start_intersection_point = intersection["start_roads"][start_side]["point"]
     end_intersection_point = intersection["end_roads"][end_side]["point"]
     start_intersection_direction = intersection["start_roads"][start_side]["direction"]
     end_intersection_direction = intersection["end_roads"][end_side]["direction"]
 
-    back_start_vector = start_intersection_direction.get_negative_of_a_vector()
+    road_screen_margin = 1000
+
     start_turn_point = start_intersection_point.copy().add_vector(
-        back_start_vector.copy().scale_to_len(margin)
+        turn_points_vectors[0]
+    )
+    start_track_length = (
+        SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2 + road_screen_margin
+        if start_side in vertical
+        else SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 + road_screen_margin
     )
     start_track_point = start_intersection_point.copy().add_vector(
-        back_start_vector.copy().scale_to_len(SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2 + 1000)
+        start_intersection_direction.get_negative_of_a_vector().scale_to_len(
+            start_track_length
+        )
     )
     start_track_line = get_straight_track(start_track_point, start_turn_point)
 
-    end_turn_point = (
-        end_intersection_point.copy()
-        .add_vector(end_intersection_direction.copy().scale_to_len(margin))
-        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    end_turn_point = end_intersection_point.copy().add_vector(turn_points_vectors[3])
+    end_track_length = (
+        SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2 + road_screen_margin
+        if end_side in vertical
+        else SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 + road_screen_margin
     )
-    end_track_point = (
-        end_intersection_point.copy()
-        .add_vector(
-            end_intersection_direction.copy().scale_to_len(
-                SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 + 1000
-            )
-        )
-        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    end_track_point = end_intersection_point.copy().add_vector(
+        end_intersection_direction.copy().scale_to_len(end_track_length)
     )
     end_track_line = get_straight_track(end_turn_point, end_track_point)
 
     second_turn_point = start_intersection_point.copy().add_vector(
-        start_intersection_direction.copy().scale_to_len(ROAD_WIDTH / 8 + margin * 0.2)
+        turn_points_vectors[1]
     )
-    third_turn_point = (
-        end_intersection_point.copy()
-        .add_vector(end_intersection_direction.copy().scale_to_len(-1 * ROAD_WIDTH / 8))
-        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
-    )
+    third_turn_point = end_intersection_point.copy().add_vector(turn_points_vectors[2])
     turn_points = [
         (start_turn_point.x, start_turn_point.y),
         (second_turn_point.x, second_turn_point.y),
         (third_turn_point.x, third_turn_point.y),
         (end_turn_point.x, end_turn_point.y),
     ]
-
     p0, p1, p2, p3 = turn_points
-    t_values = np.linspace(0, 1, 200)
-    curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
+    turn_track_points = [
+        cubic_bezier(t, p0, p1, p2, p3) for t in np.linspace(0, 1, 200)
+    ]
 
-    start_track_line.extend(curve_points)
+    start_track_line.extend(turn_track_points)
     start_track_line.extend(end_track_line)
     return turn_points, start_track_line
+
+
+def get_short_turn_track(start_side: Directions, end_side: Directions):
+    margin = 180  # car length ?
+    start_intersection_direction = intersection["start_roads"][start_side]["direction"]
+    end_intersection_direction = intersection["end_roads"][end_side]["direction"]
+
+    start_turn_vector = (
+        start_intersection_direction.get_negative_of_a_vector().scale_to_len(margin)
+    )
+    second_point_vector = start_intersection_direction.copy().scale_to_len(
+        ROAD_WIDTH / 8 + margin * 0.2
+    )
+    third_point_vector = (
+        end_intersection_direction.get_negative_of_a_vector()
+        .scale_to_len(ROAD_WIDTH / 8)
+        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    )
+    end_turn_vector = (
+        end_intersection_direction.copy()
+        .scale_to_len(margin)
+        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    )
+    return get_turn_track(
+        start_side,
+        end_side,
+        [start_turn_vector, second_point_vector, third_point_vector, end_turn_vector],
+    )
 
 
 def get_track_points(start_side: Directions, end_side: Directions):
@@ -214,14 +240,6 @@ def get_points_left_turn():
             )
         )
     return turn_points, track_points
-
-
-def get_points_straight_track():
-    track_points = [
-        (x, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4)
-        for x in np.linspace(0, SCREEN_WIDTH + 1000, 500)
-    ]
-    return [], track_points
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
