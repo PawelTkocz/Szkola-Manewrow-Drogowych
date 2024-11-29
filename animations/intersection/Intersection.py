@@ -1,6 +1,6 @@
 import math
 
-from Geometry import Directions, Point
+from Geometry import Direction, Directions, Point
 from animations.intersection.IntersectionDrafter import IntersectionDrafter
 from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from autonomousDriving.BasicAutonomousDriving import (
@@ -12,6 +12,64 @@ from cars.Car import Car
 import pygame
 import numpy as np
 from scipy.spatial import KDTree
+
+vertical = [Directions.UP, Directions.DOWN]
+horizontal = [Directions.LEFT, Directions.RIGHT]
+
+intersection = {
+    "start_roads": {
+        Directions.LEFT: {
+            "point": Point(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4
+            ),
+            "direction": Direction(Point(1, 0)),
+        },
+        Directions.UP: {
+            "point": Point(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2
+            ),
+            "direction": Direction(Point(0, 1)),
+        },
+        Directions.RIGHT: {
+            "point": Point(
+                SCREEN_WIDTH / 2 + ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 4
+            ),
+            "direction": Direction(Point(-1, 0)),
+        },
+        Directions.DOWN: {
+            "point": Point(
+                SCREEN_WIDTH / 2 + ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 2
+            ),
+            "direction": Direction(Point(0, -1)),
+        },
+    },
+    "end_roads": {
+        Directions.LEFT: {
+            "point": Point(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 4
+            ),
+            "direction": Direction(Point(-1, 0)),
+        },
+        Directions.UP: {
+            "point": Point(
+                SCREEN_WIDTH / 2 + ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2
+            ),
+            "direction": Direction(Point(0, -1)),
+        },
+        Directions.RIGHT: {
+            "point": Point(
+                SCREEN_WIDTH / 2 + ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4
+            ),
+            "direction": Direction(Point(1, 0)),
+        },
+        Directions.DOWN: {
+            "point": Point(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 2
+            ),
+            "direction": Direction(Point(0, 1)),
+        },
+    },
+}
 
 
 def cubic_bezier(t, p0, p1, p2, p3):
@@ -30,92 +88,99 @@ def cubic_bezier(t, p0, p1, p2, p3):
     return x, y
 
 
-def get_intersection_start_point(direction: Directions):
-    if direction == Directions.DOWN:
-        return Point(
-            SCREEN_WIDTH / 2 + ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 2
-        )
-    if direction == Directions.LEFT:
-        return Point(
-            SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4
-        )
-    if direction == Directions.UP:
-        return Point(
-            SCREEN_WIDTH / 2 - ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2
-        )
-    if direction == Directions.RIGHT:
-        return Point(
-            SCREEN_WIDTH / 2 + ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 4
-        )
-    return Point(0, 0)
+def get_horizontal_track(p: Point):
+    margin = 1000
+    return [(x, p.y) for x in range(-1 * margin, SCREEN_WIDTH + margin)]
 
 
-def get_intersection_end_point(direction: Directions):
-    if direction == Directions.DOWN:
-        return Point(
-            SCREEN_WIDTH / 2 - ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 2
-        )
-    if direction == Directions.LEFT:
-        return Point(
-            SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 4
-        )
-    if direction == Directions.UP:
-        return Point(
-            SCREEN_WIDTH / 2 + ROAD_WIDTH / 4, SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2
-        )
-    if direction == Directions.RIGHT:
-        return Point(
-            SCREEN_WIDTH / 2 + ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4
-        )
-    return Point(0, 0)
+def get_vertical_track(p: Point):
+    margin = 1000
+    return [(p.x, y) for y in range(-1 * margin, SCREEN_HEIGHT + margin)]
 
 
-def get_track_points(start_side: Directions, end_side: Directions):
-    pass
+def get_straight_track(start_point: Point, end_point: Point):
+    x1, y1 = start_point.x, start_point.y
+    x2, y2 = end_point.x, end_point.y
+    number_of_points = max(abs(x2 - x1), abs(y2 - y1)) + 1
+    x_values = np.linspace(x1, x2, int(number_of_points))
+    y_values = np.linspace(y1, y2, int(number_of_points))
+    return list(zip(x_values, y_values))
 
 
-def get_short_turn_points():
-    """
-    Points represent track of turn from left side of the intersection to down side
-    """
+def get_short_turn_track(start_side: Directions, end_side: Directions):
     margin = 180  # car length ?
-    start_intersection_point = get_intersection_start_point(Directions.LEFT)
-    end_intersection_point = get_intersection_end_point(Directions.DOWN)
-    start_track_line = [
-        (x, start_intersection_point.y)
-        for x in range(-500, int(start_intersection_point.x) - margin)
+    start_intersection_point = intersection["start_roads"][start_side]["point"]
+    end_intersection_point = intersection["end_roads"][end_side]["point"]
+    start_intersection_direction = intersection["start_roads"][start_side]["direction"]
+    end_intersection_direction = intersection["end_roads"][end_side]["direction"]
+
+    back_start_vector = start_intersection_direction.get_negative_of_a_vector()
+    start_turn_point = start_intersection_point.copy().add_vector(
+        back_start_vector.copy().scale_to_len(margin)
+    )
+    start_track_point = start_intersection_point.copy().add_vector(
+        back_start_vector.copy().scale_to_len(SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2 + 1000)
+    )
+    start_track_line = get_straight_track(start_track_point, start_turn_point)
+
+    end_turn_point = (
+        end_intersection_point.copy()
+        .add_vector(end_intersection_direction.copy().scale_to_len(margin))
+        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    )
+    end_track_point = (
+        end_intersection_point.copy()
+        .add_vector(
+            end_intersection_direction.copy().scale_to_len(
+                SCREEN_WIDTH / 2 - ROAD_WIDTH / 2 + 1000
+            )
+        )
+        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    )
+    end_track_line = get_straight_track(end_turn_point, end_track_point)
+
+    second_turn_point = start_intersection_point.copy().add_vector(
+        start_intersection_direction.copy().scale_to_len(ROAD_WIDTH / 8 + margin * 0.2)
+    )
+    third_turn_point = (
+        end_intersection_point.copy()
+        .add_vector(end_intersection_direction.copy().scale_to_len(-1 * ROAD_WIDTH / 8))
+        .add_vector(start_intersection_direction.copy().scale_to_len(0.2 * margin))
+    )
+    turn_points = [
+        (start_turn_point.x, start_turn_point.y),
+        (second_turn_point.x, second_turn_point.y),
+        (third_turn_point.x, third_turn_point.y),
+        (end_turn_point.x, end_turn_point.y),
     ]
 
-    turn_points = [
-        (
-            start_intersection_point.x - margin,
-            start_intersection_point.y,
-        ),
-        (
-            end_intersection_point.x - ROAD_WIDTH / 8 + margin * 0.2,
-            start_intersection_point.y,
-        ),
-        (
-            end_intersection_point.x + margin * 0.2,
-            start_intersection_point.y + ROAD_WIDTH / 8,
-        ),
-        (
-            end_intersection_point.x + margin * 0.2,
-            end_intersection_point.y + margin,
-        ),
-    ]
-    # print(turn_points)
     p0, p1, p2, p3 = turn_points
     t_values = np.linspace(0, 1, 200)
     curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
-    end_track_line = [
-        (end_intersection_point.x + margin * 0.2, y)
-        for y in range(int(end_intersection_point.y) + margin, SCREEN_HEIGHT + 500)
-    ]
+
     start_track_line.extend(curve_points)
     start_track_line.extend(end_track_line)
     return turn_points, start_track_line
-    # to get other turns i can rotate start_track_line over middle of screen
+
+
+def get_track_points(start_side: Directions, end_side: Directions):
+    if start_side in vertical and end_side in vertical:
+        return get_vertical_track(intersection["start_roads"][start_side]["point"])
+    if start_side in horizontal and end_side in horizontal:
+        return get_horizontal_track(intersection["start_roads"][start_side]["point"])
+
+    directions = [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]
+    start_index = directions.index(start_side)
+    end_index = directions.index(end_side)
+    diff = (end_index - start_index) % 4
+    if diff == 1:
+        # left turn
+        pass
+    if diff == 3:
+        # right turn
+        pass
+
+    return []
 
 
 def get_points_left_turn():
@@ -165,7 +230,9 @@ class Intersection:
     screen_width = 1400
 
     def __init__(self):
-        self.turn_points, self.curve_points = get_short_turn_points()
+        self.turn_points, self.curve_points = get_short_turn_track(
+            Directions.LEFT, Directions.DOWN
+        )
         self.tree = KDTree(self.curve_points)
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         self.car = Car(
