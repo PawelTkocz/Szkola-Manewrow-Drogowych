@@ -230,65 +230,90 @@ def get_track_points(start_side: Directions, end_side: Directions):
     return []
 
 
+def prepare_car_ride(
+    start_side: Directions, end_side: Directions, distance_to_intersection
+):
+    start_intersection_point = intersection["start_roads"][start_side]["point"]
+    start_intersection_direction = intersection["start_roads"][start_side]["direction"]
+    start_position = start_intersection_point.copy().add_vector(
+        start_intersection_direction.get_negative_of_a_vector().scale_to_len(
+            distance_to_intersection
+        )
+    )
+    _, track_points = get_track_points(start_side, end_side)
+    return (
+        start_position,
+        start_intersection_direction,
+        track_points,
+    )
+
+
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
 class Intersection:
     screen_height = 800
     screen_width = 1400
 
     def __init__(self):
-        self.turn_points, self.curve_points = get_track_points(
-            Directions.LEFT, Directions.RIGHT
-        )
-        self.tree = KDTree(self.curve_points)
+        directions = [Directions.LEFT, Directions.UP, Directions.RIGHT, Directions.DOWN]
+        self.cars = []
+        self.autonomous_drivings = []
+        for start in directions:
+            for end in directions:
+                if start == end:
+                    continue
+                start_position, direction, track_points = prepare_car_ride(
+                    start, end, 1000
+                )
+                car = Car(BasicBrand(), start_position, direction)
+                self.cars.append(car)
+                autonomous_driving = BasicAutonomousDriving(car, track_points)
+                self.autonomous_drivings.append(autonomous_driving)
+
+        # self.turn_points, self.curve_points = get_track_points(
+        #     Directions.LEFT, Directions.RIGHT
+        # )
+        # self.tree = KDTree(self.curve_points)
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-        self.car = Car(
-            BasicBrand(),
-            Point(50, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
-            velocity=0,
-        )
+        # self.car = Car(
+        #     BasicBrand(),
+        #     Point(50, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
+        #     velocity=0,
+        # )
         self.background_drafter = IntersectionDrafter(
             self.screen_width, self.screen_height
         )
-        self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
+        # self.autonomous_driving = BasicAutonomousDriving(self.car, self.curve_points)
         self.counter = 0
 
     def draw(self):
         self.background_drafter.draw(self.screen)
-        self.car.draw(self.screen)
+        for car in self.cars:
+            car.draw(self.screen)
 
-        for i in range(len(self.curve_points)):
-            pygame.draw.circle(
-                self.screen,
-                (0, 255, 0),
-                (self.curve_points[i]),
-                1,
-            )
-        for point in self.turn_points:
-            pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
+        # for i in range(len(self.curve_points)):
+        #     pygame.draw.circle(
+        #         self.screen,
+        #         (0, 255, 0),
+        #         (self.curve_points[i]),
+        #         1,
+        #     )
+        # for point in self.turn_points:
+        #     pygame.draw.circle(self.screen, (255, 0, 0), point, 5)
 
-        distance, index = self.tree.query(
-            [self.car.front_middle.x, self.car.front_middle.y]
-        )
-        closest_point = self.curve_points[index]
-        pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
-
-        _, index = self.tree.query([self.car.front_middle.x, self.car.front_middle.y])
-        # goal_point_index = (
-        #     self.autonomous_driving.car_simulation.track.furthest_point_indexes_in_line[
-        #         index
-        #     ]
+        # distance, index = self.tree.query(
+        #     [self.car.front_middle.x, self.car.front_middle.y]
         # )
-        # pygame.draw.circle(
-        #     self.screen, (200, 100, 0), self.curve_points[goal_point_index], 5
-        # )
+        # closest_point = self.curve_points[index]
+        # pygame.draw.circle(self.screen, (0, 0, 255), closest_point, 5)
 
-        font = pygame.font.Font(None, 36)
-        text = font.render(f"Distance to curve: {int(distance)}", True, (255, 255, 255))
-        self.screen.blit(text, (10, 10))
+        # font = pygame.font.Font(None, 36)
+        # text = font.render(f"Distance to curve: {int(distance)}", True, (255, 255, 255))
+        # self.screen.blit(text, (10, 10))
 
     def next_frame(self):
         self.counter += 1
-        self.autonomous_driving.move()
+        for autonomous_driving in self.autonomous_drivings:
+            autonomous_driving.move()
         # self.car.move()
 
     def speed_up_front(self):
