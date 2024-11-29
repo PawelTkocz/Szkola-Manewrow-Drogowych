@@ -1,6 +1,6 @@
 import math
 
-from Geometry import Direction, Directions, Point
+from Geometry import Direction, Directions, Point, Vector
 from animations.intersection.IntersectionDrafter import IntersectionDrafter
 from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from autonomousDriving.BasicAutonomousDriving import (
@@ -189,57 +189,45 @@ def get_short_turn_track(start_side: Directions, end_side: Directions):
     )
 
 
+def get_long_turn_track(start_side: Directions, end_side: Directions):
+    start_intersection_direction = intersection["start_roads"][start_side]["direction"]
+    end_intersection_direction = intersection["end_roads"][end_side]["direction"]
+
+    start_turn_vector = Vector(Point(0, 0))
+    second_point_vector = start_intersection_direction.copy().scale_to_len(
+        ROAD_WIDTH / 2
+    )
+    third_point_vector = (
+        end_intersection_direction.get_negative_of_a_vector().scale_to_len(
+            ROAD_WIDTH / 2
+        )
+    )
+    end_turn_vector = Vector(Point(0, 0))
+    return get_turn_track(
+        start_side,
+        end_side,
+        [start_turn_vector, second_point_vector, third_point_vector, end_turn_vector],
+    )
+
+
 def get_track_points(start_side: Directions, end_side: Directions):
     if start_side in vertical and end_side in vertical:
-        return get_vertical_track(intersection["start_roads"][start_side]["point"])
+        return [], get_vertical_track(intersection["start_roads"][start_side]["point"])
     if start_side in horizontal and end_side in horizontal:
-        return get_horizontal_track(intersection["start_roads"][start_side]["point"])
+        return [], get_horizontal_track(
+            intersection["start_roads"][start_side]["point"]
+        )
 
     directions = [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]
     start_index = directions.index(start_side)
     end_index = directions.index(end_side)
     diff = (end_index - start_index) % 4
     if diff == 1:
-        # left turn
-        pass
+        return get_long_turn_track(start_side, end_side)
     if diff == 3:
-        # right turn
-        pass
+        return get_short_turn_track(start_side, end_side)
 
     return []
-
-
-def get_points_left_turn():
-    margin = 0
-    track_points = [
-        (x, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4)
-        for x in np.linspace(0, SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, 500)
-    ]
-    turn_points = [
-        (SCREEN_WIDTH / 2 - ROAD_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
-        (2 * margin + SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + ROAD_WIDTH / 4),
-        (
-            1 * margin + SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,
-            SCREEN_HEIGHT / 2 + 0 * margin,
-        ),
-        (
-            1 * margin + SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,
-            SCREEN_HEIGHT / 2 - ROAD_WIDTH / 2,
-        ),
-    ]
-    p0, p1, p2, p3 = turn_points
-    t_values = np.linspace(0, 1, 200)
-    curve_points = [cubic_bezier(t, p0, p1, p2, p3) for t in t_values]
-    track_points.extend(curve_points)
-    t_values = np.linspace(0, margin, 200)
-    for y in range(1, SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2 + 1000):
-        track_points.append(
-            (
-                SCREEN_WIDTH / 2 + ROAD_WIDTH / 4 + 0 * margin,
-                SCREEN_HEIGHT // 2 - ROAD_WIDTH // 2 - y,
-            )
-        )
-    return turn_points, track_points
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
@@ -248,8 +236,8 @@ class Intersection:
     screen_width = 1400
 
     def __init__(self):
-        self.turn_points, self.curve_points = get_short_turn_track(
-            Directions.LEFT, Directions.DOWN
+        self.turn_points, self.curve_points = get_track_points(
+            Directions.LEFT, Directions.RIGHT
         )
         self.tree = KDTree(self.curve_points)
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
