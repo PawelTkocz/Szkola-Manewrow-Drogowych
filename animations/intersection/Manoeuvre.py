@@ -11,5 +11,8 @@ class Manoeuvre:
         self.phases = phases
         self.current_phase_index = 0
 
-    def move(self, car: Car, other_cars: list[Car]):
-        self.phases[self.current_phase_index].move(car, other_cars)
+    def current_track(self):
+        return self.phases[self.current_phase_index].track
+
+    def current_non_preference_zone(self):
+        return self.phases[self.current_phase_index].non_preperence_zone

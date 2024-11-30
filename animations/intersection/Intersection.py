@@ -1,7 +1,10 @@
 import math
 
-from Geometry import Directions
+from Geometry import Direction, Directions, Point, Rectangle
+from animations.intersection.IntersectionManoeuvre import IntersectionManoeuvre
+from animations.intersection.Manoeuvre import Manoeuvre
 from animations.intersection.StreetIntersection import StreetIntersection
+from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 from autonomousDriving.BasicAutonomousDriving import (
     BasicAutonomousDriving,
 )
@@ -18,43 +21,58 @@ class Intersection:
 
     def __init__(self):
         self.street_intersection = StreetIntersection()
-        self.cars = []
-        self.autonomous_drivings = []
 
         start_position, direction, track_points = (
             self.street_intersection.prepare_car_ride(
                 Directions.DOWN, Directions.UP, 700
             )
         )
-        # self.autonomous_driving = BasicAutonomousDriving(self.car, Manoeuvre(...))
-        # self.autonomous_driving.move(other_cars)
-        self.cars.append(Car(BasicBrand(), start_position, direction))
-        self.autonomous_drivings.append(
-            BasicAutonomousDriving(self.cars[-1], track_points)
+        self.intersection_manoeuvre1 = Manoeuvre(
+            [
+                IntersectionManoeuvre(
+                    track_points,
+                    Rectangle(
+                        Point(
+                            SCREEN_WIDTH / 2,
+                            SCREEN_HEIGHT - (SCREEN_HEIGHT - ROAD_WIDTH) / 2,
+                        ),
+                        ROAD_WIDTH,
+                        ROAD_WIDTH,
+                        Direction(Point(0, 1)),
+                    ),
+                )
+            ]
         )
+        self.car1 = Car(BasicBrand(), start_position, direction)
+        self.autonomous_driving1 = BasicAutonomousDriving(
+            self.car1, self.intersection_manoeuvre1
+        )
+
         start_position2, direction2, track_points2 = (
             self.street_intersection.prepare_car_ride(
                 Directions.LEFT, Directions.RIGHT, 700
             )
         )
-        self.cars.append(Car(BasicBrand(), start_position2, direction2))
-        self.autonomous_drivings.append(
-            BasicAutonomousDriving(self.cars[-1], track_points2)
+        self.intersection_manoeuvre2 = Manoeuvre(
+            [IntersectionManoeuvre(track_points2, None)]
+        )
+        self.car2 = Car(BasicBrand(), start_position2, direction2)
+        self.autonomous_driving2 = BasicAutonomousDriving(
+            self.car2, self.intersection_manoeuvre2
         )
 
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
-
         self.counter = 0
 
     def draw(self):
         self.street_intersection.draw(self.screen)
-        for car in self.cars:
-            car.draw(self.screen)
+        self.car1.draw(self.screen)
+        self.car2.draw(self.screen)
 
     def next_frame(self):
         self.counter += 1
-        for autonomous_driving in self.autonomous_drivings:
-            autonomous_driving.move([])
+        self.autonomous_driving1.move([])
+        self.autonomous_driving2.move([])
 
 
 pygame.init()

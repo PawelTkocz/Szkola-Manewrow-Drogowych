@@ -8,8 +8,8 @@ class IntersectionManoeuvre(ManoeuvrePhase):
     Class representing one phase of a manoeuvre
     """
 
-    def __init__(self, track: Track):
-        super().__init__(track)
+    def __init__(self, track: Track, non_preference_zone):
+        super().__init__(track, non_preference_zone)
 
     def move(self, car: Car, other_cars: list[Car]):
         # cars_with_preference = get_cars_with_preference(self.car, cars)

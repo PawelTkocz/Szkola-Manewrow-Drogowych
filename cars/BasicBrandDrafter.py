@@ -1,12 +1,10 @@
-from typing import List
 from pygame import Surface
 import pygame
-from Geometry import Directions, Point, Rectangle, Vector
+from Geometry import Directions, Point, Rectangle, Vector, tuples_list
 from drawing.utils import (
     PartRelativePosition,
     get_corners_center,
     get_symmetrical_shape,
-    tuples_list,
 )
 
 # remember to change:
@@ -24,12 +22,12 @@ class CarPartDrafter:
     def __init__(
         self,
         color: str,
-        corners_positions: List[PartRelativePosition],
+        corners_positions: list[PartRelativePosition],
     ):
         self.color = color
         self.corners_positions = corners_positions
 
-    def get_current_corners_positions(self, body: Rectangle) -> List[Point]:
+    def get_current_corners_positions(self, body: Rectangle) -> list[Point]:
         corners = []
         length_vector = body.direction.get_negative_of_a_vector()
         width_vector = body.direction.get_orthogonal_vector(Directions.RIGHT)
@@ -55,7 +53,7 @@ class CarPartDrafter:
 class WheelDrafter(CarPartDrafter):
     def __init__(
         self,
-        corners_positions: List[PartRelativePosition],
+        corners_positions: list[PartRelativePosition],
         color,
     ):
         super().__init__(color, corners_positions)

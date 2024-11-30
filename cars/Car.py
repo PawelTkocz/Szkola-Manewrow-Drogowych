@@ -158,4 +158,6 @@ class Car:
         self.brand.draw(self.body, self.wheels_angle, screen)
 
     def collides(self, obj: Rectangle):
-        pass
+        if obj is not None:
+            return self.body.collides(obj)
+        return False

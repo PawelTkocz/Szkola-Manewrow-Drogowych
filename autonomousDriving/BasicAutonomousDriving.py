@@ -4,10 +4,10 @@ from scipy.interpolate import CubicSpline
 from scipy.spatial import KDTree
 
 from Geometry import Directions, Rectangle, calculate_line, distance_of_point_to_line
+from animations.intersection.Manoeuvre import Manoeuvre
 from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT
 from autonomousDriving.CarSimulation import CarSimulation
 from cars.Car import Car, SpeedModifications
-from drawing.utils import tuples_list
 
 
 def closest_to_track_turning_policy(car_simulation: CarSimulation):
@@ -50,10 +50,10 @@ def straight_lines_turning_policy(car_simulation: CarSimulation):
 
 
 class BasicAutonomousDriving:
-    def __init__(self, car: Car, track: list[tuple[float, float]]):
+    def __init__(self, car: Car, manoeuvre: Manoeuvre):
         self.car = car
-        self.track = track
-        self.car_simulation = CarSimulation(car, track)
+        self.manoeuvre = manoeuvre
+        self.car_simulation = CarSimulation(car, self.manoeuvre.current_track())
         self.turning_policy = closest_to_track_turning_policy
         self.max_distance_to_track = 10
         self.max_steps_into_future = 1  # 340 max speed / resistance
@@ -82,8 +82,6 @@ class BasicAutonomousDriving:
         # ich wspolrzedne corners zaczynaja sie roznic na ostatnich cyfrach po przecinku (np 10) wiec byc moze warto kopiowac a
         # nie zakladac ze zawsze beda rowne
 
-        # self.manoeuvre.move(self.car)
-
         best_turn_direction = self.turning_policy(self.car_simulation)
         best_speed_modification = self.find_best_speed_modification()
 
@@ -94,3 +92,10 @@ class BasicAutonomousDriving:
         self.car.turn(best_turn_direction)
         self.car.apply_speed_modification(best_speed_modification)
         self.car.move()
+        non_preference_zone = self.manoeuvre.current_non_preference_zone()
+
+        if self.car.collides(non_preference_zone):
+            print(self.car.front_left.x, self.car.front_left.y)
+
+    def move2(self, cars: list[Car]):
+        non_preference_zone = self.manoeuvre.current_non_preference_zone()

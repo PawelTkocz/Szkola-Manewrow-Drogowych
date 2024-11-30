@@ -1,6 +1,7 @@
 from enum import Enum
 import math
-from typing import List
+
+import numpy as np
 
 
 class Directions(Enum):
@@ -267,7 +268,7 @@ class Rectangle:
         return self._rear_right.copy()
 
     @property
-    def corners_list(self) -> List[Point]:
+    def corners_list(self) -> list[Point]:
         """
         Get the list of corners coordinates
         """
@@ -318,8 +319,20 @@ class Rectangle:
         self._direction = Direction(self.front_left, self.rear_left)
         self._front_middle = self.front_right.add_vector(width_vector.scale(0.5))
 
-    def collides(self, obj: "Rectangle"):
-        pass
+    def is_point_inside(self, p: Point):
+        point = np.array([p.x, p.y])
+        rect = np.array(tuples_list(self.corners_list))
+        vectors = [rect[(i + 1) % 4] - rect[i] for i in range(4)]
+        point_vectors = [point - rect[i] for i in range(4)]
+        cross_products = [np.cross(v, pv) for v, pv in zip(vectors, point_vectors)]
+        return all(cp >= 0 for cp in cross_products) or all(
+            cp <= 0 for cp in cross_products
+        )
+
+    def collides(self, rec: "Rectangle"):
+        return any(self.is_point_inside(p) for p in rec.corners_list) or any(
+            rec.is_point_inside(p) for p in self.corners_list
+        )
 
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class
@@ -335,3 +348,10 @@ def calculate_line(p1, p2):
 
 def distance_of_point_to_line(p, a, b, c):
     return abs(a * p[0] + b * p[1] + c) / math.sqrt(a**2 + b**2)
+
+
+def tuples_list(point_list: list[Point]):
+    """
+    Convert list of points to list of tuples
+    """
+    return [(p.x, p.y) for p in point_list]

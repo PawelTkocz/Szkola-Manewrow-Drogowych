@@ -1,5 +1,3 @@
-from typing import List
-
 import pygame
 from Geometry import Rectangle
 from animations.constants import LINES_COLOR, PAVEMENT_COLOR, STREET_COLOR
