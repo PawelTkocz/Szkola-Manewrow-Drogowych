@@ -26,26 +26,11 @@ class CarSimulation(Car):
         self.body._rear_left = state["body"]["rear_left"].copy()
         self.body._rear_right = state["body"]["rear_right"].copy()
 
-    def get_state(self):
-        return {
-            "velocity": self.velocity,
-            "body": {
-                "direction": self.direction,
-                "front_middle": self.front_middle,
-                "front_left": self.front_left,
-                "front_right": self.front_right,
-                "rear_left": self.rear_left,
-                "rear_right": self.rear_right,
-            },
-            "wheels": self.wheels.direction.copy(),
-        }
-
     def will_go_off_track(
         self,
         max_distance_to_track: float,
         max_steps_into_future: int,
         turning_policy,
-        speed_modification_policy,  # maybe add in the future
     ):
         """
         Check if car will go off track
@@ -77,6 +62,26 @@ class CarSimulation(Car):
             self.brake()
             self.move()
             if self.collides(obj):
+                collides = True
+                break
+            if self.velocity == 0:
+                break
+        self.set_state(start_state)
+        return collides
+
+    def will_violate_the_right_of_way(
+        self, turning_policy, non_preference_zone: Rectangle, cars: Car
+    ):
+        if self.collides(cars.body):
+            return True
+        start_state = self.get_state()
+        collides = False
+        while self.collides(non_preference_zone):
+            turn_direction = turning_policy(self)  # better pass state instead of self
+            self.turn(turn_direction)
+            # self.brake()
+            self.move()
+            if self.collides(cars.body):
                 collides = True
                 break
             if self.velocity == 0:

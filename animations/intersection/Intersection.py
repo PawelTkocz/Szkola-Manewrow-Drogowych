@@ -13,7 +13,7 @@ from cars.Car import Car, SpeedModifications
 
 import pygame
 
-read_movement_from_file = True
+read_movement_from_file = False
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts

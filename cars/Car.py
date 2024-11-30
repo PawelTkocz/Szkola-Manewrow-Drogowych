@@ -161,3 +161,17 @@ class Car:
         if obj is not None:
             return self.body.collides(obj)
         return False
+
+    def get_state(self):
+        return {
+            "velocity": self.velocity,
+            "body": {
+                "direction": self.direction,
+                "front_middle": self.front_middle,
+                "front_left": self.front_left,
+                "front_right": self.front_right,
+                "rear_left": self.rear_left,
+                "rear_right": self.rear_right,
+            },
+            "wheels": self.wheels.direction.copy(),
+        }
