@@ -77,10 +77,13 @@ class BasicAutonomousDriving:
                 return speed_modification
         return SpeedModifications.BRAKE
 
-    def move(self):
+    def move(self, cars: list[Car]):
         # z jakiegos powodu po jakims czasie zastosowywanie analogicznych zmian w predkosci i skrecaniu dla car i car_simulation
         # ich wspolrzedne corners zaczynaja sie roznic na ostatnich cyfrach po przecinku (np 10) wiec byc moze warto kopiowac a
         # nie zakladac ze zawsze beda rowne
+
+        # self.manoeuvre.move(self.car)
+
         best_turn_direction = self.turning_policy(self.car_simulation)
         best_speed_modification = self.find_best_speed_modification()
 
