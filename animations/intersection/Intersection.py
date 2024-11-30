@@ -1,6 +1,6 @@
 import math
 
-from Geometry import Direction, Directions, Point, Rectangle
+from Geometry import Direction, Directions, Point, Rectangle, tuples_list
 from animations.intersection.IntersectionManoeuvre import IntersectionManoeuvre
 from animations.intersection.Manoeuvre import Manoeuvre
 from animations.intersection.StreetIntersection import StreetIntersection
@@ -76,7 +76,11 @@ class Intersection:
 
     def draw(self):
         self.street_intersection.draw(self.screen)
+        # e = self.car1.body.enlarge_rectangle(2)
+        # pygame.draw.polygon(self.screen, "purple", tuples_list(e.corners_list))
         self.car1.draw(self.screen)
+        # e = self.car2.body.enlarge_rectangle(2)
+        # pygame.draw.polygon(self.screen, "pink", tuples_list(e.corners_list))
         self.car2.draw(self.screen)
 
     def next_frame(self):
@@ -93,8 +97,10 @@ class Intersection:
             )
             self.counter += 1
         else:
-            self.movement_history1.append(self.autonomous_driving1.move([]))
-            self.movement_history2.append(self.autonomous_driving2.move([]))
+            self.movement_history1.append(self.autonomous_driving1.move(None))
+            self.movement_history2.append(
+                self.autonomous_driving2.move(self.autonomous_driving1.car_simulation)
+            )
 
     def save_cars_movement(self):
         file1 = "car1.txt"

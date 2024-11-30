@@ -334,6 +334,14 @@ class Rectangle:
             rec.is_point_inside(p) for p in self.corners_list
         )
 
+    def enlarge_rectangle(self, v):
+        return Rectangle(
+            self.center.add_vector(self.direction.scale_to_len(self.length / 2 * v)),
+            self.width * v,
+            self.length * v,
+            self.direction,
+        )
+
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class
 

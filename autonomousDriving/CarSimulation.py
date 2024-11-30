@@ -70,23 +70,38 @@ class CarSimulation(Car):
         return collides
 
     def will_violate_the_right_of_way(
-        self, turning_policy, non_preference_zone: Rectangle, cars: Car
+        self,
+        turning_policy,
+        speed_policy,
+        non_preference_zone: Rectangle,
+        cars: "CarSimulation",
     ):
-        if self.collides(cars.body):
+        if self.body.enlarge_rectangle(2).collides(cars.body.enlarge_rectangle(2)):
             return True
-        start_state = self.get_state()
+        self_start_state = self.get_state()
+        other_car_start_state = cars.get_state()
         collides = False
+
         while self.collides(non_preference_zone):
             turn_direction = turning_policy(self)  # better pass state instead of self
+            speed_modification = speed_policy(self)
             self.turn(turn_direction)
-            # self.brake()
+            self.apply_speed_modification(speed_modification)
             self.move()
-            if self.collides(cars.body):
+
+            turn_direction2 = turning_policy(cars)  # better pass state instead of self
+            speed_modification2 = speed_policy(cars)
+            cars.turn(turn_direction2)
+            cars.apply_speed_modification(speed_modification2)
+            cars.move()
+
+            if self.body.enlarge_rectangle(2).collides(cars.body.enlarge_rectangle(2)):
                 collides = True
                 break
             if self.velocity == 0:
                 break
-        self.set_state(start_state)
+        self.set_state(self_start_state)
+        cars.set_state(other_car_start_state)
         return collides
 
     def find_distance_to_point(self, point: tuple[float, float]):

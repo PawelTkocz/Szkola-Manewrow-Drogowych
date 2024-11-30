@@ -67,6 +67,46 @@ def dont_speed_up_if_will_go_off_track(
     return SpeedModifications.BRAKE
 
 
+def hold_to_track_with_preference(
+    car_simulation: CarSimulation,
+    max_distance_to_track,
+    max_steps_into_future,
+    turning_policy,
+    simulation_speed_policy,
+    non_preference_zone,
+    cars: "CarSimulation",
+):
+    for speed_modification in [
+        SpeedModifications.SPEED_UP,
+        SpeedModifications.NO_CHANGE,
+    ]:
+        start_state = car_simulation.get_state()
+        car_simulation.apply_speed_modification(speed_modification)
+        car_simulation.move()
+        will_go_off_track = car_simulation.will_go_off_track(
+            max_distance_to_track,
+            1,
+            turning_policy,
+        )
+        will_collide = car_simulation.will_collide(
+            max_steps_into_future,
+            turning_policy,
+            non_preference_zone,
+        )
+        car_simulation.set_state(start_state)
+        if not will_go_off_track and not will_collide:
+            return speed_modification
+        if will_go_off_track:
+            continue
+        # will collide
+        # check if you can escape non preference zone without collisions
+        if cars is None or not car_simulation.will_violate_the_right_of_way(
+            turning_policy, simulation_speed_policy, non_preference_zone, cars
+        ):
+            return speed_modification
+    return SpeedModifications.BRAKE
+
+
 class BasicAutonomousDriving:
     def __init__(self, car: Car, manoeuvre: Manoeuvre):
         self.car = car
@@ -74,47 +114,29 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(car, self.manoeuvre.current_track())
         self.turning_policy = closest_to_track_turning_policy
         self.max_distance_to_track = 10
-        self.max_steps_into_future = 50  # 340 max speed / resistance
-        self.speed_policy = lambda car_simulation: dont_speed_up_if_will_go_off_track(
-            car_simulation, self.max_distance_to_track, 1, self.turning_policy
+        self.max_steps_into_future = 100  # 340 max speed / resistance
+        self.simulation_speed_policy = (
+            lambda car_simulation: dont_speed_up_if_will_go_off_track(
+                car_simulation, self.max_distance_to_track, 1, self.turning_policy
+            )
+        )
+        self.speed_policy = lambda car_simulation, cars: hold_to_track_with_preference(
+            car_simulation,
+            self.max_distance_to_track,
+            self.max_steps_into_future,
+            self.turning_policy,
+            self.simulation_speed_policy,
+            self.manoeuvre.current_non_preference_zone(),
+            cars,
         )
 
-    # def find_best_speed_modification(self):
-    #     for speed_modification in [
-    #         SpeedModifications.SPEED_UP,
-    #         SpeedModifications.NO_CHANGE,
-    #     ]:
-    #         start_state = self.car_simulation.get_state()
-    #         self.car_simulation.apply_speed_modification(speed_modification)
-    #         self.car_simulation.move()
-    #         will_go_off_track = self.car_simulation.will_go_off_track(
-    #             self.max_distance_to_track,
-    #             1,
-    #             self.turning_policy,
-    #         )
-    #         will_collide = self.car_simulation.will_collide(
-    #             self.max_steps_into_future,
-    #             self.turning_policy,
-    #             self.manoeuvre.current_non_preference_zone(),
-    #         )
-    #         self.car_simulation.set_state(start_state)
-    #         if not will_go_off_track and not will_collide:
-    #             return speed_modification
-    #         if will_go_off_track:
-    #             continue
-    #         # will collide
-    #         # check if you can escape non preference zone without collisions
-
-    #     return SpeedModifications.BRAKE
-
-    def move(self, cars: list[Car]):
+    def move(self, cars: CarSimulation):
         # z jakiegos powodu po jakims czasie zastosowywanie analogicznych zmian w predkosci i skrecaniu dla car i car_simulation
         # ich wspolrzedne corners zaczynaja sie roznic na ostatnich cyfrach po przecinku (np 10) wiec byc moze warto kopiowac a
         # nie zakladac ze zawsze beda rowne
 
         best_turn_direction = self.turning_policy(self.car_simulation)
-        # best_speed_modification = self.find_best_speed_modification()
-        best_speed_modification = self.speed_policy(self.car_simulation)
+        best_speed_modification = self.speed_policy(self.car_simulation, cars)
         self.apply_best_changes(best_turn_direction, best_speed_modification)
         return best_turn_direction, best_speed_modification
 
