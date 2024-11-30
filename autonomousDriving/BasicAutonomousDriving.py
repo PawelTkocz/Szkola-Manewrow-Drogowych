@@ -1,11 +1,5 @@
-import math
-import numpy as np
-from scipy.interpolate import CubicSpline
-from scipy.spatial import KDTree
-
 from Geometry import Directions, Rectangle, calculate_line, distance_of_point_to_line
 from animations.intersection.Manoeuvre import Manoeuvre
-from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT
 from autonomousDriving.CarSimulation import CarSimulation
 from cars.Car import Car, SpeedModifications
 
@@ -56,7 +50,7 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(car, self.manoeuvre.current_track())
         self.turning_policy = closest_to_track_turning_policy
         self.max_distance_to_track = 10
-        self.max_steps_into_future = 1  # 340 max speed / resistance
+        self.max_steps_into_future = 50  # 340 max speed / resistance
 
     def find_best_speed_modification(self):
         for speed_modification in [
@@ -68,12 +62,17 @@ class BasicAutonomousDriving:
             self.car_simulation.move()
             will_go_off_track = self.car_simulation.will_go_off_track(
                 self.max_distance_to_track,
-                self.max_steps_into_future,
+                1,
                 self.turning_policy,
                 None,
             )
+            will_collide = self.car_simulation.will_collide(
+                self.max_steps_into_future,
+                self.turning_policy,
+                self.manoeuvre.current_non_preference_zone(),
+            )
             self.car_simulation.set_state(start_state)
-            if not will_go_off_track:
+            if not will_go_off_track and not will_collide:
                 return speed_modification
         return SpeedModifications.BRAKE
 
@@ -84,18 +83,16 @@ class BasicAutonomousDriving:
 
         best_turn_direction = self.turning_policy(self.car_simulation)
         best_speed_modification = self.find_best_speed_modification()
+        self.apply_best_changes(best_turn_direction, best_speed_modification)
+        return best_turn_direction, best_speed_modification
 
-        self.car_simulation.turn(best_turn_direction)
-        self.car_simulation.apply_speed_modification(best_speed_modification)
+    def apply_best_changes(
+        self, turn_direction: Directions, speed_modification: SpeedModifications
+    ):
+        self.car_simulation.turn(turn_direction)
+        self.car_simulation.apply_speed_modification(speed_modification)
         self.car_simulation.move()
 
-        self.car.turn(best_turn_direction)
-        self.car.apply_speed_modification(best_speed_modification)
+        self.car.turn(turn_direction)
+        self.car.apply_speed_modification(speed_modification)
         self.car.move()
-        non_preference_zone = self.manoeuvre.current_non_preference_zone()
-
-        if self.car.collides(non_preference_zone):
-            print(self.car.front_left.x, self.car.front_left.y)
-
-    def move2(self, cars: list[Car]):
-        non_preference_zone = self.manoeuvre.current_non_preference_zone()

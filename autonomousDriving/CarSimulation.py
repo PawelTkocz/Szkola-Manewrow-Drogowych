@@ -1,4 +1,5 @@
 import math
+from Geometry import Rectangle
 from autonomousDriving.Track import Track
 from cars.Car import Car
 
@@ -64,6 +65,24 @@ class CarSimulation(Car):
                 break
         self.set_state(start_state)
         return went_off_track
+
+    def will_collide(self, max_steps_into_future: int, turning_policy, obj: Rectangle):
+        if self.collides(obj):
+            return True
+        start_state = self.get_state()
+        collides = False
+        for _ in range(max_steps_into_future):
+            turn_direction = turning_policy(self)  # better pass state instead of self
+            self.turn(turn_direction)
+            self.brake()
+            self.move()
+            if self.collides(obj):
+                collides = True
+                break
+            if self.velocity == 0:
+                break
+        self.set_state(start_state)
+        return collides
 
     def find_distance_to_point(self, point: tuple[float, float]):
         x1, y1 = point[0], point[1]
