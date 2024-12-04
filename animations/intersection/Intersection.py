@@ -13,7 +13,7 @@ from cars.Car import Car, SpeedModifications
 
 import pygame
 
-read_movement_from_file = False
+read_movement_from_file = True
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
@@ -59,7 +59,7 @@ class Intersection:
                             SCREEN_HEIGHT - (SCREEN_HEIGHT - ROAD_WIDTH) / 2,
                         ),
                         ROAD_WIDTH,
-                        ROAD_WIDTH,
+                        ROAD_WIDTH / 2,
                         Direction(Point(0, 1)),
                     ),
                 )

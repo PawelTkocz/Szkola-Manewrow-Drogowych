@@ -76,18 +76,21 @@ class CarSimulation(Car):
         non_preference_zone: Rectangle,
         cars: "CarSimulation",
     ):
-        if self.body.enlarge_rectangle(2).collides(cars.body.enlarge_rectangle(1)):
+        if self.body.collides(non_preference_zone) and cars.body.collides(
+            non_preference_zone
+        ):
             return True
         self_start_state = self.get_state()
         other_car_start_state = cars.get_state()
         collides = False
         cnt = 0
+        entered_non_preference_zone = False
         while True:  # trzeba naprawic
             cnt += 1
             turn_direction = turning_policy(self)  # better pass state instead of self
-            # speed_modification = speed_policy(self)
+            speed_modification = speed_policy(self)
             self.turn(turn_direction)
-            # self.apply_speed_modification(speed_modification)
+            self.apply_speed_modification(speed_modification)
             self.move()
 
             turn_direction2 = turning_policy(cars)  # better pass state instead of self
@@ -96,10 +99,14 @@ class CarSimulation(Car):
             cars.apply_speed_modification(speed_modification2)
             cars.move()
 
-            if self.body.enlarge_rectangle(2).collides(cars.body.enlarge_rectangle(1)):
+            if self.body.collides(non_preference_zone) and cars.body.collides(
+                non_preference_zone
+            ):
                 collides = True
                 break
-            if self.velocity == 0:
+            if self.body.collides(non_preference_zone):
+                entered_non_preference_zone = True
+            elif entered_non_preference_zone:
                 break
         self.set_state(self_start_state)
         cars.set_state(other_car_start_state)
