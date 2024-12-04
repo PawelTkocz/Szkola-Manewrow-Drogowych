@@ -3,6 +3,7 @@ import math
 from pygame import Surface
 
 from Geometry import Rectangle
+from animations.intersection.constants import CAR_WIDTH
 from cars.BasicBrandDrafter import BasicBrandDrafter
 from cars.Brand import Brand
 
@@ -14,7 +15,7 @@ class BasicBrand(Brand):
     Class representing basic car brand
     """
 
-    _width: float = 100.0
+    _width: float = CAR_WIDTH
     _length_to_width_ratio = 1.8
     _length: float = _width * _length_to_width_ratio
     _max_wheels_turn: float = math.pi / 4

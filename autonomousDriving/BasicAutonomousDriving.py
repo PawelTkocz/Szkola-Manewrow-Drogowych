@@ -100,6 +100,9 @@ def hold_to_track_with_preference(
             continue
         # will collide
         # check if you can escape non preference zone without collisions
+        # return SpeedModifications.BRAKE
+        # return SpeedModifications.NO_CHANGE
+        # to juz jest po set_state(start_state) wiec dla wszystkich speed mod wynik ten sam
         if cars is None or not car_simulation.will_violate_the_right_of_way(
             turning_policy, simulation_speed_policy, non_preference_zone, cars
         ):
@@ -114,7 +117,7 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(car, self.manoeuvre.current_track())
         self.turning_policy = closest_to_track_turning_policy
         self.max_distance_to_track = 10
-        self.max_steps_into_future = 100  # 340 max speed / resistance
+        self.max_steps_into_future = 30  # 340 max speed / resistance
         self.simulation_speed_policy = (
             lambda car_simulation: dont_speed_up_if_will_go_off_track(
                 car_simulation, self.max_distance_to_track, 1, self.turning_policy
