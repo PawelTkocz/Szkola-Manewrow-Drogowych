@@ -74,14 +74,14 @@ class CarSimulation(Car):
         turning_policy,
         speed_policy,
         non_preference_zone: Rectangle,
-        cars: "CarSimulation",
+        cars: list["CarSimulation"],
     ):
-        if self.body.collides(non_preference_zone) and cars.body.collides(
-            non_preference_zone
+        if self.body.collides(non_preference_zone) and any(
+            car.body.collides(non_preference_zone) for car in cars
         ):
             return True
         self_start_state = self.get_state()
-        other_car_start_state = cars.get_state()
+        cars_state = [car.get_state() for car in cars]
         collides = False
         cnt = 0
         entered_non_preference_zone = False
@@ -93,14 +93,17 @@ class CarSimulation(Car):
             self.apply_speed_modification(speed_modification)
             self.move()
 
-            turn_direction2 = turning_policy(cars)  # better pass state instead of self
-            speed_modification2 = speed_policy(cars)
-            cars.turn(turn_direction2)
-            cars.apply_speed_modification(speed_modification2)
-            cars.move()
+            for car in cars:
+                turn_direction = turning_policy(
+                    car
+                )  # better pass state instead of self
+                speed_modification = speed_policy(car)
+                car.turn(turn_direction)
+                car.apply_speed_modification(speed_modification)
+                car.move()
 
-            if self.body.collides(non_preference_zone) and cars.body.collides(
-                non_preference_zone
+            if self.body.collides(non_preference_zone) and any(
+                car.body.collides(non_preference_zone) for car in cars
             ):
                 collides = True
                 break
@@ -109,7 +112,8 @@ class CarSimulation(Car):
             elif entered_non_preference_zone:
                 break
         self.set_state(self_start_state)
-        cars.set_state(other_car_start_state)
+        for index, car in enumerate(cars):
+            car.set_state(cars_state[index])
         return collides
 
     def find_distance_to_point(self, point: tuple[float, float]):

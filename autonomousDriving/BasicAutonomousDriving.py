@@ -74,7 +74,7 @@ def hold_to_track_with_preference(
     turning_policy,
     simulation_speed_policy,
     non_preference_zone,
-    cars: "CarSimulation",
+    cars: list["CarSimulation"],
 ):
     for speed_modification in [
         SpeedModifications.SPEED_UP,
@@ -103,7 +103,7 @@ def hold_to_track_with_preference(
         # return SpeedModifications.BRAKE
         # return SpeedModifications.NO_CHANGE
         # to juz jest po set_state(start_state) wiec dla wszystkich speed mod wynik ten sam
-        if cars is None or not car_simulation.will_violate_the_right_of_way(
+        if len(cars) == 0 or not car_simulation.will_violate_the_right_of_way(
             turning_policy, simulation_speed_policy, non_preference_zone, cars
         ):
             return speed_modification
@@ -117,7 +117,7 @@ class BasicAutonomousDriving:
         self.car_simulation = CarSimulation(car, self.manoeuvre.current_track())
         self.turning_policy = closest_to_track_turning_policy
         self.max_distance_to_track = 10
-        self.max_steps_into_future = 30  # 340 max speed / resistance
+        self.max_steps_into_future = 40  # 340 max speed / resistance
         self.simulation_speed_policy = (
             lambda car_simulation: dont_speed_up_if_will_go_off_track(
                 car_simulation, self.max_distance_to_track, 1, self.turning_policy
@@ -133,7 +133,7 @@ class BasicAutonomousDriving:
             cars,
         )
 
-    def move(self, cars: CarSimulation):
+    def move(self, cars: list[CarSimulation]):
         # z jakiegos powodu po jakims czasie zastosowywanie analogicznych zmian w predkosci i skrecaniu dla car i car_simulation
         # ich wspolrzedne corners zaczynaja sie roznic na ostatnich cyfrach po przecinku (np 10) wiec byc moze warto kopiowac a
         # nie zakladac ze zawsze beda rowne
