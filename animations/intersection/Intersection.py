@@ -1,6 +1,7 @@
 import math
 
 from Geometry import Direction, Directions, Point, Rectangle, tuples_list
+from animations.constants import SAVED_CAR_MOVEMENT_DIRECTORY
 from animations.intersection.IntersectionManoeuvre import IntersectionManoeuvre
 from animations.intersection.Manoeuvre import Manoeuvre
 from animations.intersection.StreetIntersection import StreetIntersection
@@ -10,12 +11,15 @@ from autonomousDriving.BasicAutonomousDriving import (
 )
 from cars.BasicBrand import BasicBrand
 from cars.Car import Car, SpeedModifications
+import os
 
 import pygame
 
 
 # if it will still be lagging i can do sth like computation of max velocities for each point on the line before the animation starts
 class Intersection:
+    saved_car_movement_directory = "Intersection"
+
     def __init__(self, read_movement_from_file: bool, directory_name: str):
         self.cars = []
         self.preferences = []
@@ -56,8 +60,22 @@ class Intersection:
 
     def save_cars_movement(self):
         for index in range(len(self.cars)):
-            file_name = f"car{index+1}.txt"
-            with open(file_name, "w") as file:
+            if not os.path.exists(SAVED_CAR_MOVEMENT_DIRECTORY):
+                os.makedirs(SAVED_CAR_MOVEMENT_DIRECTORY)
+            intersection_directory = os.path.join(
+                SAVED_CAR_MOVEMENT_DIRECTORY, self.saved_car_movement_directory
+            )
+            if not os.path.exists(intersection_directory):
+                os.makedirs(intersection_directory)
+            intersection_manoeuvre_directory = os.path.join(
+                intersection_directory, self.directory_name
+            )
+            if not os.path.exists(intersection_manoeuvre_directory):
+                os.makedirs(intersection_manoeuvre_directory)
+            file_path = os.path.join(
+                intersection_manoeuvre_directory, f"car{index+1}.txt"
+            )
+            with open(file_path, "w") as file:
                 for mod in self.movement_histories[index]:
                     file.write(f"{mod[0].name} {mod[1].name}\n")
 
@@ -86,5 +104,11 @@ class Intersection:
         self.autonomous_drivings.append(autonomous_driving)
         self.preferences.append(preferences)
         if self.read_movement_from_file:
-            with open(f"car{len(self.cars)}.txt", "r") as file:
+            file_path = os.path.join(
+                SAVED_CAR_MOVEMENT_DIRECTORY,
+                self.saved_car_movement_directory,
+                self.directory_name,
+                f"car{len(self.cars)}.txt",
+            )
+            with open(file_path, "r") as file:
                 self.steps.append([tuple(line.split()) for line in file])
