@@ -173,8 +173,10 @@ class StreetIntersection:
         start_track_line.extend(end_track_line)
         return turn_points, start_track_line
 
-    def get_short_turn_track(self, start_side: Directions, end_side: Directions):
-        margin = 180  # car length ?
+    def get_short_turn_track(
+        self, start_side: Directions, end_side: Directions, car_length: float
+    ):
+        margin = car_length
         start_intersection_direction = self.intersection["start_roads"][start_side][
             "direction"
         ]
@@ -238,7 +240,9 @@ class StreetIntersection:
             ],
         )
 
-    def get_track_points(self, start_side: Directions, end_side: Directions):
+    def get_track_points(
+        self, start_side: Directions, end_side: Directions, car_length: float
+    ):
         if start_side in vertical and end_side in vertical:
             return [], self.get_vertical_track(
                 self.intersection["start_roads"][start_side]["point"]
@@ -255,12 +259,16 @@ class StreetIntersection:
         if diff == 1:
             return self.get_long_turn_track(start_side, end_side)
         if diff == 3:
-            return self.get_short_turn_track(start_side, end_side)
+            return self.get_short_turn_track(start_side, end_side, car_length)
 
         return []
 
     def prepare_car_ride(
-        self, start_side: Directions, end_side: Directions, distance_to_intersection
+        self,
+        start_side: Directions,
+        end_side: Directions,
+        distance_to_intersection,
+        car_length: float,
     ):
         start_intersection_point = self.intersection["start_roads"][start_side]["point"]
         start_intersection_direction = self.intersection["start_roads"][start_side][
@@ -271,7 +279,7 @@ class StreetIntersection:
                 distance_to_intersection
             )
         )
-        _, track_points = self.get_track_points(start_side, end_side)
+        _, track_points = self.get_track_points(start_side, end_side, car_length)
         return (
             start_position,
             start_intersection_direction,

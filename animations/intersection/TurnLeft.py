@@ -13,11 +13,11 @@ read_movement_from_file = True
 class IntersectionTurnRight:
     def __init__(self):
         self.intersection = Intersection(read_movement_from_file, "turn_right")
-        self.intersection.add_car(Directions.RIGHT, Directions.DOWN, 700, None, [])
+        self.intersection.add_car(Directions.RIGHT, Directions.UP, 700, None, [])
         self.intersection.add_car(
             Directions.DOWN,
             Directions.UP,
-            1200,
+            1000,
             Rectangle(
                 Point(
                     SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,

@@ -69,12 +69,13 @@ class Intersection:
         non_preference_zone: Rectangle,
         preferences: list[int],
     ):
+        brand = BasicBrand()
         start_position, direction, track_points = (
             self.street_intersection.prepare_car_ride(
-                direction_start, direction_end, distance_to_intersection
+                direction_start, direction_end, distance_to_intersection, brand.length
             )
         )
-        car = Car(BasicBrand(), start_position, direction)
+        car = Car(brand, start_position, direction)
         self.cars.append(car)
         self.movement_histories.append([])
 
