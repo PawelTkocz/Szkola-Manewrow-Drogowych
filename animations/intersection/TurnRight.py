@@ -10,17 +10,18 @@ import pygame
 read_movement_from_file = True
 
 
-class IntersectionTurnLeft:
+class IntersectionTurnRight:
     def __init__(self):
-        self.intersection = Intersection(read_movement_from_file, "turn_left")
+        self.intersection = Intersection(read_movement_from_file, "turn_right")
+        self.intersection.add_car(Directions.LEFT, Directions.DOWN, 700, None, [])
         self.intersection.add_car(Directions.RIGHT, Directions.UP, 700, None, [])
         self.intersection.add_car(
-            Directions.DOWN,
             Directions.UP,
-            1000,
+            Directions.DOWN,
+            700,
             Rectangle(
                 Point(
-                    SCREEN_WIDTH / 2 + ROAD_WIDTH / 4,
+                    SCREEN_WIDTH / 2 - ROAD_WIDTH / 4,
                     SCREEN_HEIGHT - (SCREEN_HEIGHT - ROAD_WIDTH) / 2,
                 ),
                 ROAD_WIDTH / 2,
@@ -30,9 +31,9 @@ class IntersectionTurnLeft:
             [0],
         )
         self.intersection.add_car(
+            Directions.DOWN,
             Directions.LEFT,
-            Directions.UP,
-            600,
+            700,
             Rectangle(
                 Point(
                     SCREEN_WIDTH / 2,
@@ -42,7 +43,7 @@ class IntersectionTurnLeft:
                 ROAD_WIDTH,
                 Direction(Point(0, 1)),
             ),
-            [0, 1],
+            [1, 2],
         )
 
     def next_frame(self):
@@ -55,7 +56,7 @@ class IntersectionTurnLeft:
 
 pygame.init()
 clock = pygame.time.Clock()
-game = IntersectionTurnLeft()
+game = IntersectionTurnRight()
 
 while True:
     for event in pygame.event.get():
