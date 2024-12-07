@@ -18,7 +18,6 @@ class IntersectionGoStraight:
             Directions.RIGHT,
             700,
             None,
-            [],
         )
         self.intersection.add_car(
             Directions.LEFT,
@@ -33,7 +32,6 @@ class IntersectionGoStraight:
                 ROAD_WIDTH,
                 Direction(Point(0, 1)),
             ),
-            [0],
         )
         self.intersection.add_car(
             Directions.RIGHT,
@@ -48,7 +46,6 @@ class IntersectionGoStraight:
                 ROAD_WIDTH,
                 Direction(Point(0, 1)),
             ),
-            [1],
         )
 
     def next_frame(self):

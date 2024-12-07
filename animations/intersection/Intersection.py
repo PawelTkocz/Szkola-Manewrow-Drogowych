@@ -22,7 +22,10 @@ class Intersection:
 
     def __init__(self, read_movement_from_file: bool, directory_name: str):
         self.cars = []
-        self.preferences = []
+        self.starting_site = []
+        self.ending_site = []
+        self.preferences_directions = []
+        self.preferences_cars = []
         self.autonomous_drivings = []
         self.movement_histories = []
         self.steps = []
@@ -53,7 +56,7 @@ class Intersection:
                 autonomous_driving.move(
                     [
                         self.autonomous_drivings[carIndex].car_simulation
-                        for carIndex in self.preferences[index]
+                        for carIndex in self.preferences_cars[index]
                     ]
                 )
             )
@@ -85,7 +88,6 @@ class Intersection:
         direction_end: Directions,
         distance_to_intersection: int,
         non_preference_zone: Rectangle,
-        preferences: list[int],
     ):
         brand = BasicBrand()
         start_position, direction, track_points = (
@@ -95,6 +97,8 @@ class Intersection:
         )
         car = Car(brand, start_position, direction)
         self.cars.append(car)
+        self.starting_site.append(direction_start)
+        self.ending_site.append(direction_end)
         self.movement_histories.append([])
 
         manoeuvre = Manoeuvre(
@@ -102,7 +106,7 @@ class Intersection:
         )
         autonomous_driving = BasicAutonomousDriving(car, manoeuvre)
         self.autonomous_drivings.append(autonomous_driving)
-        self.preferences.append(preferences)
+        self.calculate_preferences()
         if self.read_movement_from_file:
             file_path = os.path.join(
                 SAVED_CAR_MOVEMENT_DIRECTORY,
@@ -112,3 +116,27 @@ class Intersection:
             )
             with open(file_path, "r") as file:
                 self.steps.append([tuple(line.split()) for line in file])
+
+    def calculate_preferences(self):
+        starting_site = self.starting_site[-1]
+        ending_site = self.ending_site[-1]
+        directions = [Directions.DOWN, Directions.RIGHT, Directions.UP, Directions.LEFT]
+        starting_site_index = directions.index(starting_site)
+        preferences_directions = []
+        for i in range(1, 3):
+            if directions[(starting_site_index + i) % 4] != ending_site:
+                preferences_directions.append(directions[(starting_site_index + i) % 4])
+            else:
+                break
+        self.preferences_directions.append(preferences_directions)
+        last_index = len(self.cars) - 1
+        for index, preference_list in enumerate(self.preferences_cars):
+            if starting_site in self.preferences_directions[index]:
+                preference_list.append(last_index)
+        self.preferences_cars.append(
+            [
+                index
+                for index in range(last_index)
+                if self.starting_site[index] in preferences_directions
+            ]
+        )

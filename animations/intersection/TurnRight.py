@@ -13,8 +13,8 @@ read_movement_from_file = True
 class IntersectionTurnRight:
     def __init__(self):
         self.intersection = Intersection(read_movement_from_file, "turn_right")
-        self.intersection.add_car(Directions.LEFT, Directions.DOWN, 700, None, [])
-        self.intersection.add_car(Directions.RIGHT, Directions.UP, 700, None, [])
+        self.intersection.add_car(Directions.LEFT, Directions.DOWN, 700, None)
+        self.intersection.add_car(Directions.RIGHT, Directions.UP, 700, None)
         self.intersection.add_car(
             Directions.UP,
             Directions.DOWN,
@@ -28,7 +28,6 @@ class IntersectionTurnRight:
                 ROAD_WIDTH,
                 Direction(Point(0, 1)),
             ),
-            [0],
         )
         self.intersection.add_car(
             Directions.DOWN,
@@ -43,7 +42,6 @@ class IntersectionTurnRight:
                 ROAD_WIDTH,
                 Direction(Point(0, 1)),
             ),
-            [1, 2],
         )
 
     def next_frame(self):
