@@ -5,7 +5,6 @@ from MainMenu import MainMenu
 from State import State
 
 pygame.init()
-
 clock = pygame.time.Clock()
 
 

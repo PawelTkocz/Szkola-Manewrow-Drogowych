@@ -1,17 +1,13 @@
-import math
-
 from Geometry import Direction, Directions, Point, Rectangle
+from State import State
 from animations.intersection.Intersection import Intersection
 from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
 
 
-import pygame
-
-read_movement_from_file = True
-
-
-class IntersectionTurnLeft:
-    def __init__(self):
+class IntersectionTurnLeft(State):
+    def __init__(self, previous_state: State, *, read_movement_from_file=True):
+        super().__init__(previous_state=previous_state)
+        self.read_movement_from_file = read_movement_from_file
         self.intersection = Intersection(read_movement_from_file, "turn_left")
         self.intersection.add_car(Directions.RIGHT, Directions.UP, 700, None)
         self.intersection.add_car(
@@ -43,26 +39,12 @@ class IntersectionTurnLeft:
             ),
         )
 
-    def next_frame(self):
-        self.intersection.draw()
-        self.intersection.move()
-
     def save_cars_movement(self):
         self.intersection.save_cars_movement()
 
+    def render_frame(self, screen):
+        self.intersection.draw(screen)
+        self.intersection.move()
 
-pygame.init()
-clock = pygame.time.Clock()
-game = IntersectionTurnLeft()
-
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            if not read_movement_from_file:
-                game.save_cars_movement()
-            pygame.quit()
-            exit()
-
-    game.next_frame()
-    pygame.display.update()
-    clock.tick(30)
+    def handle_click(self, mouse_click_position) -> State:
+        return self.previous_state

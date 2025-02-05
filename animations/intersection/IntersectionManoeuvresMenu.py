@@ -2,60 +2,36 @@ from Constants import BACKGROUND_COLOR
 from OptionsMenu import OptionsMenu, OptionToChoose
 from State import State
 from animations.intersection.GoStraight import IntersectionGoStraight
-from animations.intersection.IntersectionManoeuvresMenu import (
-    IntersectionManoeuvresMenu,
-)
 from animations.intersection.TurnLeft import IntersectionTurnLeft
 from animations.intersection.TurnRight import IntersectionTurnRight
 
-TITLE = "Choose Animation"
+TITLE = "Choose Intersection Manoeuvre"
 OPTIONS_COLUMNS_NUMBER = 3
 
 
-class MainMenu(State):
-    def __init__(self):
-        super().__init__()
+class IntersectionManoeuvresMenu(State):
+    def __init__(self, previous_state: State):
+        super().__init__(previous_state=previous_state)
         self.options_menu = OptionsMenu(TITLE, OPTIONS_COLUMNS_NUMBER)
         self._add_option_to_choose(
             OptionToChoose(
-                "Intersection",
+                "Turn Left",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionManoeuvresMenu(self),
+                IntersectionTurnLeft(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
-                "Animation 2",
+                "Turn Right",
                 "animationsScreenshots/screenshot12.png",
                 IntersectionTurnRight(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
-                "Animation 3",
+                "Go Straight",
                 "animationsScreenshots/screenshot12.png",
                 IntersectionGoStraight(self),
-            )
-        )
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Animation 4",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
-            )
-        )
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Animation 5",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
-            )
-        )
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Animation 6",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
             )
         )
 
