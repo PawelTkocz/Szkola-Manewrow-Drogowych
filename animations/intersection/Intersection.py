@@ -32,13 +32,12 @@ class Intersection:
         self.read_movement_from_file = read_movement_from_file
         self.directory_name = directory_name
         self.street_intersection = StreetIntersection()
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.counter = 0
 
-    def draw(self):
-        self.street_intersection.draw(self.screen)
+    def draw(self, screen):
+        self.street_intersection.draw(screen)
         for car in self.cars:
-            car.draw(self.screen)
+            car.draw(screen)
 
     def move(self):
         if self.read_movement_from_file:
@@ -100,7 +99,7 @@ class Intersection:
         self.starting_site.append(direction_start)
         self.ending_site.append(direction_end)
         self.movement_histories.append([])
-
+        # calculate non preference zone
         manoeuvre = Manoeuvre(
             [IntersectionManoeuvre(track_points, non_preference_zone)]
         )
