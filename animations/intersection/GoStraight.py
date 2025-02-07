@@ -53,3 +53,7 @@ class IntersectionGoStraight(State):
 
     def handle_click(self, mouse_click_position) -> State:
         return self.previous_state
+
+    def handle_quit(self):
+        if not self.read_movement_from_file:
+            self.save_cars_movement()

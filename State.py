@@ -12,3 +12,7 @@ class State(ABC):
     @abstractmethod
     def handle_click(self, mouse_click_position) -> "State":
         pass
+
+    @abstractmethod
+    def handle_quit(self):
+        pass

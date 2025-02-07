@@ -19,12 +19,16 @@ class DrivingManoeuvresApplication:
     def handle_click(self, mouse_click_position):
         self.current_state = self.current_state.handle_click(mouse_click_position)
 
+    def handle_quit(self):
+        self.current_state.handle_quit()
+
 
 driving_manoeuvres_application = DrivingManoeuvresApplication(MainMenu())
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            driving_manoeuvres_application.handle_quit()
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
