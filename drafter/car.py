@@ -1,6 +1,6 @@
 from pygame import Surface
 import pygame
-from Geometry import Directions, Point, Rectangle, tuples_list
+from geometry import Directions, Point, Rectangle, tuples_list
 from car.model import CarModel, CarPartPosition, CarPointPosition
 
 

@@ -1,6 +1,6 @@
 from scipy.spatial import KDTree
 
-from Geometry import Point, calculate_line, distance_of_point_to_line
+from geometry import Point, calculate_line, distance_of_point_to_line
 
 
 class Track:

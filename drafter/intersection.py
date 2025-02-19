@@ -1,5 +1,5 @@
 import pygame
-from Constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from animations.constants import LINES_COLOR, PAVEMENT_COLOR, STREET_COLOR
 from animations.intersection.constants import (
     LINES_WIDTH,

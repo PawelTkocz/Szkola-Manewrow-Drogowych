@@ -1,6 +1,6 @@
 import math
 import pytest
-from Geometry import Directions, Point, Vector
+from geometry import Directions, Point, Vector
 
 
 @pytest.mark.parametrize(

@@ -1,12 +1,12 @@
-from Constants import BACKGROUND_COLOR
-from OptionsMenu import OptionsMenu, OptionToChoose
-from State import State
-from animations.intersection.GoStraight import IntersectionGoStraight
-from animations.intersection.IntersectionManoeuvresMenu import (
+from constants import BACKGROUND_COLOR
+from options_menu import OptionsMenu, OptionToChoose
+from state import State
+from animations.intersection.go_straight import IntersectionGoStraight
+from animations.intersection.intersection_manoeuvre_menu import (
     IntersectionManoeuvresMenu,
 )
-from animations.intersection.TurnLeft import IntersectionTurnLeft
-from animations.intersection.TurnRight import IntersectionTurnRight
+from animations.intersection.turn_left import IntersectionTurnLeft
+from animations.intersection.turn_right import IntersectionTurnRight
 
 TITLE = "Choose Animation"
 OPTIONS_COLUMNS_NUMBER = 3

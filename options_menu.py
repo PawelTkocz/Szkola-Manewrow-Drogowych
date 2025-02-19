@@ -1,11 +1,11 @@
 from typing import TypedDict
 import pygame
 
-from Constants import (
+from constants import (
     SCREEN_WIDTH,
     SECOND_BACKGROUND_COLOR,
 )
-from State import State
+from state import State
 
 
 OPTIONS_FONT_SIZE = 40

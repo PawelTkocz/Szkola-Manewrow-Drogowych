@@ -1,8 +1,8 @@
 import pygame
 
-from Constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from MainMenu import MainMenu
-from State import State
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from main_menu import MainMenu
+from state import State
 
 pygame.init()
 clock = pygame.time.Clock()

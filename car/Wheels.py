@@ -1,4 +1,4 @@
-from Geometry import Direction, Directions, Point
+from geometry import Direction, Directions, Point
 
 
 class Wheels:

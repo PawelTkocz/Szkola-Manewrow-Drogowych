@@ -1,6 +1,6 @@
 import math
 import pytest
-from Geometry import Point, Vector
+from geometry import Point, Vector
 
 
 def test_init():

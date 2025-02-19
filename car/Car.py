@@ -1,7 +1,7 @@
 from enum import Enum
-from Geometry import Direction, Directions, Point, Rectangle
+from geometry import Direction, Directions, Point, Rectangle
 from car.model import CarModel
-from car.Wheels import Wheels
+from car.wheels import Wheels
 from drafter.car import CarDrafter
 
 

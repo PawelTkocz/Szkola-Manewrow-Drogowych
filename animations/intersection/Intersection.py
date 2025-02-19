@@ -1,18 +1,18 @@
 from typing import TypedDict
-from Geometry import Directions, Rectangle
+from geometry import Directions, Rectangle
 from animations.constants import (
     SAVED_CAR_MOVEMENT_DIRECTORY as general_car_movement_directory,
 )
 from animations.intersection.constants import (
     SAVED_CAR_MOVEMENT_DIRECTORY as intersection_car_movement_directory,
 )
-from animations.intersection.IntersectionManoeuvre import IntersectionManoeuvre
-from animations.intersection.Manoeuvre import Manoeuvre
-from animations.intersection.StreetIntersection import StreetIntersection
-from autonomousDriving.BasicAutonomousDriving import (
+from animations.intersection.intersection_manoeuvre import IntersectionManoeuvre
+from animations.intersection.manoeuvre import Manoeuvre
+from animations.intersection.street_intersection import StreetIntersection
+from autonomousDriving.basic_autonomous_driving import (
     BasicAutonomousDriving,
 )
-from car.Car import Car, SpeedModifications
+from car.car import Car, SpeedModifications
 import os
 
 from car.toyota_yaris import ToyotaYaris
