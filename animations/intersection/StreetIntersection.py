@@ -1,7 +1,8 @@
 import numpy as np
+from Constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from Geometry import Direction, Directions, Point, Vector
-from animations.intersection.IntersectionDrafter import IntersectionDrafter
-from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
+from drafter.intersection import IntersectionDrafter
+from animations.intersection.constants import ROAD_WIDTH
 
 vertical = [Directions.UP, Directions.DOWN]
 horizontal = [Directions.LEFT, Directions.RIGHT]
@@ -89,7 +90,7 @@ class StreetIntersection:
                 },
             },
         }
-        self.drafter = IntersectionDrafter(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.drafter = IntersectionDrafter()
 
     def draw(self, screen):
         self.drafter.draw(screen)

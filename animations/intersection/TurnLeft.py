@@ -1,7 +1,8 @@
+from Constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from Geometry import Direction, Directions, Point, Rectangle
 from State import State
 from animations.intersection.Intersection import Intersection
-from animations.intersection.constants import ROAD_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH
+from animations.intersection.constants import ROAD_WIDTH
 
 
 class IntersectionTurnLeft(State):

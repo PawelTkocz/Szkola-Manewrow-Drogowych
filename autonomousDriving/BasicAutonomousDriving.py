@@ -1,7 +1,7 @@
 from Geometry import Directions, Rectangle, calculate_line, distance_of_point_to_line
 from animations.intersection.Manoeuvre import Manoeuvre
 from autonomousDriving.CarSimulation import CarSimulation
-from cars.Car import Car, SpeedModifications
+from car.Car import Car, SpeedModifications
 
 
 def closest_to_track_turning_policy(car_simulation: CarSimulation):

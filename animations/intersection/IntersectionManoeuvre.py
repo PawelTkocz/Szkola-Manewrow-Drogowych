@@ -1,6 +1,6 @@
 from animations.intersection.ManoeuvrePhase import ManoeuvrePhase
 from autonomousDriving.Track import Track
-from cars.Car import Car
+from car.Car import Car
 
 
 class IntersectionManoeuvre(ManoeuvrePhase):

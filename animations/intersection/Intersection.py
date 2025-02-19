@@ -12,9 +12,10 @@ from animations.intersection.StreetIntersection import StreetIntersection
 from autonomousDriving.BasicAutonomousDriving import (
     BasicAutonomousDriving,
 )
-from cars.BasicBrand import BasicBrand
-from cars.Car import Car, SpeedModifications
+from car.Car import Car, SpeedModifications
 import os
+
+from car.toyota_yaris import ToyotaYaris
 
 
 class IntersectionCarInfo(TypedDict):
@@ -99,13 +100,13 @@ class Intersection:
         distance_to_intersection: int,
         non_preference_zone: Rectangle,
     ):
-        brand = BasicBrand()
+        model = ToyotaYaris()
         start_position, direction, track_points = (
             self.street_intersection.prepare_car_ride(
-                direction_start, direction_end, distance_to_intersection, brand.length
+                direction_start, direction_end, distance_to_intersection, model.length
             )
         )
-        car = Car(brand, start_position, direction)
+        car = Car(model, "red", start_position, direction)
         manoeuvre = Manoeuvre(
             [IntersectionManoeuvre(track_points, non_preference_zone)]
         )

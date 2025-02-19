@@ -1,5 +1,5 @@
 from animations.intersection.ManoeuvrePhase import ManoeuvrePhase
-from cars.Car import Car
+from car.Car import Car
 
 
 class Manoeuvre:

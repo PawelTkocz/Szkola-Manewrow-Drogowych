@@ -1,7 +1,7 @@
 import math
 from Geometry import Rectangle
 from autonomousDriving.Track import Track
-from cars.Car import Car
+from car.Car import Car
 
 
 class CarSimulation(Car):
@@ -13,7 +13,9 @@ class CarSimulation(Car):
         """
         Initialize car simulation
         """
-        super().__init__(car.brand, car.front_middle, car.direction, car.velocity)
+        super().__init__(
+            car.model, car.color, car.front_middle, car.direction, car.velocity
+        )
         self.track = Track(track, 5)
 
     def set_state(self, state: dict):

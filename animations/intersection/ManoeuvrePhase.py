@@ -1,6 +1,6 @@
 from Geometry import Rectangle
 from autonomousDriving.Track import Track
-from cars.Car import Car
+from car.Car import Car
 
 
 class ManoeuvrePhase:
