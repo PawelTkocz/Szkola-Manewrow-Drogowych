@@ -2,7 +2,7 @@ from constants import BACKGROUND_COLOR
 from options_menu import OptionsMenu, OptionToChoose
 from state import State
 from animations.intersection.go_straight import IntersectionGoStraight
-from animations.intersection.intersection_manoeuvre_menu import (
+from animations_menu.intersection_manoeuvres_menu import (
     IntersectionManoeuvresMenu,
 )
 from animations.intersection.turn_left import IntersectionTurnLeft

@@ -1,6 +1,6 @@
 from typing import TypedDict
 from geometry import Directions, Rectangle
-from animations.constants import (
+from constants import (
     SAVED_CAR_MOVEMENT_DIRECTORY as general_car_movement_directory,
 )
 from animations.intersection.constants import (
