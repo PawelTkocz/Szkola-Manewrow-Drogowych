@@ -5,12 +5,16 @@ from animations.intersection.constants import (
     LINES_WIDTH,
     ROAD_WIDTH,
 )
+from intersection.schemas import IntersectionParts
 
 
 class IntersectionDrafter:
     """
     Class responsible for drawing the intersection.
     """
+
+    def __init__(self, intersection_parts: IntersectionParts):
+        self.intersection_parts = intersection_parts
 
     def draw_street(self, screen):
         pygame.draw.rect(

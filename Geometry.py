@@ -49,6 +49,15 @@ class Point:
         self.y += vector.y
         return self
 
+    def distance(self, point: "Point") -> float:
+        """
+        Get the distance to point.
+
+        :param point: Point to calculate distance to
+        :return: distance to point
+        """
+        return math.sqrt((point.x - self.x) ** 2 + (point.y - self.y) ** 2)
+
     def copy(self) -> "Point":
         """
         Get copy of a point
@@ -238,6 +247,7 @@ class Rectangle:
         self._front_right = self._front_left.copy().add_vector(width_vec)
         self._rear_left = self._front_left.copy().add_vector(length_vec)
         self._rear_right = self._rear_left.copy().add_vector(width_vec)
+        self._rear_middle = self._front_middle.copy().add_vector(length_vec)
 
     @property
     def direction(self) -> Direction:
@@ -250,6 +260,13 @@ class Rectangle:
     @property
     def front_middle(self) -> Point:
         return self._front_middle.copy()
+
+    @property
+    def rear_middle(self) -> Point:
+        return self._rear_middle.copy()
+
+    # introduce sth like this: _read_middle can be None or Point. If None then calculate it, save it and return it. ELse just return it.
+    # when rectange moves, set it to None
 
     @property
     def front_left(self) -> Point:
@@ -302,6 +319,7 @@ class Rectangle:
         )
         self._direction = Direction(self.front_left, self.rear_left)
         self._front_middle = self.front_left.add_vector(width_vector.scale(0.5))
+        self._rear_middle = self.front_middle.add_vector(length_vector)
 
     def move_right_side(self, front_vector: Vector):
         self._front_right.add_vector(front_vector)
@@ -318,6 +336,7 @@ class Rectangle:
         )
         self._direction = Direction(self.front_left, self.rear_left)
         self._front_middle = self.front_right.add_vector(width_vector.scale(0.5))
+        self._rear_middle = self.front_middle.add_vector(length_vector)
 
     def is_point_inside(self, p: Point):
         point = np.array([p.x, p.y])

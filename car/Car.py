@@ -170,3 +170,4 @@ class Car:
             },
             "wheels": self.wheels.direction.copy(),
         }
+        # maybe add also info about autonomous driving programm
