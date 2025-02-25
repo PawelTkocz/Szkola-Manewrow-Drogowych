@@ -13,6 +13,9 @@ class Directions(Enum):
     DOWN = 4
 
 
+# maybe create some kind of factory for points and vectors as they are very often created and could be reused
+
+
 class Point:
     """
     Class representing a point in Cartesian coordinate system
@@ -235,27 +238,24 @@ class Rectangle:
         :param direction: direction the rectangle is heading
         :return: directed rectangle with specified width, length and position
         """
-        self.width = width
-        self.length = length
-        self._direction = direction.copy()
-        self._front_middle = front_middle.copy()
-        width_vec = direction.get_orthogonal_vector(Directions.RIGHT, width)
-        length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, length)
-        self._front_left = front_middle.copy().add_vector(
-            width_vec.copy().scale(0.5).get_negative_of_a_vector()
-        )
-        self._front_right = self._front_left.copy().add_vector(width_vec)
-        self._rear_left = self._front_left.copy().add_vector(length_vec)
-        self._rear_right = self._rear_left.copy().add_vector(width_vec)
-        self._rear_middle = self._front_middle.copy().add_vector(length_vec)
+        self._width = width
+        self._length = length
+        self.update_position(front_middle, direction)
+
+    @property
+    def width(self) -> float:
+        return self._width
+
+    @property
+    def length(self) -> float:
+        return self._length
 
     @property
     def direction(self) -> Direction:
         """
-        Get the current direction of the rectangle
+        Get the current direction of the rectangle.
         """
         return self._direction.copy()
-        # remember to calculate it everytime position changes
 
     @property
     def front_middle(self) -> Point:
@@ -264,9 +264,6 @@ class Rectangle:
     @property
     def rear_middle(self) -> Point:
         return self._rear_middle.copy()
-
-    # introduce sth like this: _read_middle can be None or Point. If None then calculate it, save it and return it. ELse just return it.
-    # when rectange moves, set it to None
 
     @property
     def front_left(self) -> Point:
@@ -284,10 +281,23 @@ class Rectangle:
     def rear_right(self) -> Point:
         return self._rear_right.copy()
 
+    def update_position(self, front_middle: Point, direction: Direction):
+        self._direction = direction.copy()
+        self._front_middle = front_middle.copy()
+        width_vec = direction.get_orthogonal_vector(Directions.RIGHT, self.width)
+        length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, self.length)
+        self._front_left = self.front_middle.add_vector(
+            width_vec.copy().scale(0.5).get_negative_of_a_vector()
+        )
+        self._front_right = self.front_left.add_vector(width_vec)
+        self._rear_left = self.front_left.add_vector(length_vec)
+        self._rear_right = self.rear_left.add_vector(width_vec)
+        self._rear_middle = self.front_middle.add_vector(length_vec)
+
     @property
     def corners_list(self) -> list[Point]:
         """
-        Get the list of corners coordinates
+        Get the list of corners coordinates.
         """
         return [
             self.rear_left,
@@ -299,44 +309,10 @@ class Rectangle:
     @property
     def center(self) -> Point:
         """
-        Get the center of rectangle
+        Get the center of rectangle.
         """
         vector = Vector(self.rear_right, self.front_left).scale(0.5)
         return self.front_left.add_vector(vector)
-
-    def move_left_side(self, front_vector: Vector):
-        self._front_left.add_vector(front_vector)
-        length_vector = Vector(self.front_left, self.rear_left).scale_to_len(
-            self.length
-        )
-        width_vector = length_vector.get_orthogonal_vector(Directions.RIGHT, self.width)
-        self._front_right = self.front_left.add_vector(width_vector)
-        self._rear_right = self.front_right.add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        self._rear_left = self.front_left.add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        self._direction = Direction(self.front_left, self.rear_left)
-        self._front_middle = self.front_left.add_vector(width_vector.scale(0.5))
-        self._rear_middle = self.front_middle.add_vector(length_vector)
-
-    def move_right_side(self, front_vector: Vector):
-        self._front_right.add_vector(front_vector)
-        length_vector = Vector(self.front_right, self.rear_right).scale_to_len(
-            self.length
-        )
-        width_vector = length_vector.get_orthogonal_vector(Directions.LEFT, self.width)
-        self._front_left = self.front_right.add_vector(width_vector)
-        self._rear_left = self.front_left.add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        self._rear_right = self.front_right.add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        self._direction = Direction(self.front_left, self.rear_left)
-        self._front_middle = self.front_right.add_vector(width_vector.scale(0.5))
-        self._rear_middle = self.front_middle.add_vector(length_vector)
 
     def is_point_inside(self, p: Point):
         point = np.array([p.x, p.y])
@@ -354,6 +330,7 @@ class Rectangle:
         )
 
     def enlarge_rectangle(self, v):
+        # move somewhere different
         return Rectangle(
             self.center.add_vector(self.direction.scale_to_len(self.length / 2 * v)),
             self.width * v,

@@ -1,5 +1,6 @@
 from enum import Enum
-from geometry import Direction, Directions, Point, Rectangle
+from car.car_state import CarState
+from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
@@ -11,7 +12,49 @@ class SpeedModifications(Enum):
     BRAKE = 3
 
 
-class Car:
+class CarBody(Rectangle):
+    def __init__(
+        self, front_middle: Point, width: float, length: float, direction: Direction
+    ):
+        super().__init__(front_middle, width, length, direction)
+
+    def move(self, direction: Directions, front_vector: Vector):
+        if direction == Directions.RIGHT:
+            self.move_left_side(front_vector)
+        else:
+            self.move_right_side(front_vector)
+        # czemu zmiana z left na right i odwrotnie rozwiazuje problem z tym, ze jadac prosto
+        # zblizalismy sie wolniej do celu niz skrecajac
+
+    # think about unifying this to just move - vector from front middle
+    def move_left_side(self, front_vector: Vector):
+        new_front_left = self.front_left.add_vector(front_vector)
+        length_vector = Vector(new_front_left, self.rear_left).scale_to_len(self.length)
+        new_rear_left = new_front_left.copy().add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        new_direction = Direction(new_front_left, new_rear_left)
+        new_front_middle = new_front_left.copy().add_vector(
+            length_vector.get_orthogonal_vector(Directions.RIGHT, self.width / 2)
+        )
+        self.update_position(new_front_middle, new_direction)
+
+    def move_right_side(self, front_vector: Vector):
+        new_front_right = self.front_right.add_vector(front_vector)
+        length_vector = Vector(new_front_right, self.rear_right).scale_to_len(
+            self.length
+        )
+        new_rear_right = new_front_right.copy().add_vector(
+            length_vector.get_negative_of_a_vector()
+        )
+        new_direction = Direction(new_front_right, new_rear_right)
+        new_front_middle = new_front_right.copy().add_vector(
+            length_vector.get_orthogonal_vector(Directions.LEFT, self.width / 2)
+        )
+        self.update_position(new_front_middle, new_direction)
+
+
+class Car(CarBody):
     """
     Class representing a car in Cartesian coordinate system.
     """
@@ -27,41 +70,12 @@ class Car:
         """
         Initialize car
         """
+        super().__init__(front_middle_position, model.width, model.length, direction)
         self.model = model
         self.color = color
         self.velocity = velocity
-        self.body = Rectangle(
-            front_middle_position,
-            model.width,
-            model.length,
-            direction,
-        )
         self.wheels = Wheels(model.max_wheels_turn)
         self._car_drafter = CarDrafter(model, color)
-
-    @property
-    def front_middle(self) -> Point:
-        return self.body.front_middle
-
-    @property
-    def direction(self) -> Direction:
-        return self.body.direction
-
-    @property
-    def front_left(self) -> Point:
-        return self.body.front_left
-
-    @property
-    def front_right(self) -> Point:
-        return self.body.front_right
-
-    @property
-    def rear_left(self) -> Point:
-        return self.body.rear_left
-
-    @property
-    def rear_right(self) -> Point:
-        return self.body.rear_right
 
     @property
     def wheels_angle(self) -> float:
@@ -70,14 +84,6 @@ class Car:
     @property
     def turn_direction(self) -> Directions:
         return self.wheels.current_direction
-
-    @property
-    def length(self) -> float:
-        return self.model.length
-
-    @property
-    def width(self) -> float:
-        return self.model.width
 
     @property
     def max_acceleration(self) -> float:
@@ -91,8 +97,16 @@ class Car:
     def max_brake(self) -> float:
         return self.model.max_brake
 
+    @property
+    def wheels_turn_speed(self) -> float:
+        return self.model.wheels_turn_speed
+
+    @property
+    def wheels_direction(self) -> Direction:
+        return self.wheels.direction
+
     def turn(self, direction: Directions):
-        self.wheels.turn(self.model.wheels_turn_speed, direction)
+        self.wheels.turn(self.wheels_turn_speed, direction)
 
     def speed_up(self, direction: Directions, limit=None):
         if (self.velocity > 0 and direction == Directions.BACK) or (
@@ -141,33 +155,16 @@ class Car:
         front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
             self.velocity
         )
-        if self.turn_direction == Directions.RIGHT:
-            self.body.move_left_side(front_movement_vector)
-        else:
-            self.body.move_right_side(front_movement_vector)
-        # czemu zmiana z left na right i odwrotnie rozwiazuje problem z tym, ze jadac prosto
-        # zblizalismy sie wolniej do celu niz skrecajac
+        super().move(self.turn_direction, front_movement_vector)
         self.slow_down(self.model.resistance)
 
     def draw(self, screen):
-        self._car_drafter.draw(self.body, self.wheels_angle, screen)
+        self._car_drafter.draw(self, self.wheels_angle, screen)
 
     def collides(self, obj: Rectangle):
         if obj is not None:
-            return self.body.collides(obj)
+            return self.collides(obj)
         return False
 
-    def get_state(self):
-        return {
-            "velocity": self.velocity,
-            "body": {
-                "direction": self.direction,
-                "front_middle": self.front_middle,
-                "front_left": self.front_left,
-                "front_right": self.front_right,
-                "rear_left": self.rear_left,
-                "rear_right": self.rear_right,
-            },
-            "wheels": self.wheels.direction.copy(),
-        }
-        # maybe add also info about autonomous driving programm
+    def get_state(self) -> CarState:
+        return CarState(self)
