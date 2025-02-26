@@ -37,3 +37,7 @@ class AutonomousCar(Car):
         self.apply_speed_modification(speed_modification)
         self.turn(turn_direction)
         super().move()
+
+    def apply_movement_decision(self, movement_decision: MovementDecision):
+        pass
+        # think about moving here the function from car class with apply_speed_modification

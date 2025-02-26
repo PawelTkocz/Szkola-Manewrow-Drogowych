@@ -3,7 +3,7 @@ from car.model import CarModel
 from geometry import Direction, Point, Rectangle
 
 
-# call it CarData, include model in properties and refactor all places
+# call it CarLiveData, include model in properties and refactor all places
 class CarState:
     """
     Read-only proxy for Car representing car state.
