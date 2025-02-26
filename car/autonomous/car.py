@@ -1,4 +1,5 @@
 from animations.intersection.manoeuvre import Manoeuvre
+from car.autonomous.program import MovementDecision
 from car.car import Car
 from car.model import CarModel
 from geometry import Direction, Point
@@ -27,5 +28,12 @@ class AutonomousCar(Car):
     def set_manoeuvre(self, manoeuvre: Manoeuvre):
         self.current_manoeuvre = manoeuvre
 
-    def move(self):
-        turn_direction, speed_modification = self.autonomous_driving_program()
+    def move(self, *, movement_decision: MovementDecision | None = None):
+        if movement_decision:
+            speed_modification = movement_decision['speed_modification']
+            turn_direction = movement_decision['turn_direction']
+        else:
+            turn_direction, speed_modification = self.autonomous_driving_program()
+        self.apply_speed_modification(speed_modification)
+        self.turn(turn_direction)
+        super().move()

@@ -38,3 +38,14 @@ class TrackFollowerBeta(TrackFollower):
             car_simulation.set_state(start_state)
 
         return best_turn_direction
+
+    def find_distance_to_point(self, point: tuple[float, float]):
+        x1, y1 = point[0], point[1]
+        x2, y2 = self.front_middle.x, self.front_middle.y
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+
+    def find_index_of_closest_point_on_track(self):
+        return self.track.find_index_of_closest_point(self.front_middle)
+
+    def find_straight_line_end_point_on_track(self, point_index):
+        return self.track.find_straight_line_end_point(point_index)
