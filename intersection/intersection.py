@@ -103,6 +103,9 @@ class Intersection(ABC):
     def remove_car(self, car_on_intersection: CarOnIntersection):
         self.cars.remove(car_on_intersection)
 
+    def get_cars(self) -> list[CarOnIntersection]:
+        return self.cars
+
     @abstractmethod
     def has_priority(car1: CarOnIntersection, car2: CarOnIntersection) -> bool:
         pass

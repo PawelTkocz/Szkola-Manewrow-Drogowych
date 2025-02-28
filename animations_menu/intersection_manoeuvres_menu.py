@@ -10,28 +10,28 @@ OPTIONS_COLUMNS_NUMBER = 3
 
 
 class IntersectionManoeuvresMenu(State):
-    def __init__(self, previous_state: State):
+    def __init__(self, previous_state: State, read_saved_car_movement: bool):
         super().__init__(previous_state=previous_state)
         self.options_menu = OptionsMenu(TITLE, OPTIONS_COLUMNS_NUMBER)
         self._add_option_to_choose(
             OptionToChoose(
                 "Turn Left",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeftAnimation(self, True),
+                IntersectionTurnLeftAnimation(self, read_saved_car_movement),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Turn Right",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnRightAnimation(self, True),
+                IntersectionTurnRightAnimation(self, read_saved_car_movement),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Go Straight",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionGoStraightAnimation(self, True),
+                IntersectionGoStraightAnimation(self, read_saved_car_movement),
             )
         )
 

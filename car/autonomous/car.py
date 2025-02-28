@@ -1,7 +1,7 @@
 from car.autonomous.program import MovementDecision
-from car.car import Car
+from car.car import Car, SpeedModifications
 from car.model import CarModel
-from geometry import Direction, Point
+from geometry import Direction, Directions, Point
 from manoeuvres.manoeuvre import Manoeuvre
 
 # jedna klasa musi byc odpowiedzialna za opisanie sytuacji na skrzyzowaniu:
@@ -29,15 +29,20 @@ class AutonomousCar(Car):
         self.current_manoeuvre = manoeuvre
 
     def move(self, *, movement_decision: MovementDecision | None = None):
-        if movement_decision:
-            speed_modification = movement_decision['speed_modification']
-            turn_direction = movement_decision['turn_direction']
-        else:
-            turn_direction, speed_modification = self.autonomous_driving_program()
-        self.apply_speed_modification(speed_modification)
-        self.turn(turn_direction)
+        movement_decision = movement_decision or self.autonomous_driving_program()
+        self.apply_movement_decision(movement_decision)
         super().move()
+        return movement_decision
 
     def apply_movement_decision(self, movement_decision: MovementDecision):
-        pass
-        # think about moving here the function from car class with apply_speed_modification
+        self._apply_speed_modification(movement_decision['speed_modification'])
+        self.turn(movement_decision['turn_direction'])
+
+    def _apply_speed_modification(self, modification: SpeedModifications):
+        if modification == SpeedModifications.SPEED_UP:
+            direction = Directions.FRONT if self.velocity >= 0 else Directions.BACK
+            self.speed_up(direction)
+        elif modification == SpeedModifications.NO_CHANGE:
+            pass
+        elif modification == SpeedModifications.BRAKE:
+            self.brake()

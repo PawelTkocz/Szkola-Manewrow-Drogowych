@@ -18,6 +18,7 @@ class AnimationCarInfo(TypedDict):
     car_id: int
     car: AutonomousCar
     movement_history: list[tuple[Directions, SpeedModifications]]
+    start_frame_number: int
 
 
 class IntersectionAnimation(State):
@@ -40,13 +41,11 @@ class IntersectionAnimation(State):
         color: str,
         starting_side: Directions,
         ending_side: Directions,
-        frames_to_wait: int,
+        start_frame_number: int,
     ):
-        # how about not passing distance to intersection but number of frames to wait till activation
-        # and not passing car here, create it here
-        front_middle_position = Point(0, 0)
+        front_middle_position = self.intersection.intersection_parts["incoming_lines"][starting_side].rear_middle
+        direction = self.intersection.intersection_parts["incoming_lines"][starting_side].direction
         autonomous_driving_program = None
-        direction = None
         car = AutonomousCar(
             ToyotaYaris(),
             color,
@@ -61,7 +60,7 @@ class IntersectionAnimation(State):
             else []
         )
         self.cars.append(
-            {"car_id": car_id, "car": car, "movement_history": movement_history}
+            {"car_id": car_id, "car": car, "movement_history": movement_history, "start_frame_number": start_frame_number}
         )
         self.intersection.add_car(LiveCarData(car), starting_side, ending_side)
 
@@ -100,22 +99,30 @@ class IntersectionAnimation(State):
     def move_cars(self):
         if not self.read_saved_cars_movement:
             for car_info in self.cars:
-                car_info["movement_history"].append(car_info["car"].move())
+                if self.frames_counter >= car_info["start_frame_number"]:
+                    car_info["movement_history"].append(car_info["car"].move())
             return
         for car_info in self.cars:
-            if self.frames_counter >= len(car_info["movement_history"]):
+            if self.frames_counter < car_info["start_frame_number"]:
+                continue
+            saved_movement_decision_index = self.frames_counter - car_info["start_frame_number"]
+            if saved_movement_decision_index >= len(car_info["movement_history"]):
                 continue
             turn_direction, speed_modification = car_info["movement_history"][
-                self.frames_counter
+                saved_movement_decision_index
             ]
-            car_info["car"].apply_best_changes(
-                Directions[turn_direction], SpeedModifications[speed_modification]
-            )
+            car_info["car"].move(movement_decision={
+                "speed_modification": SpeedModifications[speed_modification],
+                "turn_direction": Directions[turn_direction]
+            })
 
-    def render_frame(self, screen):
+    def draw(self, screen):
         self.intersection.draw(screen)
         for car_info in self.cars:
             car_info["car"].draw(screen)
+
+    def render_frame(self, screen):
+        self.draw(screen)
         self.move_cars()
         self.frames_counter += 1
 

@@ -1,5 +1,5 @@
 from animations_menu.options_menu import OptionToChoose, OptionsMenu
-from constants import BACKGROUND_COLOR
+from constants import BACKGROUND_COLOR, READ_SAVED_CAR_MOVEMENT
 from intersection.go_straight import IntersectionGoStraightAnimation
 from intersection.turn_left import IntersectionTurnLeftAnimation
 from intersection.turn_right import IntersectionTurnRightAnimation
@@ -20,42 +20,42 @@ class MainMenu(State):
             OptionToChoose(
                 "Intersection",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionManoeuvresMenu(self),
+                IntersectionManoeuvresMenu(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 2",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnRightAnimation(self),
+                IntersectionTurnRightAnimation(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 3",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionGoStraightAnimation(self),
+                IntersectionGoStraightAnimation(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 4",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeftAnimation(self),
+                IntersectionTurnLeftAnimation(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 5",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeftAnimation(self),
+                IntersectionTurnLeftAnimation(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 6",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeftAnimation(self),
+                IntersectionTurnLeftAnimation(self, READ_SAVED_CAR_MOVEMENT),
             )
         )
 
