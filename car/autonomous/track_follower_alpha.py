@@ -1,4 +1,4 @@
-from car.car import Car, CarState, SpeedModifications
+from car.car import Car, LiveCarData, SpeedModifications
 from car.autonomous.car_simulation import CarSimulation
 from car.autonomous.track import Track, TrackPath
 from car.autonomous.track_follower import MovementDecision, TrackFollower
@@ -14,10 +14,10 @@ class TrackFollowerAlpha(TrackFollower):
     def set_track(self, track_path: TrackPath) -> None:
         self.track = Track(track_path)
 
-    def make_movement_decision(self, car_state: CarState) -> MovementDecision:
+    def make_movement_decision(self, live_car_data: LiveCarData) -> MovementDecision:
         return {"speed_modification": None, "turn_direction": None}
 
-    def closest_to_track_turning_policy(self, car_state: CarState):
+    def closest_to_track_turning_policy(self, live_car_data: LiveCarData):
         min_distance = None
         best_turn_direction = None
 

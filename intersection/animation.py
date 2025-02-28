@@ -1,7 +1,7 @@
 import os
 from typing import TypedDict
 from car.autonomous.car import AutonomousCar
-from car.car import CarState, SpeedModifications
+from car.car import LiveCarData, SpeedModifications
 from car.toyota_yaris import ToyotaYaris
 from geometry import Directions, Point
 from intersection.intersection import Intersection
@@ -63,7 +63,7 @@ class IntersectionAnimation(State):
         self.cars.append(
             {"car_id": car_id, "car": car, "movement_history": movement_history}
         )
-        self.intersection.add_car(CarState(car), starting_side, ending_side)
+        self.intersection.add_car(LiveCarData(car), starting_side, ending_side)
 
     def save_cars_movement(self):
         for car_info in self.cars:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from car.car import CarState
+from car.car import LiveCarData
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.intersection import IntersectionDrafter
 from geometry import Direction, Directions, Point, Rectangle
@@ -90,11 +90,11 @@ class Intersection(ABC):
         self.intersection_drafter.draw(screen)
 
     def add_car(
-        self, car_state: CarState, starting_side: Directions, ending_side: Directions
+        self, live_car_data: LiveCarData, starting_side: Directions, ending_side: Directions
     ):
         self.cars.append(
             {
-                "car_state": car_state,
+                "live_car_data": live_car_data,
                 "starting_side": starting_side,
                 "ending_side": ending_side,
             }

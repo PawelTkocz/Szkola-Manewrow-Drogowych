@@ -1,7 +1,7 @@
 from car.autonomous.car_simulation import CarSimulation
 from car.autonomous.track import TrackPath
 from car.autonomous.track_follower import MovementDecision, TrackFollower
-from car.car import CarState
+from car.car import LiveCarData, SpeedModifications
 from car.model import CarModel
 from geometry import Directions
 
@@ -13,7 +13,7 @@ class TrackFollowerGamma(TrackFollower):
     def set_track(self, track_path: TrackPath) -> None:
         self.track_path = track_path
 
-    def make_movement_decision(self, car_state: CarState) -> MovementDecision:
+    def make_movement_decision(self, live_car_data: LiveCarData) -> MovementDecision:
 
         return {"speed_modification": None, "turn_direction": None}
 

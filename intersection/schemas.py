@@ -1,11 +1,11 @@
 from typing import TypedDict
 
-from car.car import CarState
+from car.car import LiveCarData
 from geometry import Directions, Rectangle
 
 
 class CarOnIntersection(TypedDict):
-    car_state: CarState
+    live_car_data: LiveCarData
     starting_side: Directions
     ending_side: Directions
 

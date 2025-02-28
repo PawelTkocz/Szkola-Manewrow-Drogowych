@@ -1,6 +1,6 @@
 from car.autonomous.car_simulation import CarSimulation
 from car.autonomous.track import Track, TrackPath
-from car.car import CarState, SpeedModifications
+from car.car import LiveCarData, SpeedModifications
 from geometry import Directions, Rectangle
 from intersection.intersection import Intersection
 
@@ -10,8 +10,8 @@ directions = [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]
 
 
 class IntersectionProgram:
-    def __init__(self, car_state: CarState):
-        self.car_state = car_state
+    def __init__(self, live_car_data: LiveCarData):
+        self.live_car_data = live_car_data
         self.intersection = None
         self.starting_side = None
         self.ending_side = None
@@ -32,7 +32,7 @@ class IntersectionProgram:
     def _calculate_turn_track(
         self, turn_direction: Directions, turn_margin: float, turn_sharpness: float
     ) -> TrackPath:
-        car_length = self.car_state.length
+        car_length = self.live_car_data.length
         incoming_line = self.intersection.intersection_parts["incoming_lines"][
             self.starting_side
         ]
@@ -62,10 +62,10 @@ class IntersectionProgram:
         return self._calculate_turn_track(Directions.LEFT, 0, 0.66)
 
     def _calculate_right_turn_track(self):
-        return self._calculate_turn_track(Directions.RIGHT, self.car_state.length, 0.66)
+        return self._calculate_turn_track(Directions.RIGHT, self.live_car_data.length, 0.66)
 
     def _calculate_straight_track(self):
-        car_length = self.car_state.length
+        car_length = self.live_car_data.length
         start_point = self.intersection.intersection_parts["incoming_lines"][
             self.starting_side
         ].rear_middle

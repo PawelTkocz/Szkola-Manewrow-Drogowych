@@ -165,14 +165,14 @@ class Car(CarBody):
             return self.collides(obj)
         return False
 
-    def get_state(self) -> "CarState":
-        return CarState(self)
+    def get_state(self) -> "LiveCarData":
+        return LiveCarData(self)
 
 
 # call it CarLiveData, include model in properties and refactor all places
-class CarState:
+class LiveCarData:
     """
-    Read-only proxy for Car representing car state.
+    Read-only proxy for Car providing data possibly useful for other road users.
     """
 
     def __init__(self, car: Car):
@@ -237,6 +237,3 @@ class CarState:
     @property
     def color(self) -> str:
         return self._car.color
-
-    def collides(self, obj: Rectangle) -> bool:
-        return self._car.collides(obj)

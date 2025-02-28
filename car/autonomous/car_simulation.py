@@ -1,5 +1,5 @@
 from typing import TypedDict
-from car.car import Car, CarState
+from car.car import Car, LiveCarData
 from car.model import CarModel
 from geometry import Direction, Point
 
@@ -22,16 +22,16 @@ class CarSimulation(Car):
     Class simulating real car.
     """
 
-    def __init__(self, model: CarModel, car_state: CarState):
+    def __init__(self, model: CarModel, live_car_data: LiveCarData):
         """
         Initialize car simulation.
         """
         super().__init__(
             model,
-            car_state.color,
-            car_state.front_middle,
-            car_state.direction,
-            car_state.velocity,
+            live_car_data.color,
+            live_car_data.front_middle,
+            live_car_data.direction,
+            live_car_data.velocity,
         )
 
     def set_state(self, car_saved_state: CarSavedState):
