@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from car.car_state import CarState
+from car.car import CarState
 from geometry import Directions, Rectangle
 
 

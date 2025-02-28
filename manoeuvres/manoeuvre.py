@@ -1,5 +1,5 @@
-from animations.intersection.manoeuvre_phase import ManoeuvrePhase
 from car.car import Car
+from manoeuvres.manoeuvre_phase import ManoeuvrePhase
 
 
 class Manoeuvre:

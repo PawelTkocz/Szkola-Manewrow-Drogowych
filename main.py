@@ -1,7 +1,7 @@
 import pygame
 
+from animations_menu.main_menu import MainMenu
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from main_menu import MainMenu
 from state import State
 
 pygame.init()

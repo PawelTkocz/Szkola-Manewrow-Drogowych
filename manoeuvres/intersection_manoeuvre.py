@@ -1,6 +1,6 @@
-from animations.intersection.manoeuvre_phase import ManoeuvrePhase
-from autonomousDriving.track import Track
+from car.autonomous.track import Track
 from car.car import Car
+from manoeuvres.manoeuvre_phase import ManoeuvrePhase
 
 
 class IntersectionManoeuvre(ManoeuvrePhase):

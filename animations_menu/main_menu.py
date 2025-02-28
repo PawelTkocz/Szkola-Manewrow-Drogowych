@@ -1,12 +1,12 @@
+from animations_menu.options_menu import OptionToChoose, OptionsMenu
 from constants import BACKGROUND_COLOR
-from options_menu import OptionsMenu, OptionToChoose
+from intersection.go_straight import IntersectionGoStraightAnimation
+from intersection.turn_left import IntersectionTurnLeftAnimation
+from intersection.turn_right import IntersectionTurnRightAnimation
 from state import State
-from animations.intersection.go_straight import IntersectionGoStraight
 from animations_menu.intersection_manoeuvres_menu import (
     IntersectionManoeuvresMenu,
 )
-from animations.intersection.turn_left import IntersectionTurnLeft
-from animations.intersection.turn_right import IntersectionTurnRight
 
 TITLE = "Choose Animation"
 OPTIONS_COLUMNS_NUMBER = 3
@@ -27,35 +27,35 @@ class MainMenu(State):
             OptionToChoose(
                 "Animation 2",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnRight(self),
+                IntersectionTurnRightAnimation(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 3",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionGoStraight(self),
+                IntersectionGoStraightAnimation(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 4",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
+                IntersectionTurnLeftAnimation(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 5",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
+                IntersectionTurnLeftAnimation(self),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Animation 6",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
+                IntersectionTurnLeftAnimation(self),
             )
         )
 

@@ -1,7 +1,7 @@
 from car.autonomous.car_simulation import CarSimulation
 from car.autonomous.track import Track, TrackPath
 from car.autonomous.track_follower import MovementDecision, TrackFollower
-from car.car_state import CarState
+from car.car import CarState
 from car.model import CarModel
 from geometry import Directions, calculate_line, distance_of_point_to_line
 

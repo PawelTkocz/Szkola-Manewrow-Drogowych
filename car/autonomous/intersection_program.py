@@ -1,6 +1,7 @@
+from car.autonomous.car_simulation import CarSimulation
 from car.autonomous.track import Track, TrackPath
-from car.car_state import CarState
-from geometry import Directions
+from car.car import CarState, SpeedModifications
+from geometry import Directions, Rectangle
 from intersection.intersection import Intersection
 
 vertical = [Directions.UP, Directions.DOWN]

@@ -1,5 +1,5 @@
+from car.autonomous.track import Track
 from geometry import Rectangle
-from autonomousDriving.track import Track
 from car.car import Car
 
 

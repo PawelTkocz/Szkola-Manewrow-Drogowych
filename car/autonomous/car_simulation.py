@@ -1,6 +1,5 @@
 from typing import TypedDict
-from car.car import Car
-from car.car_state import CarState
+from car.car import Car, CarState
 from car.model import CarModel
 from geometry import Direction, Point
 

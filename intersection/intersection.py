@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from car.car_state import CarState
+from car.car import CarState
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.intersection import IntersectionDrafter
 from geometry import Direction, Directions, Point, Rectangle

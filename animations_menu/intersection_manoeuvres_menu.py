@@ -1,9 +1,9 @@
+from animations_menu.options_menu import OptionToChoose, OptionsMenu
 from constants import BACKGROUND_COLOR
-from options_menu import OptionsMenu, OptionToChoose
+from intersection.go_straight import IntersectionGoStraightAnimation
+from intersection.turn_left import IntersectionTurnLeftAnimation
+from intersection.turn_right import IntersectionTurnRightAnimation
 from state import State
-from animations.intersection.go_straight import IntersectionGoStraight
-from animations.intersection.turn_left import IntersectionTurnLeft
-from animations.intersection.turn_right import IntersectionTurnRight
 
 TITLE = "Choose Intersection Manoeuvre"
 OPTIONS_COLUMNS_NUMBER = 3
@@ -17,21 +17,21 @@ class IntersectionManoeuvresMenu(State):
             OptionToChoose(
                 "Turn Left",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeft(self),
+                IntersectionTurnLeftAnimation(self, True),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Turn Right",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionTurnRight(self),
+                IntersectionTurnRightAnimation(self, True),
             )
         )
         self._add_option_to_choose(
             OptionToChoose(
                 "Go Straight",
                 "animationsScreenshots/screenshot12.png",
-                IntersectionGoStraight(self),
+                IntersectionGoStraightAnimation(self, True),
             )
         )
 

@@ -1,8 +1,8 @@
-from animations.intersection.manoeuvre import Manoeuvre
 from car.autonomous.program import MovementDecision
 from car.car import Car
 from car.model import CarModel
 from geometry import Direction, Point
+from manoeuvres.manoeuvre import Manoeuvre
 
 # jedna klasa musi byc odpowiedzialna za opisanie sytuacji na skrzyzowaniu:
 # jakie samochody biora udzial, kto kumu musi ustapic pierwszenstwa

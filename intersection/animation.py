@@ -1,8 +1,7 @@
 import os
 from typing import TypedDict
 from car.autonomous.car import AutonomousCar
-from car.car import SpeedModifications
-from car.car_state import CarState
+from car.car import CarState, SpeedModifications
 from car.toyota_yaris import ToyotaYaris
 from geometry import Directions, Point
 from intersection.intersection import Intersection
