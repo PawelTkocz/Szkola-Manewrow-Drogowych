@@ -1,16 +1,25 @@
-from car.autonomous.track import Track
-from geometry import Rectangle
-from car.car import Car
+from abc import ABC, abstractmethod
+from typing import TypedDict
+from car.autonomous.track import Track, TrackPath
+from geometry import Point
 
+class ManoeuvrePhaseEndState(TypedDict):
+    front_middle_position: Point
+    velocity: float
 
-class ManoeuvrePhase:
+class ManoeuvrePhase(ABC):
     """
-    Class representing one phase of a manoeuvre
+    Class representing one phase of a manoeuvre.
     """
 
-    def __init__(self, track: Track, non_preference_zone: Rectangle):
-        self.track = track
-        self.non_preperence_zone = non_preference_zone
+    def __init__(self, track_path: TrackPath, reversing: bool):
+        self.track = Track(track_path)
+        self.reversing = reversing
 
-    def is_phase_over(self):
+    @abstractmethod
+    def get_desired_end_state() -> ManoeuvrePhaseEndState:
+        pass
+
+    @abstractmethod
+    def is_phase_over(self, front_middle_position: Point, velocity: float) -> bool:
         pass

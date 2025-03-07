@@ -1,4 +1,5 @@
 from typing import TypedDict
+from car.autonomous.car import AutonomousCar
 from car.car import Car, LiveCarData
 from car.model import CarModel
 from geometry import Direction, Point
@@ -17,24 +18,27 @@ class CarSavedState(TypedDict):
     model: CarModel
 
 
-class CarSimulation(Car):
+class CarSimulation(AutonomousCar):
     """
-    Class simulating real car.
+    Class simulating autonomous car.
     """
 
-    def __init__(self, model: CarModel, live_car_data: LiveCarData):
+    def __init__(self, live_car_data: LiveCarData):
         """
         Initialize car simulation.
         """
         super().__init__(
-            model,
-            live_car_data.color,
-            live_car_data.front_middle,
-            live_car_data.direction,
-            live_car_data.velocity,
+            live_car_data["registry_number"],
+            live_car_data["model"],
+            live_car_data["color"],
+            live_car_data["front_middle"],
+            live_car_data["road_segment"],
+            live_car_data["autonomous_driving_program"],
+            live_car_data["direction"],
+            live_car_data["velocity"],
         )
 
-    def set_state(self, car_saved_state: CarSavedState):
+    def restore_state(self, car_saved_state: CarSavedState):
         # make sure it's not necessary to create copies here
         self._direction = car_saved_state["direction"]
         self._front_left = car_saved_state["front_left"]

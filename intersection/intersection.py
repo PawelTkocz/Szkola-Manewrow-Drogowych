@@ -1,18 +1,25 @@
 from abc import ABC, abstractmethod
-from car.car import LiveCarData
+from typing import TypedDict
+from car.car import Car, LiveCarData
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.intersection import IntersectionDrafter
 from geometry import Direction, Directions, Point, Rectangle
 from intersection.schemas import CarOnIntersection, IntersectionParts
 
+class CarOnIntersectionData(TypedDict):
+    car: Car # will be using only .get_live_data method so maybe some interface instead
+    starting_side: Directions
+    ending_side: Directions
 
+
+# remember to fix imports for example for LiveCarData
 # remember to change from line to lane
 class Intersection(ABC):
     def __init__(self, line_width):
         self.line_width = line_width
         self.intersection_parts = self._calculate_intersection_parts(line_width)
         self.intersection_drafter = IntersectionDrafter(self.intersection_parts)
-        self.cars: list[CarOnIntersection] = []
+        self._cars: list[CarOnIntersectionData] = []
 
     def _calculate_intersection_parts(self, line_width: float) -> IntersectionParts:
         street_width = 2 * line_width
@@ -92,7 +99,7 @@ class Intersection(ABC):
     def add_car(
         self, live_car_data: LiveCarData, starting_side: Directions, ending_side: Directions
     ):
-        self.cars.append(
+        self._cars.append(
             {
                 "live_car_data": live_car_data,
                 "starting_side": starting_side,
@@ -100,11 +107,15 @@ class Intersection(ABC):
             }
         )
 
-    def remove_car(self, car_on_intersection: CarOnIntersection):
-        self.cars.remove(car_on_intersection)
+    def remove_car(self, car_on_intersection: CarOnIntersectionData):
+        self._cars.remove(car_on_intersection)
 
-    def get_cars(self) -> list[CarOnIntersection]:
-        return self.cars
+    def get_cars_data(self) -> list[CarOnIntersection]:
+        return [{
+            "starting_side": car["starting_side"],
+            "ending_side": car["ending_side"],
+            "live_car_data": car["car"].get_live_data()
+        } for car in self._cars]
 
     @abstractmethod
     def has_priority(car1: CarOnIntersection, car2: CarOnIntersection) -> bool:
