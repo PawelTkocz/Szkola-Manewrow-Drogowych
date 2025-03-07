@@ -3,6 +3,7 @@ from typing import TypedDict
 from car.autonomous.track import TrackPath
 from car.car import LiveCarData, SpeedModifications
 from geometry import Directions
+from manoeuvres.manoeuvre_phase import ManoeuvrePhaseEndState
 
 
 class MovementDecision(TypedDict):
@@ -16,5 +17,5 @@ class TrackFollower(ABC):
         pass
 
     @abstractmethod
-    def make_movement_decision(self, live_car_data: LiveCarData) -> MovementDecision:
+    def make_movement_decision(self, live_car_data: LiveCarData, desired_end_state: ManoeuvrePhaseEndState) -> MovementDecision:
         pass

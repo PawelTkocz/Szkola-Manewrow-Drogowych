@@ -189,7 +189,7 @@ class Car(CarBody):
             "max_velocity": self.max_velocity,
             "max_brake": self.max_brake,
             "road_segment": self.current_road_segment,
-            "autonomous_drivign_program": None,
+            "autonomous_driving_program": None,
             "registry_number": self.registry_number
         }
     

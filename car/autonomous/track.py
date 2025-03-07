@@ -70,3 +70,7 @@ class Track:
     def get_distance_to_point(self, point: Point):
         distances, _ = self.kd_tree.query([point.x, point.y], k=2)
         return distances[0] + distances[1]
+    
+    def find_index_of_closest_point(self, point: Point):
+        _, index = self.kd_tree.query([point.x, point.y])
+        return index

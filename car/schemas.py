@@ -25,4 +25,4 @@ class LiveCarData(TypedDict):
     model: CarModel
     color: str
     road_segment: RoadSegment
-    autonomous_drivign_program: AutonomousDrivingProgram | None
+    autonomous_driving_program: AutonomousDrivingProgram | None

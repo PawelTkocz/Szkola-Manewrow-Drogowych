@@ -67,10 +67,7 @@ class UpgradedTrack(Track):
 
     def find_straight_line_end_point(self, track_point_index):
         return self.track_path[self.furthest_point_indexes_in_line[track_point_index]]
-    
-    def find_index_of_closest_point(self, point: Point):
-        _, index = self.kd_tree.query([point.x, point.y])
-        return index
+
 
 
 class TrackFollowerBeta(TrackFollower):
