@@ -37,7 +37,6 @@ class IntersectionProgram:
         self.manoeuvre_status = {
             "closing_to_intersection": True,
             "can_cross_the_intersection": False,
-            "intersection_behind": False
         }
         self.track_follower.set_track(self.current_manoeuvre.current_phase().track.track_path)
 
