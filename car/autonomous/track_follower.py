@@ -13,9 +13,9 @@ class MovementDecision(TypedDict):
 
 class TrackFollower(ABC):
     @abstractmethod
-    def set_track(self, track_path: TrackPath) -> None:
+    def set_track(self, track_path: TrackPath, desired_end_state: ManoeuvrePhaseEndState) -> None:
         pass
 
     @abstractmethod
-    def make_movement_decision(self, live_car_data: LiveCarData, desired_end_state: ManoeuvrePhaseEndState) -> MovementDecision:
+    def make_movement_decision(self, live_car_data: LiveCarData) -> MovementDecision:
         pass

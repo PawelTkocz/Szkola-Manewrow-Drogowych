@@ -11,12 +11,13 @@ class TrackFollowerAlpha(TrackFollower):
         self.max_distance_to_track = 5
         self.simulation_max_future_steps = 5
 
-    def set_track(self, track_path: TrackPath) -> None:
+    def set_track(self, track_path: TrackPath, desired_end_state: ManoeuvrePhaseEndState) -> None:
         self.track = Track(track_path)
+        self.desired_end_state = desired_end_state
 
-    def make_movement_decision(self, live_car_data: LiveCarData, desired_end_state: ManoeuvrePhaseEndState) -> MovementDecision:
-        turn_direction = self.closest_to_track_turning_policy(live_car_data, desired_end_state)
-        speed_modification = self.hold_to_track(live_car_data, desired_end_state)
+    def make_movement_decision(self, live_car_data: LiveCarData) -> MovementDecision:
+        turn_direction = self.closest_to_track_turning_policy(live_car_data, self.desired_end_state)
+        speed_modification = self.hold_to_track(live_car_data, self.desired_end_state)
         return {"speed_modification": speed_modification, "turn_direction": turn_direction}
 
     def closest_to_track_turning_policy(self, live_car_data: LiveCarData, desired_end_state: ManoeuvrePhaseEndState) -> Directions:
