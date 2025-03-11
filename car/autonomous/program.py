@@ -14,11 +14,9 @@ class AutonomousDrivingProgram(ABC):
     ):
         self.name = name
         self.intersection_program = intersection_program
-        self.current_manoeuvre_description: ManoeuvreDescription | None = None
         self.current_manoeuvre: Manoeuvre | None = None
 
     def set_manoeuvre(self, manoeuvre_description: ManoeuvreDescription):
-        self.current_manoeuvre = manoeuvre_description
         if isinstance(manoeuvre_description, IntersectionManoeuvreDescription):
             self.current_manoeuvre = self.intersection_program.prepare_manoeuvre(manoeuvre_description)
 

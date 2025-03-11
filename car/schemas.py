@@ -1,6 +1,7 @@
 from typing import TypedDict
 
 from car.autonomous.program import AutonomousDrivingProgram
+from car.autonomous.schemas import Manoeuvre
 from car.car import RoadSegment
 from car.model import CarModel
 from geometry import Point
@@ -26,3 +27,4 @@ class LiveCarData(TypedDict):
     color: str
     road_segment: RoadSegment
     autonomous_driving_program: AutonomousDrivingProgram | None
+    current_manoeuvre: Manoeuvre | None

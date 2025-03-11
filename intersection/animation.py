@@ -1,7 +1,7 @@
 import os
 from typing import TypedDict
 from car.autonomous.car import AutonomousCar
-from car.autonomous.intersection_program import IntersectionProgram
+from car.autonomous.intersection_program_alpha import IntersectionProgram
 from car.autonomous.program import AutonomousDrivingProgram
 from car.car import LiveCarData, SpeedModifications
 from car.toyota_yaris import ToyotaYaris

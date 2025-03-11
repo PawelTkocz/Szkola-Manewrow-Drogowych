@@ -12,13 +12,10 @@ class ManoeuvrePhase(ABC):
     Class representing one phase of a manoeuvre.
     """
 
-    def __init__(self, track_path: TrackPath, reversing: bool):
+    def __init__(self, track_path: TrackPath, reversing: bool, desired_end_state: ManoeuvrePhaseEndState):
         self.track = Track(track_path)
         self.reversing = reversing
-
-    @abstractmethod
-    def get_desired_end_state() -> ManoeuvrePhaseEndState:
-        pass
+        self.desired_end_state = desired_end_state
 
     @abstractmethod
     def is_phase_over(self, front_middle_position: Point, velocity: float) -> bool:

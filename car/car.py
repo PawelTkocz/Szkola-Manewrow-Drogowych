@@ -190,7 +190,8 @@ class Car(CarBody):
             "max_brake": self.max_brake,
             "road_segment": self.current_road_segment,
             "autonomous_driving_program": None,
-            "registry_number": self.registry_number
+            "registry_number": self.registry_number,
+            "current_manoeuvre": None
         }
     
     def update_current_road_segment(self, road_segment: Intersection):
