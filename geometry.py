@@ -338,6 +338,11 @@ class Rectangle:
             self.direction,
         )
 
+    def copy(self) -> "Rectangle":
+        """
+        Get copy of a rectangle
+        """
+        return Rectangle(self.front_middle, self.width, self.length, self.direction)
 
 # maybe create class Angle for wheels angle and class Direction whill extend this class
 

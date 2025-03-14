@@ -1,31 +1,46 @@
-from car.autonomous.track import TrackPath, get_right_angle_turn, get_straight_track
-from car.car import LiveCarData
+from traffic_control_center_software.track import (
+    TrackPath,
+    get_right_angle_turn,
+    get_straight_track,
+)
 from car.model import CarModel
-from geometry import Directions
-from intersection.intersection import Intersection
+from geometry import Directions, Point
 from manoeuvres.manoeuvre import Manoeuvre
 from manoeuvres.manoeuvre_phase import ManoeuvrePhase
+from road_segments.intersection.intersection import Intersection
 
 vertical = [Directions.UP, Directions.DOWN]
 horizontal = [Directions.LEFT, Directions.RIGHT]
 directions = [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]
 
+
 class IntersectionManoeruvrePhase(ManoeuvrePhase):
     distance_to_finish_phase = 20
-    def __init__(self, track_path: TrackPath):
-        super().__init__(track_path)
 
-    def is_phase_over(self, live_car_data: LiveCarData):
-        return self.track.get_distance_to_point(live_car_data["front_middle"]) < self.distance_to_finish_phase
+    def __init__(self, track_path: TrackPath):
+        super().__init__(track_path, False, {})
+
+    def is_phase_over(self, front_middle_position: Point, velocity: float) -> bool:
+        return (
+            self.track.get_distance_to_point(front_middle_position)
+            < self.distance_to_finish_phase
+        )
+
 
 class IntersectionManoeuvre(Manoeuvre):
-    def __init__(self, model: CarModel, intersection: Intersection, starting_side: Directions, ending_side: Directions):
+    def __init__(
+        self,
+        model: CarModel,
+        intersection: Intersection,
+        starting_side: Directions,
+        ending_side: Directions,
+    ):
         # think about not passing intersection as parameter but reading it from live_car_data.current_road_segment
         self.intersection = intersection
         self.starting_side = starting_side
         self.ending_side = ending_side
         self.model = model
-        super().__init__([IntersectionManoeruvrePhase(intersection, self._calculate_track_path())])
+        super().__init__([IntersectionManoeruvrePhase(self._calculate_track_path())])
 
     def _calculate_track_path(self) -> TrackPath:
         if (self.starting_side in vertical and self.ending_side in vertical) or (
@@ -51,7 +66,7 @@ class IntersectionManoeuvre(Manoeuvre):
             self.ending_side
         ]
         end_point = outcoming_line.front_middle.add_vector(
-            outcoming_line.direction.scale_to_len(2*car_length)
+            outcoming_line.direction.scale_to_len(2 * car_length)
         )
         turn_start_point = incoming_line.front_middle.add_vector(
             incoming_line.direction.get_negative_of_a_vector().scale_to_len(turn_margin)
@@ -59,9 +74,7 @@ class IntersectionManoeuvre(Manoeuvre):
         turn_end_point = outcoming_line.rear_middle.add_vector(
             outcoming_line.direction.scale_to_len(turn_margin)
         )
-        incoming_track_path = get_straight_track(
-            start_point, turn_start_point
-        )
+        incoming_track_path = get_straight_track(start_point, turn_start_point)
         turning_track_path = get_right_angle_turn(
             turn_start_point, turn_end_point, turn_direction, turn_sharpness
         )
@@ -83,6 +96,6 @@ class IntersectionManoeuvre(Manoeuvre):
             self.ending_side
         ]
         end_point = outcoming_line.front_middle.add_vector(
-            outcoming_line.direction.scale_to_len(2*car_length)
+            outcoming_line.direction.scale_to_len(2 * car_length)
         )
         return get_straight_track(start_point, end_point)
