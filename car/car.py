@@ -1,20 +1,7 @@
-from enum import Enum
-from typing import TypeAlias
-from car.schemas import LiveCarData
 from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
-from intersection.intersection import Intersection
-
-RoadSegment: TypeAlias = Intersection
-
-
-class SpeedModifications(Enum):
-    SPEED_UP = 1
-    NO_CHANGE = 2
-    BRAKE = 3
-
 
 class CarBody(Rectangle):
     def __init__(
@@ -65,11 +52,10 @@ class Car(CarBody):
 
     def __init__(
         self,
-        registry_number: int,
+        registry_number: str,
         model: CarModel,
         color: str,
         front_middle_position: Point,
-        road_segment: RoadSegment,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
     ):
@@ -82,7 +68,6 @@ class Car(CarBody):
         self.color = color
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn)
-        self._road_segment = road_segment
         self._car_drafter = CarDrafter(model, color)
 
     @property
@@ -112,11 +97,6 @@ class Car(CarBody):
     @property
     def wheels_direction(self) -> Direction:
         return self.wheels.direction
-
-    @property
-    def current_road_segment(self) -> RoadSegment:
-        return self._road_segment
-
 
     def turn(self, direction: Directions):
         self.wheels.turn(self.wheels_turn_speed, direction)
@@ -169,33 +149,3 @@ class Car(CarBody):
         if obj is not None:
             return self.collides(obj)
         return False
-    
-    def get_live_data(self) -> LiveCarData:
-        return {
-            "length": self.length,
-            "width": self.width,
-            "direction": self.direction,
-            "front_middle": self.front_middle,
-            "front_right": self.front_right,
-            "front_left": self.front_left,
-            "rear_middle": self.rear_middle,
-            "rear_left": self.rear_left,
-            "rear_right": self.rear_right,
-            "color": self.color,
-            "model": self.model,
-            "wheels_angle": self.wheels_angle,
-            "max_acceleration": self.max_acceleration,
-            "velocity": self.velocity,
-            "max_velocity": self.max_velocity,
-            "max_brake": self.max_brake,
-            "road_segment": self.current_road_segment,
-            "autonomous_driving_program": None,
-            "registry_number": self.registry_number,
-            "current_manoeuvre": None
-        }
-    
-    def update_current_road_segment(self, road_segment: Intersection):
-        """
-        Update current road segment the car is on.
-        """
-        self.current_road_segment = road_segment
