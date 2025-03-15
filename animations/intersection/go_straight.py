@@ -1,22 +1,36 @@
-from geometry import Directions
-from intersection.animation import IntersectionAnimation
-from intersection.priority_to_the_right_intersection import (
-    PriorityToTheRightIntersection,
+from animations.intersection.intersection_manoeuvre_animation import (
+    IntersectionManoeuvreAnimation,
 )
+from geometry import Directions
+from road_control_center.intersection.intersection_A0 import IntersectionA0ControlCenter
 from state import State
 
 
-class IntersectionGoStraightAnimation(IntersectionAnimation):
-    intersection = PriorityToTheRightIntersection()
+class IntersectionGoStraightAnimation(IntersectionManoeuvreAnimation):
+    intersection_control_center = IntersectionA0ControlCenter()
     manoeuvre_directory_name = "go_straight"
 
-    def __init__(self, previous_state: State, read_from_file: bool):
+    def __init__(self, previous_state: State):
         super().__init__(
             previous_state,
-            self.intersection,
             self.manoeuvre_directory_name,
-            read_from_file,
+            self.intersection_control_center,
         )
-        self.add_car("red", Directions.DOWN, Directions.RIGHT, 0)
-        self.add_car("pink", Directions.LEFT, Directions.RIGHT, 0)
-        self.add_car("purple", Directions.RIGHT, Directions.DOWN, 0)
+        self.add_car(
+            "DW001",
+            "red",
+            {"starting_side": Directions.DOWN, "ending_side": Directions.RIGHT},
+            0,
+        )
+        self.add_car(
+            "DW002",
+            "pink",
+            {"starting_side": Directions.LEFT, "ending_side": Directions.RIGHT},
+            0,
+        )
+        self.add_car(
+            "DW003",
+            "purple",
+            {"starting_side": Directions.RIGHT, "ending_side": Directions.DOWN},
+            0,
+        )

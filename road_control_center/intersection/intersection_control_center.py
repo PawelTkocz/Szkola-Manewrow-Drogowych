@@ -15,9 +15,7 @@ from traffic_control_center_software.car_movement_simulator import (
     can_stop_before_zone,
     get_status_before_entering_zone,
 )
-from traffic_control_center_software.intersection.intersection_program import (
-    IntersectionProgram,
-)
+
 from traffic_control_center_software.schemas import (
     MovementInstruction,
     SpeedModifications,
@@ -31,7 +29,6 @@ class IntersectionControlCenter(RoadControlCenter):
         self.intersection = intersection
         self.cars: list[CarOnIntersection] = []
         self.track_follower = TrackFollower()
-        self.intersection_program = IntersectionProgram()
 
     def add_car(self, car_data_transmitter: CarDataTransmitter):
         live_car_data = car_data_transmitter.get_live_car_data()

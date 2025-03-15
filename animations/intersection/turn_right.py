@@ -1,23 +1,42 @@
-from geometry import Directions
-from intersection.animation import IntersectionAnimation
-from intersection.priority_to_the_right_intersection import (
-    PriorityToTheRightIntersection,
+from animations.intersection.intersection_manoeuvre_animation import (
+    IntersectionManoeuvreAnimation,
 )
+from geometry import Directions
+from road_control_center.intersection.intersection_A0 import IntersectionA0ControlCenter
 from state import State
 
 
-class IntersectionTurnRightAnimation(IntersectionAnimation):
-    intersection = PriorityToTheRightIntersection()
+class IntersectionTurnRightAnimation(IntersectionManoeuvreAnimation):
+    intersection_control_center = IntersectionA0ControlCenter()
     manoeuvre_directory_name = "turn_right"
 
-    def __init__(self, previous_state: State, read_from_file: bool):
+    def __init__(self, previous_state: State):
         super().__init__(
             previous_state,
-            self.intersection,
             self.manoeuvre_directory_name,
-            read_from_file,
+            self.intersection_control_center,
         )
-        self.add_car("red", Directions.LEFT, Directions.DOWN, 0)
-        self.add_car("yellow", Directions.RIGHT, Directions.UP, 0)
-        self.add_car("green", Directions.UP, Directions.DOWN, 0)
-        self.add_car("orange", Directions.DOWN, Directions.LEFT, 0)
+        self.add_car(
+            "DW001",
+            "red",
+            {"starting_side": Directions.LEFT, "ending_side": Directions.DOWN},
+            0,
+        )
+        self.add_car(
+            "DW002",
+            "yellow",
+            {"starting_side": Directions.RIGHT, "ending_side": Directions.UP},
+            0,
+        )
+        self.add_car(
+            "DW003",
+            "green",
+            {"starting_side": Directions.UP, "ending_side": Directions.DOWN},
+            0,
+        )
+        self.add_car(
+            "DW004",
+            "orange",
+            {"starting_side": Directions.DOWN, "ending_side": Directions.LEFT},
+            0,
+        )
