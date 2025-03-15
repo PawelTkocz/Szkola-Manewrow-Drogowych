@@ -1,0 +1,64 @@
+from abc import abstractmethod
+from animations.animation_strategy import AnimationStrategy
+from animations.constants import PLAYBACK_ANIMATIONS
+from animations.playback_animation import PlaybackAnimation
+from animations.runtime_animation import RuntimeAnimation
+from animations.schemas import CarStartingPosition
+from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from road_control_center.road_control_center import RoadControlCenter
+from state import State
+
+
+class ManoeuvreAnimation(State):
+    def __init__(
+        self,
+        previous_state: State,
+        manoeuvre_directory_name: str,
+        road_control_center: RoadControlCenter,
+    ):
+        super().__init__(previous_state=previous_state)
+        self.frame_number = 0
+        self.animation_strategy: AnimationStrategy = (
+            PlaybackAnimation(manoeuvre_directory_name)
+            if PLAYBACK_ANIMATIONS
+            else RuntimeAnimation(manoeuvre_directory_name, road_control_center)
+        )
+
+    @abstractmethod
+    def get_starting_position(
+        self, manoeuvre_description: IntersectionManoeuvreDescription
+    ) -> CarStartingPosition:
+        pass
+
+    @abstractmethod
+    def draw_road(self, screen):
+        pass
+
+    def add_car(
+        self,
+        registry_number: str,
+        color: str,
+        manoeuvre_description: IntersectionManoeuvreDescription,
+        start_frame_number: int,
+    ):
+        starting_position = self.get_starting_position(manoeuvre_description)
+        self.animation_strategy.add_car(
+            registry_number,
+            color,
+            starting_position,
+            manoeuvre_description,
+            start_frame_number,
+        )
+
+    def render_frame(self, screen):
+        cars = self.animation_strategy.move_cars(self.frame_number)
+        self.draw_road(screen)
+        for car in cars:
+            car.draw(screen)
+        self.frame_number += 1
+
+    def handle_click(self, mouse_click_position) -> State:
+        return self.previous_state
+
+    def handle_quit(self):
+        self.animation_strategy.handle_quit()

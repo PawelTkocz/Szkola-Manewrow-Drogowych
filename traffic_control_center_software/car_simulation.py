@@ -1,6 +1,4 @@
 from typing import TypedDict
-from car.autonomous.car import AutonomousCar
-from car.car import Car, LiveCarData
 from car.model import CarModel
 from geometry import Direction, Point
 
