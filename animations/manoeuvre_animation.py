@@ -9,19 +9,19 @@ from road_control_center.road_control_center import RoadControlCenter
 from state import State
 
 
-class ManoeuvreAnimation(State):
+class RoadSegmentAnimation(State):
     def __init__(
         self,
         previous_state: State,
-        manoeuvre_directory_name: str,
+        movement_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
     ):
         super().__init__(previous_state=previous_state)
         self.frame_number = 0
         self.animation_strategy: AnimationStrategy = (
-            PlaybackAnimation(manoeuvre_directory_name)
+            PlaybackAnimation(movement_instructions_dir_path)
             if PLAYBACK_ANIMATIONS
-            else RuntimeAnimation(manoeuvre_directory_name, road_control_center)
+            else RuntimeAnimation(movement_instructions_dir_path, road_control_center)
         )
 
     @abstractmethod

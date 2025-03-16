@@ -8,13 +8,13 @@ from traffic_control_center_software.schemas import MovementInstruction
 
 class PlaybackAnimationCarInfo(TypedDict):
     car: InstructionControlledCar
-    movement_history: list[MovementInstruction]
+    movement_instructions: list[MovementInstruction]
     start_frame_number: int
 
 
 class RuntimeAnimationCarInfo(TypedDict):
     car: SmartTrafficCar
-    movement_history: list[MovementInstruction]
+    movement_instructions: list[MovementInstruction]
     start_frame_number: int
 
 

@@ -1,4 +1,5 @@
-from animations.manoeuvre_animation import ManoeuvreAnimation
+import os
+from animations.manoeuvre_animation import RoadSegmentAnimation
 from animations.schemas import CarStartingPosition
 from drafter.intersection import IntersectionDrafter
 from road_control_center.intersection.intersection_control_center import (
@@ -6,18 +7,29 @@ from road_control_center.intersection.intersection_control_center import (
 )
 from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
 from state import State
+from animations.constants import (
+    MOVEMENT_INSTRUCTIONS_DIR as movement_instructions_dir,
+)
+from animations.intersection.constants import (
+    MOVEMENT_INSTRUCTIONS_DIR as intersection_movement_instructions_dir,
+)
 
 
-class IntersectionManoeuvreAnimation(ManoeuvreAnimation):
+class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
     def __init__(
         self,
         previous_state: State,
-        manoeuvre_directory_name: str,
+        manoeuvre_movement_instructions_dir: str,
         intersection_control_center: IntersectionControlCenter,
     ):
+        movement_instructions_dir_path = os.path.join(
+            movement_instructions_dir,
+            intersection_movement_instructions_dir,
+            manoeuvre_movement_instructions_dir,
+        )
         super().__init__(
             previous_state,
-            manoeuvre_directory_name,
+            movement_instructions_dir_path,
             intersection_control_center,
         )
         self.intersection = intersection_control_center.intersection

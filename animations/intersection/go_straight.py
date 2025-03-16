@@ -8,12 +8,12 @@ from state import State
 
 class IntersectionGoStraightAnimation(IntersectionManoeuvreAnimation):
     intersection_control_center = IntersectionA0ControlCenter()
-    manoeuvre_directory_name = "go_straight"
+    manoeuvre_movement_instructions_dir = "go_straight"
 
     def __init__(self, previous_state: State):
         super().__init__(
             previous_state,
-            self.manoeuvre_directory_name,
+            self.manoeuvre_movement_instructions_dir,
             self.intersection_control_center,
         )
         self.add_car(

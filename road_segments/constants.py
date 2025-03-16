@@ -1,0 +1,1 @@
+LINES_WIDTH = 5
