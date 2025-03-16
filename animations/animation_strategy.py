@@ -5,8 +5,8 @@ from road_control_center.intersection.schemas import IntersectionManoeuvreDescri
 
 
 class AnimationStrategy(ABC):
-    def __init__(self, manoeuvre_directory_name: str):
-        self.manoeuvre_directory_name = manoeuvre_directory_name
+    def __init__(self, movement_instructions_dir_path: str):
+        self.movement_instructions_dir_path = movement_instructions_dir_path
 
     @abstractmethod
     def add_car(

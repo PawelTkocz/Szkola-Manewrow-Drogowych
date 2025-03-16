@@ -19,36 +19,47 @@ class TrafficControlCenter:
         self._road_control_center = road_control_center
         self._time = 0
 
+    def receive_live_car_data(self, live_car_data: LiveCarData):
+        pass
+
+    def send_movement_instruction(self, registry_number: str) -> MovementInstruction:
+        pass
+
     def tick(self):
         self._time += 1
         self._road_control_center.update_time()
 
 
 class CarDataTransmitter:
-    def __init__(
-        self,
-        traffic_control_center: TrafficControlCenter,
-        autonomous_car: "SmartTrafficCar",
-    ):
+    def __init__(self, autonomous_car: "SmartTrafficCar"):
         self._autonomous_car = autonomous_car
+        self._traffic_control_center: TrafficControlCenter | None = None
+
+    def connect_to_traffic_control_center(
+        self, traffic_control_center: TrafficControlCenter
+    ):
         self._traffic_control_center = traffic_control_center
         self.send_live_data_to_control_center()
 
     def send_live_data_to_control_center(self):
-        self._traffic_control_center.receive_live_car_data(
-            self._autonomous_car.get_live_data()
-        )
+        if self._traffic_control_center:
+            self._traffic_control_center.receive_live_car_data(
+                self._autonomous_car.get_live_data()
+            )
 
-    def fetch_movement_instruction(self) -> MovementInstruction:
-        return self._traffic_control_center.send_movement_instruction(
-            self._autonomous_car.registry_number
+    def fetch_movement_instruction(self) -> MovementInstruction | None:
+        return (
+            self._traffic_control_center.send_movement_instruction(
+                self._autonomous_car.registry_number
+            )
+            if self._traffic_control_center
+            else None
         )
 
 
 class SmartTrafficCar(InstructionControlledCar):
     def __init__(
         self,
-        traffic_control_center: TrafficControlCenter,
         manoeuvre_description: IntersectionManoeuvreDescription,
         registry_number: str,
         model: CarModel,
@@ -60,15 +71,23 @@ class SmartTrafficCar(InstructionControlledCar):
         super().__init__(
             registry_number, model, color, front_middle_position, direction, velocity
         )
-        self.car_data_transmitter = CarDataTransmitter(traffic_control_center, self)
+        self.car_data_transmitter = CarDataTransmitter(self)
         self.manoeuvre_description = manoeuvre_description
 
-    def tick(self) -> MovementInstruction:
+    def tick(self) -> MovementInstruction | None:
         movement_instruction = self.car_data_transmitter.fetch_movement_instruction()
-        self.apply_movement_instruction(movement_instruction)
+        if movement_instruction:
+            self.apply_movement_instruction(movement_instruction)
         self.move()
         self.car_data_transmitter.send_live_data_to_control_center()
         return movement_instruction
+
+    def connect_to_traffic_control_center(
+        self, traffic_control_center: TrafficControlCenter
+    ):
+        self.car_data_transmitter.connect_to_traffic_control_center(
+            traffic_control_center
+        )
 
     def get_live_data(self) -> LiveCarData:
         return {

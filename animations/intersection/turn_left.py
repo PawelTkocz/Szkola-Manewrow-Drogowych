@@ -8,12 +8,12 @@ from state import State
 
 class IntersectionTurnLeftAnimation(IntersectionManoeuvreAnimation):
     intersection_control_center = IntersectionA0ControlCenter()
-    manoeuvre_directory_name = "turn_left"
+    manoeuvre_movement_instructions_dir = "turn_left"
 
     def __init__(self, previous_state: State):
         super().__init__(
             previous_state,
-            self.manoeuvre_directory_name,
+            self.manoeuvre_movement_instructions_dir,
             self.intersection_control_center,
         )
         self.add_car(

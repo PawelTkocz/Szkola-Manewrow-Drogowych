@@ -12,21 +12,15 @@ from traffic_control_center.traffic_control_center import (
     SmartTrafficCar,
     TrafficControlCenter,
 )
-from constants import (
-    SAVED_CAR_MOVEMENT_DIRECTORY as general_car_movement_directory,
-)
-from animations.intersection.constants import (
-    SAVED_CAR_MOVEMENT_DIRECTORY as intersection_car_movement_directory,
-)
 
 
 class RuntimeAnimation(AnimationStrategy):
     def __init__(
         self,
-        manoeuvre_directory_name: str,
+        movement_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
     ):
-        super().__init__(manoeuvre_directory_name)
+        super().__init__(movement_instructions_dir_path)
         self.traffic_control_center = TrafficControlCenter(road_control_center)
         self.cars: list[RuntimeAnimationCarInfo] = []
 
@@ -39,7 +33,6 @@ class RuntimeAnimation(AnimationStrategy):
         start_frame_number: int,
     ):
         car = SmartTrafficCar(
-            self.traffic_control_center,
             manoeuvre_description,
             registry_number,
             ToyotaYaris(),
@@ -50,38 +43,40 @@ class RuntimeAnimation(AnimationStrategy):
         self.cars.append(
             {
                 "car": car,
-                "movement_history": [],
+                "movement_instructions": [],
                 "start_frame_number": start_frame_number,
             }
         )
 
     def move_cars(self, frame_number: int) -> list[Car]:
+        for car in self._get_cars_that_start_movement(frame_number):
+            car["car"].connect_to_traffic_control_center(self.traffic_control_center)
+        self.traffic_control_center.tick()
         for car in self.cars:
-            if frame_number >= car["start_frame_number"]:
-                car["movement_history"].append(car["car"].tick())
+            if frame_number < car["start_frame_number"]:
+                continue
+            movement_instruction = car["car"].tick()
+            if movement_instruction:
+                car["movement_instructions"].append()
         return [car["car"] for car in self.cars]
 
-    def _save_cars_movement(self):
-        for car_info in self.cars:
-            if not os.path.exists(general_car_movement_directory):
-                os.makedirs(general_car_movement_directory)
-            intersection_directory = os.path.join(
-                general_car_movement_directory, intersection_car_movement_directory
-            )
-            if not os.path.exists(intersection_directory):
-                os.makedirs(intersection_directory)
-            intersection_manoeuvre_directory = os.path.join(
-                intersection_directory, self.manoeuvre_directory_name
-            )
-            if not os.path.exists(intersection_manoeuvre_directory):
-                os.makedirs(intersection_manoeuvre_directory)
+    def _get_cars_that_start_movement(
+        self, frame_number
+    ) -> list[RuntimeAnimationCarInfo]:
+        return [car for car in self.cars if car["start_frame_number"] == frame_number]
+
+    def _save_movement_instructions(self):
+        os.makedirs(self.movement_instructions_dir_path, exist_ok=True)
+        for car in self.cars:
             file_path = os.path.join(
-                intersection_manoeuvre_directory,
-                f"car{car_info['car'].registry_number}.txt",
+                self.movement_instructions_dir_path,
+                f"car_{car['car'].registry_number}.txt",
             )
             with open(file_path, "w") as file:
-                for mod in car_info["movement_history"]:
-                    file.write(f"{mod[0].name} {mod[1].name}\n")
+                for movement_instruction in car["movement_instructions"]:
+                    file.write(
+                        f"{movement_instruction['speed_modification'].name} {movement_instruction['turn_direction'].name}\n"
+                    )
 
     def handle_quit(self) -> None:
-        self._save_cars_movement()
+        self._save_movement_instructions()
