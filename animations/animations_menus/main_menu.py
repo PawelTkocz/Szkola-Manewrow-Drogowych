@@ -1,12 +1,19 @@
-from animations_menu.options_menu import OptionToChoose, OptionsMenu
-from constants import BACKGROUND_COLOR, READ_SAVED_CAR_MOVEMENT
-from intersection.go_straight import IntersectionGoStraightAnimation
-from intersection.turn_left import IntersectionTurnLeftAnimation
-from intersection.turn_right import IntersectionTurnRightAnimation
-from state import State
-from animations_menu.intersection_manoeuvres_menu import (
+from animations.animations_generators.intersection.go_straight import (
+    IntersectionGoStraightAnimation,
+)
+from animations.animations_generators.intersection.turn_left import (
+    IntersectionTurnLeftAnimation,
+)
+from animations.animations_generators.intersection.turn_right import (
+    IntersectionTurnRightAnimation,
+)
+from animations.animations_menus.intersection_manoeuvres_menu import (
     IntersectionManoeuvresMenu,
 )
+from animations.animations_menus.options_menu import OptionToChoose, OptionsMenu
+from constants import BACKGROUND_COLOR
+from state import State
+
 
 TITLE = "Choose Animation"
 OPTIONS_COLUMNS_NUMBER = 3

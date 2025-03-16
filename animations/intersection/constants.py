@@ -1,1 +1,0 @@
-MOVEMENT_INSTRUCTIONS_DIR = "intersection"
