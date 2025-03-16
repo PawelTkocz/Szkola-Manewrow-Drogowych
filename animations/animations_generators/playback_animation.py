@@ -1,6 +1,10 @@
 import os
-from animations.animation_strategy import AnimationStrategy
-from animations.schemas import CarStartingPosition, PlaybackAnimationCarInfo
+
+from animations.animations_generators.animation_strategy import AnimationStrategy
+from animations.animations_generators.schemas import (
+    CarStartingPosition,
+    PlaybackAnimationCarInfo,
+)
 from car.car import Car
 from car.instruction_controlled_car import InstructionControlledCar
 from car.toyota_yaris import ToyotaYaris

@@ -1,4 +1,4 @@
-from animations.intersection.intersection_manoeuvre_animation import (
+from animations.animations_generators.intersection.intersection_manoeuvre_animation import (
     IntersectionManoeuvreAnimation,
 )
 from geometry import Directions

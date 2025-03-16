@@ -1,8 +1,15 @@
-from animations_menu.options_menu import OptionToChoose, OptionsMenu
+from animations.animations_generators.intersection.go_straight import (
+    IntersectionGoStraightAnimation,
+)
+from animations.animations_generators.intersection.turn_left import (
+    IntersectionTurnLeftAnimation,
+)
+from animations.animations_generators.intersection.turn_right import (
+    IntersectionTurnRightAnimation,
+)
+from animations.animations_menus.options_menu import OptionToChoose, OptionsMenu
 from constants import BACKGROUND_COLOR
-from intersection.go_straight import IntersectionGoStraightAnimation
-from intersection.turn_left import IntersectionTurnLeftAnimation
-from intersection.turn_right import IntersectionTurnRightAnimation
+
 from state import State
 
 TITLE = "Choose Intersection Manoeuvre"

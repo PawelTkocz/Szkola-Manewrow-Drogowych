@@ -1,6 +1,7 @@
 import os
-from animations.animation_strategy import AnimationStrategy
-from animations.schemas import (
+
+from animations.animations_generators.animation_strategy import AnimationStrategy
+from animations.animations_generators.schemas import (
     CarStartingPosition,
     RuntimeAnimationCarInfo,
 )
