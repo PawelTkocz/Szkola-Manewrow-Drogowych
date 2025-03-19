@@ -1,3 +1,4 @@
+from pygame import Surface
 from animations.animations_generators.intersection.go_straight import (
     IntersectionGoStraightAnimation,
 )
@@ -7,42 +8,56 @@ from animations.animations_generators.intersection.turn_left import (
 from animations.animations_generators.intersection.turn_right import (
     IntersectionTurnRightAnimation,
 )
-from animations.animations_menus.options_menu import OptionToChoose, OptionsMenu
-from constants import BACKGROUND_COLOR
+from animations.animations_menus.constants import (
+    INTERSECTION_MENU_OPTIONS_COLUMNS_NUMBER,
+    INTERSECTION_MENU_TITLE,
+    MENU_OPTIONS_IMAGE_SIDE,
+    MENU_OPTIONS_X_SPACING,
+    MENU_OPTIONS_Y_SPACING,
+    MENU_TITLE_TOP_OFFSET,
+)
+from animations.animations_menus.options_menu import OptionsMenu
+from constants import BACKGROUND_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH
 
 from state import State
 
-TITLE = "Choose Intersection Manoeuvre"
-OPTIONS_COLUMNS_NUMBER = 3
-
 
 class IntersectionManoeuvresMenu(State):
-    def __init__(self, previous_state: State, read_saved_car_movement: bool):
+    def __init__(self, previous_state: State):
         super().__init__(previous_state=previous_state)
-        self.options_menu = OptionsMenu(TITLE, OPTIONS_COLUMNS_NUMBER)
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Turn Left",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionTurnLeftAnimation(self, read_saved_car_movement),
-            )
+        self.options_menu = OptionsMenu(
+            INTERSECTION_MENU_TITLE,
+            INTERSECTION_MENU_OPTIONS_COLUMNS_NUMBER,
+            SCREEN_HEIGHT,
+            SCREEN_WIDTH,
+            MENU_TITLE_TOP_OFFSET,
+            MENU_OPTIONS_X_SPACING,
+            MENU_OPTIONS_Y_SPACING,
+            MENU_OPTIONS_IMAGE_SIDE,
         )
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Turn Right",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionTurnRightAnimation(self, read_saved_car_movement),
-            )
+        self.options_menu.add_option_item(
+            {
+                "title": "Turn right",
+                "image_path": "animationsScreenshots/screenshot12.png",
+                "on_click_state": IntersectionTurnRightAnimation(self),
+            }
         )
-        self._add_option_to_choose(
-            OptionToChoose(
-                "Go Straight",
-                "animationsScreenshots/screenshot12.png",
-                IntersectionGoStraightAnimation(self, read_saved_car_movement),
-            )
+        self.options_menu.add_option_item(
+            {
+                "title": "Go straight",
+                "image_path": "animationsScreenshots/screenshot12.png",
+                "on_click_state": IntersectionGoStraightAnimation(self),
+            }
+        )
+        self.options_menu.add_option_item(
+            {
+                "title": "Turn left",
+                "image_path": "animationsScreenshots/screenshot12.png",
+                "on_click_state": IntersectionTurnLeftAnimation(self),
+            }
         )
 
-    def render_frame(self, screen):
+    def render_frame(self, screen: Surface):
         screen.fill(BACKGROUND_COLOR)
         self.options_menu.render(screen)
 
@@ -52,6 +67,3 @@ class IntersectionManoeuvresMenu(State):
 
     def handle_quit(self):
         return
-
-    def _add_option_to_choose(self, option_to_choose: OptionToChoose):
-        self.options_menu.add_option_to_choose(option_to_choose)

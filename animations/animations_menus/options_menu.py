@@ -1,125 +1,133 @@
-from typing import TypedDict
 import pygame
 
+from animations.animations_menus.constants import (
+    FONT_COLOR,
+    FONT_NAME,
+    MENU_OPTIONS_TITLE_FONT_SIZE,
+    MENU_TITLE_FONT_SIZE,
+)
+from animations.animations_menus.schemas import OptionItemDescription
 from constants import (
-    SCREEN_WIDTH,
     SECOND_BACKGROUND_COLOR,
 )
 from state import State
 
 
-OPTIONS_FONT_SIZE = 40
-OPTIONS_X_SPACING = 80
-OPTIONS_Y_SPACING = 50
-OPTIONS_OFFSET_Y = 200
-OPTIONS_SCREENSHOT_SIZE = 200
-TEXT_COLOR = "#000000"
-DEFAULT_FONT = "Sofia Pro"
-TITLE_FONT_SIZE = 120
-TITLE_OFFSET_Y = 100
-
-
-class OptionToChoose:
+class OptionItem:
     def __init__(
         self,
-        title,
-        image_path,
-        on_click_state: State,
-        *,
-        image_width=OPTIONS_SCREENSHOT_SIZE,
-        image_height=OPTIONS_SCREENSHOT_SIZE,
+        option_item_description: OptionItemDescription,
+        rectangle: pygame.Rect,
+        background_color: str,
+        font: pygame.font.Font,
+        font_color: str,
     ):
-        self.title = title
+        self.title = option_item_description["title"]
         self.image = pygame.transform.scale(
-            self._load_image(image_path, image_width, image_height),
-            (image_width, image_height),
+            pygame.image.load(option_item_description["image_path"]),
+            (rectangle.width, rectangle.width),
         )
-        self.on_click_state = on_click_state
+        self.on_click_state = option_item_description["on_click_state"]
+        self.rectangle = rectangle
+        self.background_color = background_color
+        self.font = font
+        self.font_color = font_color
 
-    def _load_image(self, image_path, image_width, image_height):
-        try:
-            return pygame.image.load(image_path)
-        except FileNotFoundError:
-            return pygame.Surface((image_width, image_height))
+    def is_clicked(self, mouse_click_position: tuple[float, float]) -> bool:
+        return self.rectangle.collidepoint(mouse_click_position)
 
     def on_click(self) -> State:
         return self.on_click_state
 
+    def render(self, screen: pygame.Surface) -> None:
+        pygame.draw.rect(screen, self.background_color, self.rectangle)
+        screen.blit(self.image, (self.rectangle.x, self.rectangle.y))
 
-class Option(TypedDict):
-    option_to_choose: OptionToChoose
-    rect: pygame.Rect
+        title_surface = self.font.render(self.title, True, self.font_color)
+        title_rect = title_surface.get_rect(
+            center=(
+                self.rectangle.centerx,
+                self.rectangle.bottom - self.font.get_height() / 2,
+            )
+        )
+        screen.blit(title_surface, title_rect)
 
 
 class OptionsMenu:
-    def __init__(self, title, columns_number):
+    def __init__(
+        self,
+        title: str,
+        columns_number: int,
+        height: int,
+        width: int,
+        title_top_offset: int,
+        option_items_x_spacing: int,
+        option_items_y_spacing: int,
+        option_items_image_side: int,
+    ):
         self.title = title
 
         pygame.font.init()
-        self.title_font = pygame.font.SysFont(DEFAULT_FONT, TITLE_FONT_SIZE)
-        self.options_font = pygame.font.SysFont(DEFAULT_FONT, OPTIONS_FONT_SIZE)
-
-        self.columns_number = columns_number
-        self.options: list[Option] = []
-
-        self.options_margin_left = (
-            SCREEN_WIDTH
-            - (
-                columns_number * OPTIONS_SCREENSHOT_SIZE
-                + (columns_number - 1) * OPTIONS_X_SPACING
-            )
-        ) // 2
-        self.options_margin_top = OPTIONS_OFFSET_Y
-
-    def add_option_to_choose(self, option_to_choose: OptionToChoose):
-        self.options.append(
-            {
-                "option_to_choose": option_to_choose,
-                "rect": self._calculate_option_rectangle(),
-            }
+        self.title_font = pygame.font.SysFont(FONT_NAME, MENU_TITLE_FONT_SIZE)
+        self.option_items_font = pygame.font.SysFont(
+            FONT_NAME, MENU_OPTIONS_TITLE_FONT_SIZE
         )
 
-    def _calculate_option_rectangle(self):
-        rect_width = OPTIONS_SCREENSHOT_SIZE
-        rect_height = OPTIONS_SCREENSHOT_SIZE + OPTIONS_FONT_SIZE
+        self.columns_number = columns_number
+        self.option_items: list[OptionItem] = []
+        self.height = height
+        self.width = width
+        self.title_top_offset = title_top_offset
+        self.option_items_x_spacing = option_items_x_spacing
+        self.option_items_y_spacing = option_items_y_spacing
+        self.option_items_image_side = option_items_image_side
 
-        option_index = len(self.options)
-        column = option_index % self.columns_number
-        row = option_index // self.columns_number
-        x_pos = self.options_margin_left + column * (rect_width + OPTIONS_X_SPACING)
-        y_pos = self.options_margin_top + row * (rect_height + OPTIONS_Y_SPACING)
+    def add_option_item(self, option_item_description: OptionItemDescription) -> None:
+        self.option_items.append(
+            OptionItem(
+                option_item_description,
+                self._calculate_option_rectangle(len(self.option_items)),
+                SECOND_BACKGROUND_COLOR,
+                self.option_items_font,
+                FONT_COLOR,
+            )
+        )
 
+    def _calculate_option_rectangle(self, option_item_index: int) -> pygame.Rect:
+        options_left_offset = (
+            self.width
+            - (
+                self.columns_number * self.option_items_image_side
+                + (self.columns_number - 1) * self.option_items_x_spacing
+            )
+        ) // 2
+        options_margin_top = 200  # fix this later
+
+        rect_width = self.option_items_image_side
+        rect_height = self.option_items_image_side + MENU_OPTIONS_TITLE_FONT_SIZE
+
+        column = option_item_index % self.columns_number
+        row = option_item_index // self.columns_number
+        x_pos = options_left_offset + column * (
+            rect_width + self.option_items_x_spacing
+        )
+        y_pos = options_margin_top + row * (rect_height + self.option_items_y_spacing)
         return pygame.Rect(x_pos, y_pos, rect_width, rect_height)
 
-    def _render_title(self, screen):
-        title_surface = self.title_font.render(self.title, True, TEXT_COLOR)
-        title_rect = title_surface.get_rect(center=(SCREEN_WIDTH // 2, TITLE_OFFSET_Y))
+    def _render_title(self, screen: pygame.Surface):
+        title_surface = self.title_font.render(self.title, True, FONT_COLOR)
+        title_rect = title_surface.get_rect(
+            center=(self.width // 2, self.title_top_offset)
+        )
         screen.blit(title_surface, title_rect)
 
-    def _render_options(self, screen):
-        for option in self.options:
-            rect = option["rect"]
-            pygame.draw.rect(screen, SECOND_BACKGROUND_COLOR, rect)
-            screen.blit(option["option_to_choose"].image, (rect.x, rect.y))
-
-            option_title_surface = self.options_font.render(
-                option["option_to_choose"].title, True, TEXT_COLOR
-            )
-            option_title_rect = option_title_surface.get_rect(
-                center=(
-                    rect.x + rect.width // 2,
-                    rect.y + rect.height - OPTIONS_FONT_SIZE / 2,
-                )
-            )
-            screen.blit(option_title_surface, option_title_rect)
-
-    def render(self, screen):
+    def render(self, screen: pygame.Surface):
         self._render_title(screen)
-        self._render_options(screen)
+        for option_item in self.option_items:
+            option_item.render(screen)
 
-    def handle_click(self, mouse_click_position) -> State | None:
-        for option in self.options:
-            rect = option["rect"]
-            if rect.collidepoint(mouse_click_position):
-                return option["option_to_choose"].on_click()
+    def handle_click(self, mouse_click_position: tuple[float, float]) -> State | None:
+        for option_item in self.option_items:
+            if option_item.is_clicked(mouse_click_position):
+                return option_item.on_click()
         return None
