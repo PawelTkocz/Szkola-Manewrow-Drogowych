@@ -1,2 +1,2 @@
-MOVEMENT_INSTRUCTIONS_DIR = "movement_instructions"
+MOVEMENT_INSTRUCTIONS_DIR = "animations/movement_instructions"
 PLAYBACK_ANIMATIONS = False
