@@ -10,9 +10,15 @@ from traffic_control_center_software.track_follower import TrackFollower
 
 
 def can_stop_before_zone(
-    live_car_data: LiveCarData, track: Track, zone: Rectangle
+    live_car_data: LiveCarData,
+    track: Track,
+    zone: Rectangle,
+    movement_instruction: MovementInstruction | None = None,
 ) -> bool:
     car_simulation = CarSimulation(live_car_data)
+    if movement_instruction:
+        car_simulation.apply_movement_instruction(movement_instruction)
+        car_simulation.move()
     if car_simulation.collides(zone):
         return False
     while car_simulation.velocity > 0:
@@ -31,21 +37,30 @@ def can_stop_before_zone(
 
 
 def get_status_before_entering_zone(
-    live_car_data: LiveCarData, track: Track, zone: Rectangle
+    live_car_data: LiveCarData,
+    track: Track,
+    zone: Rectangle,
+    movement_instruction: MovementInstruction,
 ) -> EnteringZoneStatus:
     car_simulation = CarSimulation(live_car_data)
-    if car_simulation.collides(zone):
-        return {"time_needed": 0, "velocity": car_simulation.velocity}
+    previous_live_car_data = live_car_data
+    current_live_car_data = live_car_data
     time = 0
-    for _ in range(10):
+    if movement_instruction:
+        car_simulation.apply_movement_instruction(movement_instruction)
+        car_simulation.move()
+        current_live_car_data = car_simulation.get_live_data()
         time += 1
+
+    while not car_simulation.collides(zone):
+        previous_live_car_data = current_live_car_data
         movement_instruction = TrackFollower().get_movement_instruction(
-            car_simulation.get_live_data(), track
+            current_live_car_data, track
         )
         car_simulation.move(movement_instruction)
-        if car_simulation.collides(zone):
-            break
-    return {"time_needed": time, "velocity": car_simulation.velocity}
+        current_live_car_data = car_simulation.get_live_data()
+        time += 1
+    return {"time_to_enter_zone": time, "live_car_data": previous_live_car_data}
 
 
 def get_predicted_live_car_data(

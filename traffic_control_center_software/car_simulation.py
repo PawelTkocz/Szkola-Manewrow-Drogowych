@@ -64,3 +64,25 @@ class CarSimulation(InstructionControlledCar):
             "wheels_direction": self.wheels_direction,
             "model": self.model,
         }
+
+    def get_live_data(self) -> LiveCarData:
+        return {
+            "length": self.length,
+            "width": self.width,
+            "direction": self.direction,
+            "front_middle": self.front_middle,
+            "front_right": self.front_right,
+            "front_left": self.front_left,
+            "rear_middle": self.rear_middle,
+            "rear_left": self.rear_left,
+            "rear_right": self.rear_right,
+            "color": self.color,
+            "model": self.model,
+            "wheels_angle": self.wheels_angle,
+            "max_acceleration": self.max_acceleration,
+            "velocity": self.velocity,
+            "max_velocity": self.max_velocity,
+            "max_brake": self.max_brake,
+            "registry_number": self.registry_number,
+            "manoeuvre_description": None,
+        }
