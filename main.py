@@ -1,6 +1,6 @@
 import pygame
 
-from animations_menu.main_menu import MainMenu
+from animations.animations_menus.main_menu import MainMenu
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from state import State
 

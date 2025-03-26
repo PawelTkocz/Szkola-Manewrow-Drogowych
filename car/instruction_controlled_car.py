@@ -1,10 +1,19 @@
+from enum import Enum
+from typing import TypedDict
 from car.car import Car
 from car.model import CarModel
 from geometry import Direction, Directions, Point
-from traffic_control_center_software.schemas import (
-    MovementInstruction,
-    SpeedModifications,
-)
+
+
+class SpeedModifications(Enum):
+    SPEED_UP = 1
+    NO_CHANGE = 2
+    BRAKE = 3
+
+
+class MovementInstruction(TypedDict):
+    speed_modification: SpeedModifications
+    turn_direction: Directions  # create separate enum
 
 
 class InstructionControlledCar(Car):

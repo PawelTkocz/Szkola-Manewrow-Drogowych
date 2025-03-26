@@ -15,7 +15,7 @@ class LiveCarData(TypedDict):
     rear_left: Point
     rear_middle: Point
     rear_right: Point
-    wheels_angle: Point
+    wheels_angle: float
     length: float
     width: float
     max_acceleration: float

@@ -1,20 +1,6 @@
-from typing import TypeAlias, TypedDict
+from typing import TypedDict
 
-
-class CarPointPosition(TypedDict):
-    """
-    Representation of a point on a car.
-
-    The (0, 0) point is the point in the middle of front bumper
-    (the car is directed UP, horizontally to the Y axis).
-    """
-
-    x: float
-    y: float
-
-
-# Position of a car part can be defined as list of points creating polygon
-CarPartPosition: TypeAlias = list[CarPointPosition]
+from car.schemas import CarPartPosition, CarPointPosition
 
 
 class SymmetricCarPartPositions(TypedDict):

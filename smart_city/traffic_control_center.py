@@ -1,0 +1,29 @@
+# in the future road_control_center can be list of centers, and after each frame
+# the traffic control center should reassign car to road control centers based on
+# car position.
+
+from car.instruction_controlled_car import MovementInstruction
+from road_control_center.road_control_center import RoadControlCenter
+from smart_city.schemas import LiveCarData
+
+
+class TrafficControlCenter:
+    def __init__(self, road_control_center: RoadControlCenter):
+        self._road_control_center = road_control_center
+        self._time = 0
+
+    def send_movement_instruction(
+        self, live_car_data: LiveCarData
+    ) -> MovementInstruction:
+        road_control_center = self._get_current_road_control_center(live_car_data)
+        return road_control_center.send_movement_instruction(live_car_data)
+
+    def _get_current_road_control_center(
+        self, live_car_data: LiveCarData
+    ) -> RoadControlCenter:
+        """Based on car position, determine which road control center should give it movement instruction."""
+        return self._road_control_center
+
+    def tick(self):
+        self._time += 1
+        self._road_control_center.tick(self._time)
