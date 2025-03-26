@@ -2,6 +2,7 @@ from typing import TypedDict
 
 from geometry import Directions
 from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
+from smart_city.schemas import LiveCarData
 
 
 class IntersectionManoeuvreStatus(TypedDict):
@@ -16,3 +17,8 @@ class IntersectionManoeuvreDescription(TypedDict):
 class IntersectionCarManoeuvreInfo(TypedDict):
     manoeuvre: IntersectionManoeuvre
     manoeuvre_status: IntersectionManoeuvreStatus
+
+
+class IntersectionPriorityCarInfo(TypedDict):
+    live_car_data: LiveCarData
+    manoeuvre_description: IntersectionManoeuvreDescription
