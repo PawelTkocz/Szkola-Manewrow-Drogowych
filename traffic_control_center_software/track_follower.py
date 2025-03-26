@@ -1,6 +1,6 @@
 from car.car import Car
 from car.instruction_controlled_car import MovementInstruction, SpeedModifications
-from traffic_control_center.schemas import LiveCarData
+from smart_city.schemas import LiveCarData
 from traffic_control_center_software.car_simulation import CarSimulation
 from traffic_control_center_software.track import Track
 from geometry import Directions

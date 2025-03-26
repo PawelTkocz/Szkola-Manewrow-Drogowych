@@ -1,9 +1,8 @@
 from typing import TypedDict
 
-from car.instruction_controlled_car import InstructionControlledCar
+from car.instruction_controlled_car import InstructionControlledCar, MovementInstruction
 from geometry import Direction, Point
-from traffic_control_center.traffic_control_center import SmartTrafficCar
-from traffic_control_center_software.schemas import MovementInstruction
+from smart_city.traffic_control_center import SmartTrafficCar
 
 
 class PlaybackAnimationCarInfo(TypedDict):

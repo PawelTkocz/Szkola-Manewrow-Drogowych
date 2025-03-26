@@ -1,5 +1,5 @@
 from manoeuvres.manoeuvre_phase import ManoeuvrePhase
-from traffic_control_center.schemas import LiveCarData
+from smart_city.schemas import LiveCarData
 
 
 class Manoeuvre:
