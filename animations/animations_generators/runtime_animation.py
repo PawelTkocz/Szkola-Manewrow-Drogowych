@@ -9,7 +9,7 @@ from car.car import Car
 from car.toyota_yaris import ToyotaYaris
 from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
 from road_control_center.road_control_center import RoadControlCenter
-from traffic_control_center.traffic_control_center import (
+from smart_city.traffic_control_center import (
     SmartTrafficCar,
     TrafficControlCenter,
 )

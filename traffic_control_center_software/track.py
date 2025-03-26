@@ -25,11 +25,13 @@ def _cubic_bezier(
     )
     return x, y
 
+
 def get_straight_track(start_point: Point, end_point: Point) -> TrackPath:
-        distance = start_point.distance(end_point)
-        x_values = np.linspace(start_point.x, end_point.x, distance + 1)
-        y_values = np.linspace(start_point.y, end_point.y, distance + 1)
-        return list(zip(x_values, y_values))
+    distance = start_point.distance(end_point)
+    x_values = np.linspace(start_point.x, end_point.x, distance + 1)
+    y_values = np.linspace(start_point.y, end_point.y, distance + 1)
+    return list(zip(x_values, y_values))
+
 
 def get_right_angle_turn(
     start_point: Point,
@@ -70,7 +72,7 @@ class Track:
     def get_distance_to_point(self, point: Point):
         distances, _ = self.kd_tree.query([point.x, point.y], k=2)
         return distances[0] + distances[1]
-    
+
     def find_index_of_closest_point(self, point: Point):
         _, index = self.kd_tree.query([point.x, point.y])
         return index

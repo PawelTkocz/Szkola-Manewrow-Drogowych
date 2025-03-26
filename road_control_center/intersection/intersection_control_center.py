@@ -56,9 +56,11 @@ class IntersectionControlCenter(RoadControlCenter):
         for speed_modification in speed_modifications:
             movement_instruction: MovementInstruction = {
                 "speed_modification": speed_modification,
-                "turn_direction": turn_direction
+                "turn_direction": turn_direction,
             }
-            predicted_live_car_data = get_predicted_live_car_data(live_car_data, movement_instruction)
+            predicted_live_car_data = get_predicted_live_car_data(
+                live_car_data, movement_instruction
+            )
             if can_stop_before_zone(
                 predicted_live_car_data,
                 manoeuvre.phases[0].track,
@@ -68,7 +70,10 @@ class IntersectionControlCenter(RoadControlCenter):
                     "speed_modification": speed_modification,
                     "turn_direction": turn_direction,
                 }
-            if self.can_safely_cross_the_intersection(predicted_live_car_data, self.cars_manoeuvre_info[registry_number]):
+            if self.can_safely_cross_the_intersection(
+                predicted_live_car_data, self.cars_manoeuvre_info[registry_number]
+            ):
+                pass
 
         return {
             "speed_modification": SpeedModifications.BRAKE,
@@ -91,7 +96,7 @@ class IntersectionControlCenter(RoadControlCenter):
         raise NotImplementedError
 
     def get_cars_with_priority(
-        self, car_manoeuvre_info: CarOnIntersection, time: int
+        self, car_manoeuvre_desc: CarOnIntersection, time: int
     ) -> list[CarOnIntersection]:
         return [
             intersection_car
@@ -104,7 +109,9 @@ class IntersectionControlCenter(RoadControlCenter):
             )
         ]
 
-    def can_safely_cross_the_intersection(self, live_car_data: LiveCarData, manoeuvre_info: IntersectionCarManoeuvreInfo) -> bool:
+    def can_safely_cross_the_intersection(
+        self, live_car_data: LiveCarData, manoeuvre_info: IntersectionCarManoeuvreInfo
+    ) -> bool:
         track = manoeuvre_info["manoeuvre"].phases[0].track
         entering_intersection_status = get_status_before_entering_zone(
             live_car_data,

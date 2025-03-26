@@ -3,6 +3,7 @@ from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
 
+
 class CarBody(Rectangle):
     def __init__(
         self, front_middle: Point, width: float, length: float, direction: Direction
