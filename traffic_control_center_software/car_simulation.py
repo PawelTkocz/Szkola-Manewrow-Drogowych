@@ -1,6 +1,8 @@
 from typing import TypedDict
+from car.instruction_controlled_car import InstructionControlledCar
 from car.model import CarModel
 from geometry import Direction, Point
+from smart_city.schemas import LiveCarData
 
 
 class CarSavedState(TypedDict):
@@ -16,7 +18,7 @@ class CarSavedState(TypedDict):
     model: CarModel
 
 
-class CarSimulation(AutonomousCar):
+class CarSimulation(InstructionControlledCar):
     """
     Class simulating autonomous car.
     """

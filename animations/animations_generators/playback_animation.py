@@ -6,14 +6,14 @@ from animations.animations_generators.schemas import (
     PlaybackAnimationCarInfo,
 )
 from car.car import Car
-from car.instruction_controlled_car import InstructionControlledCar
-from car.toyota_yaris import ToyotaYaris
-from geometry import Directions
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
-from traffic_control_center_software.schemas import (
+from car.instruction_controlled_car import (
+    InstructionControlledCar,
     MovementInstruction,
     SpeedModifications,
 )
+from car.toyota_yaris import ToyotaYaris
+from geometry import Directions
+from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
 
 
 # think about not writing to txt but json

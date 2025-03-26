@@ -1,3 +1,4 @@
+from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
 from traffic_control_center_software.track import (
     TrackPath,
     get_right_angle_turn,
@@ -32,13 +33,13 @@ class IntersectionManoeuvre(Manoeuvre):
         self,
         model: CarModel,
         intersection: Intersection,
-        starting_side: Directions,
-        ending_side: Directions,
+        manoeuvre_description: IntersectionManoeuvreDescription,
     ):
         # think about not passing intersection as parameter but reading it from live_car_data.current_road_segment
         self.intersection = intersection
-        self.starting_side = starting_side
-        self.ending_side = ending_side
+        self.manoeuvre_description = manoeuvre_description
+        self.starting_side = manoeuvre_description["starting_side"]
+        self.ending_side = manoeuvre_description["ending_side"]
         self.model = model
         super().__init__([IntersectionManoeruvrePhase(self._calculate_track_path())])
 

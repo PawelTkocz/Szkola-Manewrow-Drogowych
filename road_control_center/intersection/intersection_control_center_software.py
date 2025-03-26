@@ -1,8 +1,8 @@
 from typing import TypedDict
-from car.autonomous_car import LiveCarData
 from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
 from road_control_center.intersection.schemas import CarOnIntersection
 from road_segments.intersection.intersection import Intersection
+from traffic_control_center.schemas import LiveCarData
 from traffic_control_center_software.car_simulation import CarSimulation
 from traffic_control_center_software.track_follower import TrackFollower
 
