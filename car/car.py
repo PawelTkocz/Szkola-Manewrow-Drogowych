@@ -59,6 +59,7 @@ class Car(CarBody):
         front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
+        wheels_direction: Direction = Direction(Point(1, 0)),
     ):
         """
         Initialize car
@@ -68,7 +69,7 @@ class Car(CarBody):
         self.model = model
         self.color = color
         self.velocity = velocity
-        self.wheels = Wheels(model.max_wheels_turn)
+        self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
         self._car_drafter = CarDrafter(model, color)
 
     @property
