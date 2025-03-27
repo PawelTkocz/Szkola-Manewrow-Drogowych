@@ -1,7 +1,3 @@
-# in the future road_control_center can be list of centers, and after each frame
-# the traffic control center should reassign car to road control centers based on
-# car position.
-
 from car.instruction_controlled_car import MovementInstruction
 from road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData

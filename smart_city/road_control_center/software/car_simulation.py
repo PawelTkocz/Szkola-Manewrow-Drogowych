@@ -1,88 +1,31 @@
-from typing import TypedDict
-from car.instruction_controlled_car import InstructionControlledCar
-from car.model import CarModel
-from geometry import Direction, Point
+from car.instruction_controlled_car import MovementInstruction
 from smart_city.schemas import LiveCarData
+from smart_city.smart_city_car import SmartCityCar
 
 
-class CarSavedState(TypedDict):
-    velocity: float
-    direction: Direction
-    front_left: Point
-    front_middle: Point
-    front_right: Point
-    rear_left: Point
-    rear_middle: Point
-    rear_right: Point
-    wheels_direction: Direction
-    model: CarModel
-
-
-class CarSimulation(InstructionControlledCar):
+class CarSimulation:
     """
-    Class simulating autonomous car.
+    Class simulating smart city car.
     """
 
     def __init__(self, live_car_data: LiveCarData):
         """
         Initialize car simulation.
         """
-        super().__init__(
-            live_car_data["registry_number"],
-            live_car_data["model"],
-            live_car_data["color"],
-            live_car_data["front_middle"],
-            live_car_data["road_segment"],
-            live_car_data["autonomous_driving_program"],
-            live_car_data["direction"],
-            live_car_data["velocity"],
+        self.car = SmartCityCar(
+            None,
+            live_car_data["specification"]["registry_number"],
+            live_car_data["specification"]["model"],
+            live_car_data["specification"]["color"],
+            live_car_data["live_state"]["front_middle"],
+            live_car_data["live_state"]["direction"],
+            live_car_data["live_state"]["velocity"],
+            live_car_data["live_state"]["wheels_direction"],
+            live_car_data["live_state"]["high_priority"],
         )
 
-    def restore_state(self, car_saved_state: CarSavedState):
-        # make sure it's not necessary to create copies here
-        self._direction = car_saved_state["direction"]
-        self._front_left = car_saved_state["front_left"]
-        self._front_middle = car_saved_state["front_middle"]
-        self._front_right = car_saved_state["front_right"]
-        self._rear_left = car_saved_state["rear_left"]
-        self._rear_middle = car_saved_state["rear_middle"]
-        self._rear_right = car_saved_state["rear_right"]
-        self.velocity = car_saved_state["velocity"]
-        self.wheels._direction = car_saved_state["wheels_direction"]
-        self.model = car_saved_state["model"]
-
-    def get_current_state(self) -> CarSavedState:
-        return {
-            "direction": self.direction,
-            "front_left": self.front_left,
-            "front_middle": self.front_middle,
-            "front_right": self.front_right,
-            "rear_left": self.rear_left,
-            "rear_middle": self.rear_middle,
-            "rear_right": self.rear_right,
-            "velocity": self.velocity,
-            "wheels_direction": self.wheels_direction,
-            "model": self.model,
-        }
-
     def get_live_data(self) -> LiveCarData:
-        return {
-            "length": self.length,
-            "width": self.width,
-            "direction": self.direction,
-            "front_middle": self.front_middle,
-            "front_right": self.front_right,
-            "front_left": self.front_left,
-            "rear_middle": self.rear_middle,
-            "rear_left": self.rear_left,
-            "rear_right": self.rear_right,
-            "color": self.color,
-            "model": self.model,
-            "wheels_angle": self.wheels_angle,
-            "max_acceleration": self.max_acceleration,
-            "velocity": self.velocity,
-            "max_velocity": self.max_velocity,
-            "max_brake": self.max_brake,
-            "registry_number": self.registry_number,
-            "manoeuvre_description": None,
-        }
+        self.car.get_live_data()
+
+    def move(self, movement_instruction: MovementInstruction | None = None) -> None:
+        self.car.move(movement_instruction)

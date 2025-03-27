@@ -25,10 +25,22 @@ class InstructionControlledCar(Car):
         front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
+        wheels_direction: Direction = Direction(Point(1, 0)),
     ):
         super().__init__(
-            registry_number, model, color, front_middle_position, direction, velocity
+            registry_number,
+            model,
+            color,
+            front_middle_position,
+            direction,
+            velocity,
+            wheels_direction,
         )
+
+    def move(self, movement_instruction: MovementInstruction | None = None) -> None:
+        if movement_instruction:
+            self.apply_movement_instruction(movement_instruction)
+        super().move()
 
     def apply_movement_instruction(self, movement_instruction: MovementInstruction):
         self._apply_speed_modification(movement_instruction["speed_modification"])
