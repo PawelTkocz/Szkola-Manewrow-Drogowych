@@ -2,10 +2,12 @@ import os
 from animations.animations_generators.manoeuvre_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import CarStartingPosition
 from drafter.intersection import IntersectionDrafter
-from road_control_center.intersection.intersection_control_center import (
+from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 from state import State
 from animations.animations_generators.constants import (
     MOVEMENT_INSTRUCTIONS_DIR as movement_instructions_dir,

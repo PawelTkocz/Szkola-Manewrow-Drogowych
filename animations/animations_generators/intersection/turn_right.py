@@ -2,19 +2,20 @@ from animations.animations_generators.intersection.intersection_manoeuvre_animat
     IntersectionManoeuvreAnimation,
 )
 from geometry import Directions
-from road_control_center.intersection.intersection_A0 import IntersectionA0ControlCenter
 from state import State
+from smart_city.road_control_center.intersection.intersection_A0 import (
+    intersection_A0_control_center,
+)
 
 
 class IntersectionTurnRightAnimation(IntersectionManoeuvreAnimation):
-    intersection_control_center = IntersectionA0ControlCenter()
     manoeuvre_movement_instructions_dir = "turn_right"
 
     def __init__(self, previous_state: State):
         super().__init__(
             previous_state,
             self.manoeuvre_movement_instructions_dir,
-            self.intersection_control_center,
+            intersection_A0_control_center,
         )
         self.add_car(
             "DW001",

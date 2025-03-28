@@ -1,17 +1,13 @@
 from typing import TypedDict
 
-from geometry import Directions
 from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
-from smart_city.schemas import LiveCarData
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 
 
 class IntersectionManoeuvreStatus(TypedDict):
     can_safely_cross_intersection: bool
-
-
-class IntersectionManoeuvreDescription(TypedDict):
-    starting_side: Directions
-    ending_side: Directions
 
 
 class IntersectionCarManoeuvreInfo(TypedDict):
@@ -20,5 +16,5 @@ class IntersectionCarManoeuvreInfo(TypedDict):
 
 
 class IntersectionPriorityCarInfo(TypedDict):
-    live_car_data: LiveCarData
+    high_priority: bool
     manoeuvre_description: IntersectionManoeuvreDescription

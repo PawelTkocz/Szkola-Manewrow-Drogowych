@@ -1,4 +1,5 @@
-from car.instruction_controlled_car import MovementInstruction
+from car.instruction_controlled_car import CarControlInstructions
+from geometry import Point, Rectangle
 from smart_city.schemas import LiveCarData
 from smart_city.smart_city_car import SmartCityCar
 
@@ -27,5 +28,16 @@ class CarSimulation:
     def get_live_data(self) -> LiveCarData:
         self.car.get_live_data()
 
-    def move(self, movement_instruction: MovementInstruction | None = None) -> None:
-        self.car.move(movement_instruction)
+    def move(self, control_instructions: CarControlInstructions | None = None) -> None:
+        self.car.move(control_instructions)
+
+    def collides(self, obj: Rectangle) -> bool:
+        return self.car.collides(obj)
+
+    @property
+    def velocity(self) -> float:
+        return self.car.velocity
+
+    @property
+    def front_middle(self) -> Point:
+        return self.car.front_middle

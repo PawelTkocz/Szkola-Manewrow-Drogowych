@@ -5,8 +5,10 @@ from animations.animations_generators.constants import PLAYBACK_ANIMATIONS
 from animations.animations_generators.playback_animation import PlaybackAnimation
 from animations.animations_generators.runtime_animation import RuntimeAnimation
 from animations.animations_generators.schemas import CarStartingPosition
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
-from road_control_center.road_control_center import RoadControlCenter
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
+from smart_city.road_control_center.road_control_center import RoadControlCenter
 from state import State
 
 

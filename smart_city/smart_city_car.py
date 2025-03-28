@@ -1,4 +1,7 @@
-from car.instruction_controlled_car import InstructionControlledCar, MovementInstruction
+from car.instruction_controlled_car import (
+    CarControlInstructions,
+    InstructionControlledCar,
+)
 from car.model import CarModel
 from geometry import Direction, Point
 from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
@@ -32,7 +35,7 @@ class SmartCityCar(InstructionControlledCar):
         self.manoeuvre_description = manoeuvre_description
         self.traffic_control_center: TrafficControlCenter | None = None
 
-    def tick(self) -> MovementInstruction | None:
+    def tick(self) -> CarControlInstructions | None:
         movement_instruction = self.fetch_movement_instruction()
         self.move(movement_instruction)
         return movement_instruction
@@ -42,7 +45,7 @@ class SmartCityCar(InstructionControlledCar):
     ) -> None:
         self.traffic_control_center = traffic_control_center
 
-    def fetch_movement_instruction(self) -> MovementInstruction | None:
+    def fetch_movement_instruction(self) -> CarControlInstructions | None:
         return (
             self.traffic_control_center.send_movement_instruction(self.get_live_data())
             if self.traffic_control_center
