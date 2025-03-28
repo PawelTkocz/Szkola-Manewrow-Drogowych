@@ -1,6 +1,7 @@
+from pygame import Surface
 from drafter.intersection import IntersectionDrafter
 from geometry import Direction, Directions, Point, Rectangle
-from intersection.schemas import IntersectionColors, IntersectionParts
+from road_segments.intersection.schemas import IntersectionColors, IntersectionParts
 
 
 class Intersection:
@@ -90,5 +91,5 @@ class Intersection:
             },
         }
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         self.drafter.draw(screen)

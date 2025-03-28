@@ -3,7 +3,7 @@ import pytest
 from geometry import Point, Vector
 
 
-def test_init():
+def test_init() -> None:
     point = Point(3, 1.14)
     assert point.x == 3
     assert point.y == 1.14
@@ -18,7 +18,7 @@ def test_init():
         (Point(1, 2.5), True),
     ],
 )
-def test_compare(point: Point, expected: bool):
+def test_compare(point: Point, expected: bool) -> None:
     assert Point(1, 2.5).compare(point) == expected
 
 
@@ -32,20 +32,20 @@ def test_compare(point: Point, expected: bool):
         (Point(-100, -99), Vector(Point(100, 99)), Point(0, 0)),
     ],
 )
-def test_add_vector(point: Point, vector: Vector, expected: Point):
+def test_add_vector(point: Point, vector: Vector, expected: Point) -> None:
     res = point.add_vector(vector)
     assert res.compare(expected)
     assert res is point
 
 
-def test_add_vector_composed():
+def test_add_vector_composed() -> None:
     point = Point(3, 4)
-    res = point.add_vector(Point(6, 8)).add_vector(Point(10, 10))
+    res = point.add_vector(Vector(Point(6, 8))).add_vector(Vector(Point(10, 10)))
     assert point.compare(Point(19, 22))
     assert res is point
 
 
-def test_copy():
+def test_copy() -> None:
     point = Point(92, 87.33)
     point_copy = point.copy()
     assert point_copy.compare(point)
@@ -74,7 +74,7 @@ def test_copy():
 )
 def test_rotate_over_point(
     point: Point, rotate_point: Point, angle: float, expected: Point
-):
+) -> None:
     rotated_point = point.rotate_over_point(rotate_point, angle)
     max_rel_tol = 1e-9
     assert math.isclose(rotated_point.x, expected.x, rel_tol=max_rel_tol)
@@ -82,7 +82,7 @@ def test_rotate_over_point(
     assert rotated_point is point
 
 
-def test_rotate_over_point_compose():
+def test_rotate_over_point_compose() -> None:
     start_point = Point(1234.56, -3.8)
     point = start_point.copy()
     rotate_point = Point(23.1, 43.3)

@@ -1,4 +1,4 @@
-from car.schemas import GearboxState
+from pygame import Surface
 from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
@@ -11,7 +11,7 @@ class CarBody(Rectangle):
     ):
         super().__init__(front_middle, width, length, direction)
 
-    def move(self, direction: Directions, front_vector: Vector):
+    def _force_move(self, direction: Directions, front_vector: Vector) -> None:
         if direction == Directions.RIGHT:
             self.move_left_side(front_vector)
         else:
@@ -20,7 +20,7 @@ class CarBody(Rectangle):
         # zblizalismy sie wolniej do celu niz skrecajac
 
     # think about unifying this to just move - vector from front middle
-    def move_left_side(self, front_vector: Vector):
+    def move_left_side(self, front_vector: Vector) -> None:
         new_front_left = self.front_left.add_vector(front_vector)
         length_vector = Vector(new_front_left, self.rear_left).scale_to_len(self.length)
         new_rear_left = new_front_left.copy().add_vector(
@@ -32,7 +32,7 @@ class CarBody(Rectangle):
         )
         self.update_position(new_front_middle, new_direction)
 
-    def move_right_side(self, front_vector: Vector):
+    def move_right_side(self, front_vector: Vector) -> None:
         new_front_right = self.front_right.add_vector(front_vector)
         length_vector = Vector(new_front_right, self.rear_right).scale_to_len(
             self.length
@@ -127,15 +127,15 @@ class Car(CarBody):
     def brake(self) -> None:
         self._slow_down(self.max_brake)
 
-    def move(self):
+    def move(self) -> None:
         if self.velocity == 0:
             return
 
         front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
             self.velocity
         )
-        super().move(self.turn_direction, front_movement_vector)
+        self._force_move(self.turn_direction, front_movement_vector)
         self._slow_down(self.model.resistance)
 
-    def draw(self, screen):
+    def draw(self, screen: Surface) -> None:
         self._car_drafter.draw(self, self.wheels_angle, screen)

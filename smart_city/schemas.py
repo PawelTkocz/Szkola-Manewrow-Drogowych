@@ -2,11 +2,13 @@ from typing import TypedDict
 
 from car.model import CarModel
 from geometry import Direction, Point
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 
 
 class CarSpecification(TypedDict):
-    registry_number: int
+    registry_number: str
     model: CarModel
     color: str
 
@@ -22,4 +24,4 @@ class LiveCarState(TypedDict):
 class LiveCarData(TypedDict):
     specification: CarSpecification
     live_state: LiveCarState
-    manoeuvre_description: IntersectionManoeuvreDescription | None
+    manoeuvre_description: IntersectionManoeuvreDescription

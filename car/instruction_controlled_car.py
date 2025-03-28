@@ -2,7 +2,6 @@ from enum import Enum
 from typing import TypedDict
 from car.car import Car
 from car.model import CarModel
-from car.schemas import GearboxState
 from geometry import Direction, Directions, Point
 
 
@@ -50,15 +49,13 @@ class InstructionControlledCar(Car):
             self.apply_control_instructions(control_instructions)
         super().move()
 
-    def apply_control_instructions(self, control_instructions: CarControlInstructions):
-        self._apply_gearbox_instruction(control_instructions["gearbox_instruction"])
+    def apply_control_instructions(
+        self, control_instructions: CarControlInstructions
+    ) -> None:
         self._apply_speed_instruction(control_instructions["speed_instruction"])
         self._apply_turn_instruction(control_instructions["turn_instruction"])
 
-    def _apply_gearbox_instruction(self, gearbox_instruction: GearboxState) -> None:
-        self.shift_gear(gearbox_instruction)
-
-    def _apply_speed_instruction(self, speed_instruction: SpeedInstruction):
+    def _apply_speed_instruction(self, speed_instruction: SpeedInstruction) -> None:
         if speed_instruction == SpeedInstruction.ACCELERATE_FRONT:
             self.accelerate(Directions.FRONT)
         elif speed_instruction == SpeedInstruction.NO_CHANGE:

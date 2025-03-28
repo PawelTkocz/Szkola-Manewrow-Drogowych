@@ -1,7 +1,7 @@
 from car.instruction_controlled_car import CarControlInstructions
-from geometry import Point, Rectangle
+from geometry import Directions, Point, Rectangle
 from smart_city.schemas import LiveCarData
-from smart_city.smart_city_car import SmartCityCar
+import smart_city.smart_city_car as smart_city_car
 
 
 class CarSimulation:
@@ -13,8 +13,8 @@ class CarSimulation:
         """
         Initialize car simulation.
         """
-        self.car = SmartCityCar(
-            None,
+        self.car = smart_city_car.SmartCityCar(
+            {"starting_side": Directions.LEFT, "ending_side": Directions.RIGHT},
             live_car_data["specification"]["registry_number"],
             live_car_data["specification"]["model"],
             live_car_data["specification"]["color"],
@@ -26,7 +26,7 @@ class CarSimulation:
         )
 
     def get_live_data(self) -> LiveCarData:
-        self.car.get_live_data()
+        return self.car.get_live_data()
 
     def move(self, control_instructions: CarControlInstructions | None = None) -> None:
         self.car.move(control_instructions)

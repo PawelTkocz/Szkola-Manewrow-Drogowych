@@ -1,7 +1,8 @@
 from pygame import Surface
 import pygame
+from car.model import CarModel
+from car.schemas import CarPartPosition, CarPointPosition
 from geometry import Directions, Point, Rectangle, tuples_list
-from car.model import CarModel, CarPartPosition, CarPointPosition
 
 
 class CarDrafter:
@@ -52,13 +53,13 @@ class CarDrafter:
         car_part_position: CarPartPosition,
         color: str,
         screen: Surface,
-    ):
+    ) -> None:
         corners = self._get_car_part_corners(car_body, car_part_position)
         pygame.draw.polygon(screen, color, tuples_list(corners))
 
     def _draw_body(
         self, car_body: Rectangle, screen: Surface, bumpers_color: str = "black"
-    ):
+    ) -> None:
         # Draw bumpers
         pygame.draw.polygon(screen, bumpers_color, tuples_list(car_body.corners_list))
 
@@ -67,31 +68,49 @@ class CarDrafter:
             car_body, self.model.appearance["shell"], self.color, screen
         )
 
-    def _draw_lights(self, car_body: Rectangle, screen: Surface, color: str = "yellow"):
-        for lights_side in ["left", "right"]:
+    def _draw_lights(
+        self, car_body: Rectangle, screen: Surface, color: str = "yellow"
+    ) -> None:
+        front_lights_appearance = self.model.appearance["front_lights"]
+        for lights_positions in [
+            front_lights_appearance["left"],
+            front_lights_appearance["right"],
+        ]:
             self._draw_car_part(
                 car_body,
-                self.model.appearance["front_lights"][lights_side],
+                lights_positions,
                 color,
                 screen,
             )
 
     def _draw_side_mirrors(
         self, car_body: Rectangle, screen: Surface, color: str = "black"
-    ):
-        for mirror_side in ["left", "right"]:
+    ) -> None:
+        side_mirrors_appearance = self.model.appearance["side_mirrors"]
+        for mirrors_positions in [
+            side_mirrors_appearance["left"],
+            side_mirrors_appearance["right"],
+        ]:
             self._draw_car_part(
                 car_body,
-                self.model.appearance["side_mirrors"][mirror_side],
+                mirrors_positions,
                 color,
                 screen,
             )
 
-    def _draw_windows(self, car_body: Rectangle, screen: Surface, color: str = "black"):
-        for window_position in ["front", "rear", "left", "right"]:
+    def _draw_windows(
+        self, car_body: Rectangle, screen: Surface, color: str = "black"
+    ) -> None:
+        windows_appearance = self.model.appearance["windows"]
+        for windows_positions in [
+            windows_appearance["front"],
+            windows_appearance["rear"],
+            windows_appearance["left"],
+            windows_appearance["right"],
+        ]:
             self._draw_car_part(
                 car_body,
-                self.model.appearance["windows"][window_position],
+                windows_positions,
                 color,
                 screen,
             )
@@ -102,13 +121,16 @@ class CarDrafter:
         screen: Surface,
         wheels_angle: float,
         color: str = "#262626",
-    ):
-        for wheel_side in ["left", "right"]:
+    ) -> None:
+        for wheels_positions in [
+            self.model.wheels_positions["left"],
+            self.model.wheels_positions["right"],
+        ]:
             wheel_corners = self._get_car_part_corners(
-                car_body, self.model.wheels_positions[wheel_side]["corners"]
+                car_body, wheels_positions["corners"]
             )
             wheel_middle = self._get_car_point_position(
-                car_body, self.model.wheels_positions[wheel_side]["middle"]
+                car_body, wheels_positions["middle"]
             )
             rotated_wheel_corners = [
                 corner.rotate_over_point(wheel_middle, wheels_angle)

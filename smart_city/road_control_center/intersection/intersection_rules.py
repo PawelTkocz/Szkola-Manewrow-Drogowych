@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
-from road_control_center.intersection.schemas import IntersectionPriorityCarInfo
+from smart_city.road_control_center.intersection.schemas import (
+    IntersectionPriorityCarInfo,
+)
 
 
 class IntersectionRules(ABC):
@@ -13,6 +15,7 @@ class IntersectionRules(ABC):
 
     @abstractmethod
     def has_priority(
+        self,
         car1_info: IntersectionPriorityCarInfo,
         car2_info: IntersectionPriorityCarInfo,
         time: int,

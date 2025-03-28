@@ -18,7 +18,7 @@ class IntersectionDrafter:
         self.intersection_colors = intersection_colors
         self.road_width = self.intersection_parts["intersection_area"].width // 2
 
-    def draw_street(self, screen):
+    def draw_street(self, screen: pygame.Surface) -> None:
         pygame.draw.rect(
             screen,
             self.intersection_colors["street_color"],
@@ -40,7 +40,7 @@ class IntersectionDrafter:
             ),
         )
 
-    def draw_lines(self, screen: pygame.Surface):
+    def draw_lines(self, screen: pygame.Surface) -> None:
         pygame.draw.rect(
             screen,
             self.intersection_colors["lines_color"],
@@ -82,7 +82,7 @@ class IntersectionDrafter:
             ),
         )
 
-    def draw(self, screen: pygame.Surface):
+    def draw(self, screen: pygame.Surface) -> None:
         screen.fill(self.intersection_colors["pavement_color"])
         self.draw_street(screen)
         self.draw_lines(screen)

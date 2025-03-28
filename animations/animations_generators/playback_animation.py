@@ -20,7 +20,7 @@ from smart_city.road_control_center.manoeuvres.schemas import (
 
 # think about not writing to txt but json
 class PlaybackAnimation(AnimationStrategy):
-    def __init__(self, movement_instructions_dir_path: str):
+    def __init__(self, movement_instructions_dir_path: str) -> None:
         super().__init__(movement_instructions_dir_path)
         self.cars: list[PlaybackAnimationCarInfo] = []
 
@@ -31,7 +31,7 @@ class PlaybackAnimation(AnimationStrategy):
         starting_position: CarStartingPosition,
         manoeuvre_description: IntersectionManoeuvreDescription,
         start_frame_number: int,
-    ):
+    ) -> None:
         car = InstructionControlledCar(
             registry_number,
             ToyotaYaris(),
@@ -72,8 +72,8 @@ class PlaybackAnimation(AnimationStrategy):
         with open(file_path, "r") as file:
             return [
                 {
-                    "speed_modification": SpeedInstruction[speed_mod],
-                    "turn_direction": TurnInstruction[turn_mod],
+                    "speed_instruction": SpeedInstruction[speed_mod],
+                    "turn_instruction": TurnInstruction[turn_mod],
                 }
                 for speed_mod, turn_mod in (line.split() for line in file)
             ]

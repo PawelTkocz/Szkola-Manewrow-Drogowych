@@ -4,7 +4,9 @@ from car.instruction_controlled_car import (
 )
 from car.model import CarModel
 from geometry import Direction, Point
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 from smart_city.schemas import LiveCarData
 from smart_city.traffic_control_center import TrafficControlCenter
 

@@ -1,7 +1,7 @@
 from car.model import CarModel
 from geometry import Directions
-from manoeuvres.manoeuvre import Manoeuvre
 from road_segments.intersection.intersection import Intersection
+from smart_city.road_control_center.manoeuvres.manoeuvre import Manoeuvre
 from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
 from smart_city.road_control_center.manoeuvres.schemas import (
     IntersectionManoeuvreDescription,
@@ -52,7 +52,7 @@ def calculate_left_turn_track_path(
     intersection: Intersection,
     manoeuvre_description: IntersectionManoeuvreDescription,
     car_length: float,
-):
+) -> TrackPath:
     return calculate_turn_track(
         intersection,
         manoeuvre_description,
@@ -67,7 +67,7 @@ def calculate_right_turn_track_path(
     intersection: Intersection,
     manoeuvre_description: IntersectionManoeuvreDescription,
     car_length: float,
-):
+) -> TrackPath:
     return calculate_turn_track(
         intersection,
         manoeuvre_description,
@@ -105,7 +105,9 @@ def calculate_track_path(
     if (starting_side in vertical and ending_side in vertical) or (
         starting_side in horizontal and ending_side in horizontal
     ):
-        return calculate_straight_track_path()
+        return calculate_straight_track_path(
+            intersection, manoeuvre_description, car_length
+        )
 
     starting_side_index = directions.index(starting_side)
     if directions[(starting_side_index + 1) % 4] == ending_side:

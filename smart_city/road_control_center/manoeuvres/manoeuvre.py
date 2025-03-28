@@ -1,4 +1,4 @@
-from manoeuvres.manoeuvre_phase import ManoeuvrePhase
+from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
 from smart_city.schemas import LiveCarData
 
 
