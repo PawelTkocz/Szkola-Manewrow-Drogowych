@@ -64,7 +64,7 @@ class OptionsMenu:
         option_items_x_spacing: int,
         option_items_y_spacing: int,
         option_items_image_side: int,
-    ):
+    ) -> None:
         self.title = title
 
         pygame.font.init()
@@ -114,14 +114,14 @@ class OptionsMenu:
         y_pos = options_margin_top + row * (rect_height + self.option_items_y_spacing)
         return pygame.Rect(x_pos, y_pos, rect_width, rect_height)
 
-    def _render_title(self, screen: pygame.Surface):
+    def _render_title(self, screen: pygame.Surface) -> None:
         title_surface = self.title_font.render(self.title, True, FONT_COLOR)
         title_rect = title_surface.get_rect(
             center=(self.width // 2, self.title_top_offset)
         )
         screen.blit(title_surface, title_rect)
 
-    def render(self, screen: pygame.Surface):
+    def render(self, screen: pygame.Surface) -> None:
         self._render_title(screen)
         for option_item in self.option_items:
             option_item.render(screen)

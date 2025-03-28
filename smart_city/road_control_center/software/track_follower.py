@@ -10,7 +10,7 @@ from smart_city.schemas import LiveCarData
 
 
 class TrackFollower:
-    def __init__(self):
+    def __init__(self) -> None:
         self.max_distance_to_track = 5
         self.simulation_max_future_steps = 5
 
@@ -30,7 +30,7 @@ class TrackFollower:
                     "turn_instruction": turn_instruction,
                 }
             )
-            return self.distance_to_track(car_simulation.get_live_data(), track)
+            return self.distance_to_track(car_simulation, track)
 
         return min(TurnInstruction, key=_distance_to_track_after_instruction)
 
@@ -131,13 +131,14 @@ class TrackFollower:
         self,
         car_simulation: CarSimulation,
         track: Track,
-    ):
+    ) -> bool:
         """
         Check if car will go off track.
         """
         if self.distance_to_track(car_simulation, track) > self.max_distance_to_track:
             return True
         for _ in range(self.simulation_max_future_steps):
+            print(car_simulation.get_live_data())
             car_simulation.move(
                 {
                     "speed_instruction": SpeedInstruction.BRAKE,
@@ -155,8 +156,10 @@ class TrackFollower:
                 return False
         return False
 
-    def distance_to_track(self, car_simulation: CarSimulation, track: Track):
+    def distance_to_track(self, car_simulation: CarSimulation, track: Track) -> float:
         return track.get_distance_to_point(car_simulation.front_middle)
 
-    def index_of_closest_track_point(self, car_simulation: CarSimulation, track: Track):
+    def index_of_closest_track_point(
+        self, car_simulation: CarSimulation, track: Track
+    ) -> int:
         return track.find_index_of_closest_point(car_simulation.front_middle)

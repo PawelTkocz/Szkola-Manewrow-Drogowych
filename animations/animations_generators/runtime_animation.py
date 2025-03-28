@@ -22,7 +22,7 @@ class RuntimeAnimation(AnimationStrategy):
         self,
         movement_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
-    ):
+    ) -> None:
         super().__init__(movement_instructions_dir_path)
         self.traffic_control_center = TrafficControlCenter(road_control_center)
         self.cars: list[RuntimeAnimationCarInfo] = []
@@ -34,7 +34,7 @@ class RuntimeAnimation(AnimationStrategy):
         starting_position: CarStartingPosition,
         manoeuvre_description: IntersectionManoeuvreDescription,
         start_frame_number: int,
-    ):
+    ) -> None:
         car = SmartCityCar(
             manoeuvre_description,
             registry_number,
@@ -60,15 +60,15 @@ class RuntimeAnimation(AnimationStrategy):
                 continue
             movement_instruction = car["car"].tick()
             if movement_instruction:
-                car["movement_instructions"].append()
+                car["movement_instructions"].append(movement_instruction)
         return [car["car"] for car in self.cars]
 
     def _get_cars_that_start_movement(
-        self, frame_number
+        self, frame_number: int
     ) -> list[RuntimeAnimationCarInfo]:
         return [car for car in self.cars if car["start_frame_number"] == frame_number]
 
-    def _save_movement_instructions(self):
+    def _save_movement_instructions(self) -> None:
         os.makedirs(self.movement_instructions_dir_path, exist_ok=True)
         for car in self.cars:
             file_path = os.path.join(
@@ -78,7 +78,7 @@ class RuntimeAnimation(AnimationStrategy):
             with open(file_path, "w") as file:
                 for movement_instruction in car["movement_instructions"]:
                     file.write(
-                        f"{movement_instruction['speed_modification'].name} {movement_instruction['turn_direction'].name}\n"
+                        f"{movement_instruction['speed_instruction'].name} {movement_instruction['turn_instruction'].name}\n"
                     )
 
     def handle_quit(self) -> None:

@@ -157,7 +157,7 @@ class Vector(Point):
         )
         return v.scale_to_len(len) if len is not None else v
 
-    def get_negative_of_a_vector(self):
+    def get_negative_of_a_vector(self) -> "Vector":
         return self.copy().scale(-1)
 
     def normalize(self) -> "Vector":
@@ -281,7 +281,7 @@ class Rectangle:
     def rear_right(self) -> Point:
         return self._rear_right.copy()
 
-    def update_position(self, front_middle: Point, direction: Direction):
+    def update_position(self, front_middle: Point, direction: Direction) -> None:
         self._direction = direction.copy()
         self._front_middle = front_middle.copy()
         width_vec = direction.get_orthogonal_vector(Directions.RIGHT, self.width)
@@ -314,7 +314,7 @@ class Rectangle:
         vector = Vector(self.rear_right, self.front_left).scale(0.5)
         return self.front_left.add_vector(vector)
 
-    def is_point_inside(self, p: Point):
+    def is_point_inside(self, p: Point) -> bool:
         point = np.array([p.x, p.y])
         rect = np.array(tuples_list(self.corners_list))
         vectors = [rect[(i + 1) % 4] - rect[i] for i in range(4)]
@@ -329,7 +329,7 @@ class Rectangle:
             rec.is_point_inside(p) for p in self.corners_list
         )
 
-    def enlarge_rectangle(self, v):
+    def enlarge_rectangle(self, v: float) -> "Rectangle":
         # move somewhere different
         return Rectangle(
             self.center.add_vector(self.direction.scale_to_len(self.length / 2 * v)),
@@ -348,7 +348,9 @@ class Rectangle:
 # maybe create class Angle for wheels angle and class Direction whill extend this class
 
 
-def calculate_line(p1, p2):
+def calculate_line(
+    p1: tuple[float, float], p2: tuple[float, float]
+) -> tuple[float, float, float]:
     # ax + by + c = 0
     a = p2[1] - p1[1]
     b = p1[0] - p2[0]
@@ -356,11 +358,13 @@ def calculate_line(p1, p2):
     return a, b, c
 
 
-def distance_of_point_to_line(p, a, b, c):
+def distance_of_point_to_line(
+    p: tuple[float, float], a: float, b: float, c: float
+) -> float:
     return abs(a * p[0] + b * p[1] + c) / math.sqrt(a**2 + b**2)
 
 
-def tuples_list(point_list: list[Point]):
+def tuples_list(point_list: list[Point]) -> list[tuple[float, float]]:
     """
     Convert list of points to list of tuples
     """

@@ -1,6 +1,10 @@
 from geometry import Directions
-from road_control_center.intersection.intersection_rules import IntersectionRules
-from road_control_center.intersection.schemas import IntersectionPriorityCarInfo
+from smart_city.road_control_center.intersection.intersection_rules import (
+    IntersectionRules,
+)
+from smart_city.road_control_center.intersection.schemas import (
+    IntersectionPriorityCarInfo,
+)
 
 
 class PriorityToTheRightRule(IntersectionRules):
@@ -12,6 +16,7 @@ class PriorityToTheRightRule(IntersectionRules):
         return True
 
     def has_priority(
+        self,
         car1_info: IntersectionPriorityCarInfo,
         car2_info: IntersectionPriorityCarInfo,
         time: int,

@@ -1,4 +1,6 @@
 import os
+
+from pygame import Surface
 from animations.animations_generators.manoeuvre_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import CarStartingPosition
 from drafter.intersection import IntersectionDrafter
@@ -36,7 +38,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         )
         self.intersection = intersection_control_center.intersection
         self.intersection_drafter = IntersectionDrafter(
-            self.intersection.intersection_parts
+            self.intersection.intersection_parts, self.intersection.intersection_colors
         )
 
     def get_starting_position(
@@ -51,5 +53,5 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         ].direction
         return {"front_middle": front_middle_position, "direction": direction}
 
-    def draw_road(self, screen):
+    def draw_road(self, screen: Surface) -> None:
         self.intersection_drafter.draw(screen)

@@ -25,8 +25,8 @@ from state import State
 
 
 class MainMenu(State):
-    def __init__(self):
-        super().__init__()
+    def __init__(self) -> None:
+        super().__init__(previous_state=self)
         self.options_menu = OptionsMenu(
             MAIN_MENU_TITLE,
             MAIN_MENU_OPTIONS_COLUMNS_NUMBER,
@@ -41,53 +41,53 @@ class MainMenu(State):
         self.options_menu.add_option_item(
             {
                 "title": "Intersection",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionManoeuvresMenu(self),
             }
         )
         self.options_menu.add_option_item(
             {
                 "title": "Animation 2",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionTurnRightAnimation(self),
             }
         )
         self.options_menu.add_option_item(
             {
                 "title": "Animation 3",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionGoStraightAnimation(self),
             }
         )
         self.options_menu.add_option_item(
             {
                 "title": "Animation 4",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionTurnLeftAnimation(self),
             }
         )
         self.options_menu.add_option_item(
             {
                 "title": "Animation 5",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionTurnLeftAnimation(self),
             }
         )
         self.options_menu.add_option_item(
             {
                 "title": "Animation 6",
-                "image_path": "animationsScreenshots/screenshot12.png",
+                "image_path": "animations/animations_menus/screenshots/screenshot1.png",
                 "on_click_state": IntersectionTurnLeftAnimation(self),
             }
         )
 
-    def render_frame(self, screen: Surface):
+    def render_frame(self, screen: Surface) -> None:
         screen.fill(BACKGROUND_COLOR)
         self.options_menu.render(screen)
 
-    def handle_click(self, mouse_click_position) -> State:
+    def handle_click(self, mouse_click_position: tuple[float, float]) -> State:
         state = self.options_menu.handle_click(mouse_click_position)
         return state if state is not None else self
 
-    def handle_quit(self):
+    def handle_quit(self) -> None:
         return

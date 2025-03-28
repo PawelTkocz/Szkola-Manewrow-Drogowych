@@ -1,14 +1,18 @@
 from car.instruction_controlled_car import CarControlInstructions
-from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
-from road_control_center.intersection.intersection_control_center_software import (
+from road_segments.intersection.intersection import Intersection
+from smart_city.road_control_center.intersection.intersection_control_center_software import (
     IntersectionControlCenterSoftware,
 )
-from road_control_center.intersection.intersection_rules import IntersectionRules
-from road_control_center.intersection.schemas import (
+from smart_city.road_control_center.intersection.intersection_rules import (
+    IntersectionRules,
+)
+from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
-from road_control_center.road_control_center import RoadControlCenter
-from road_segments.intersection.intersection import Intersection
+from smart_city.road_control_center.manoeuvres.intersection_manoeuvre import (
+    IntersectionManoeuvre,
+)
+from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData
 
 
@@ -36,7 +40,7 @@ class IntersectionControlCenter(RoadControlCenter):
                 live_car_data, manoeuvre_info["manoeuvre"]
             )
         return self.software.approach_intersection_movement_instruction(
-            self.live_cars_data, self.cars_manoeuvre_info, self.time
+            registry_number, self.live_cars_data, self.cars_manoeuvre_info, self.time
         )
 
     def update_active_cars_on_road(self, registry_numbers: list[str]) -> None:
@@ -49,9 +53,11 @@ class IntersectionControlCenter(RoadControlCenter):
     def register_new_active_car(self, live_car_data: LiveCarData) -> None:
         manoeuvre_description = live_car_data["manoeuvre_description"]
         manoeuvre = IntersectionManoeuvre(
-            live_car_data["model"], self.intersection, manoeuvre_description
+            live_car_data["specification"]["model"],
+            self.intersection,
+            manoeuvre_description,
         )
-        registry_number = live_car_data["registry_number"]
+        registry_number = live_car_data["specification"]["registry_number"]
         self.cars_manoeuvre_info[registry_number] = {
             "manoeuvre": manoeuvre,
             "manoeuvre_status": {"can_safely_cross_intersection": False},

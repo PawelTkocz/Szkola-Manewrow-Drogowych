@@ -91,33 +91,33 @@ class CarModel:
         }
 
     @property
-    def width(self):
+    def width(self) -> float:
         return self.appearance["width"]
 
     @property
-    def length(self):
+    def length(self) -> float:
         return self.appearance["length"]
 
     @property
-    def max_wheels_turn(self):
+    def max_wheels_turn(self) -> float:
         return self.specification["max_wheels_turn"]
 
     @property
-    def wheels_turn_speed(self):
+    def wheels_turn_speed(self) -> float:
         return self.specification["wheels_turn_speed"]
 
     @property
-    def max_velocity(self):
+    def max_velocity(self) -> float:
         return self.specification["max_velocity"]
 
     @property
-    def max_acceleration(self):
+    def max_acceleration(self) -> float:
         return self.specification["max_acceleration"]
 
     @property
-    def max_brake(self):
+    def max_brake(self) -> float:
         return self.specification["max_brake"]
 
     @property
-    def resistance(self):
+    def resistance(self) -> float:
         return self.specification["resistance"]
