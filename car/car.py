@@ -1,3 +1,4 @@
+from car.schemas import GearboxState
 from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
@@ -60,6 +61,7 @@ class Car(CarBody):
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_direction: Direction = Direction(Point(1, 0)),
+        gearbox_state: GearboxState = GearboxState.NEUTRAL,
     ):
         """
         Initialize car
@@ -70,6 +72,7 @@ class Car(CarBody):
         self.color = color
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
+        self.gearbox_state = gearbox_state
         self._car_drafter = CarDrafter(model, color)
 
     @property
@@ -100,39 +103,41 @@ class Car(CarBody):
     def wheels_direction(self) -> Direction:
         return self.wheels.direction
 
-    def turn(self, direction: Directions):
-        self.wheels.turn(self.wheels_turn_speed, direction)
+    def shift_gear(self, gear: GearboxState) -> bool:
+        if gear == GearboxState.DRIVE and self.velocity < 0:
+            return False
+        if gear == GearboxState.REVERSE and self.velocity > 0:
+            return False
+        self.gearbox_state = gear
+        return True
 
-    def speed_up(self, direction: Directions, limit=None):
-        if (self.velocity > 0 and direction == Directions.BACK) or (
-            self.velocity < 0 and direction == Directions.FRONT
-        ):
+    def turn_left(self) -> None:
+        self.wheels.turn(self.wheels_turn_speed, Directions.LEFT)
+
+    def turn_right(self) -> None:
+        self.wheels.turn(self.wheels_turn_speed, Directions.RIGHT)
+
+    def accelerate(self) -> None:
+        if self.gearbox_state == GearboxState.NEUTRAL:
             return
-        if limit is not None and abs(self.velocity) > limit:
-            self.brake()
-            return
-        if direction == Directions.FRONT:
+        if self.gearbox_state == GearboxState.DRIVE:
             self.velocity = min(
-                self.velocity + self.max_acceleration,
-                self.max_velocity,
-                limit if limit is not None else self.max_velocity,
+                self.velocity + self.max_acceleration, self.max_velocity
             )
-        elif direction == Directions.BACK:
+        elif self.gearbox_state == GearboxState.REVERSE:
             self.velocity = max(
-                self.velocity - self.max_acceleration,
-                -1 * self.max_velocity,
-                limit if limit is not None else -1 * self.max_velocity,
+                self.velocity - self.max_acceleration, -1 * self.max_velocity
             )
 
-    def slow_down(self, value):
+    def _slow_down(self, value: float) -> None:
         self.velocity = (
             max(self.velocity - value, 0)
             if self.velocity > 0
             else min(self.velocity + value, 0)
         )
 
-    def brake(self):
-        self.slow_down(self.max_brake)
+    def brake(self) -> None:
+        self._slow_down(self.max_brake)
 
     def move(self):
         if self.velocity == 0:
@@ -142,12 +147,7 @@ class Car(CarBody):
             self.velocity
         )
         super().move(self.turn_direction, front_movement_vector)
-        self.slow_down(self.model.resistance)
+        self._slow_down(self.model.resistance)
 
     def draw(self, screen):
         self._car_drafter.draw(self, self.wheels_angle, screen)
-
-    def collides(self, obj: Rectangle):
-        if obj is not None:
-            return self.collides(obj)
-        return False

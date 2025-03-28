@@ -1,4 +1,11 @@
+from enum import Enum
 from typing import TypeAlias, TypedDict
+
+
+class GearboxState(Enum):
+    REVERSE = "REVERSE"
+    NEUTRAL = "NEUTRAL"
+    DRIVE = "DRIVE"
 
 
 class CarPointPosition(TypedDict):

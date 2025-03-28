@@ -324,7 +324,7 @@ class Rectangle:
             cp <= 0 for cp in cross_products
         )
 
-    def collides(self, rec: "Rectangle"):
+    def collides(self, rec: "Rectangle") -> bool:
         return any(self.is_point_inside(p) for p in rec.corners_list) or any(
             rec.is_point_inside(p) for p in self.corners_list
         )
