@@ -1,19 +1,22 @@
 from typing import TypedDict
-from car.instruction_controlled_car import MovementInstruction, SpeedModifications
-from geometry import Directions
+from car.instruction_controlled_car import (
+    CarControlInstructions,
+    SpeedInstruction,
+    TurnInstruction,
+)
 from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
 from road_control_center.intersection.intersection_rules import IntersectionRules
 from road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
 from road_segments.intersection.intersection import Intersection
-from smart_city.schemas import LiveCarData
-from traffic_control_center_software.car_movement_simulator import (
+from smart_city.road_control_center.software.car_movement_simulator import (
     can_stop_before_zone,
     get_status_before_entering_zone,
 )
-from traffic_control_center_software.car_simulation import CarSimulation
-from traffic_control_center_software.track_follower import TrackFollower
+from smart_city.road_control_center.software.car_simulation import CarSimulation
+from smart_city.road_control_center.software.track_follower import TrackFollower
+from smart_city.schemas import LiveCarData
 
 
 class CarOnIntersectionSimulation(TypedDict):
@@ -29,19 +32,22 @@ class IntersectionControlCenterSoftware:
         self.intersection_rules = intersection_rules
         self.track_follower = TrackFollower()
 
-    def get_default_movement_instruction(self) -> MovementInstruction:
+    def get_default_movement_instruction(self) -> CarControlInstructions:
         return {
-            "speed_modification": SpeedModifications.NO_CHANGE,
-            "turn_direction": Directions.FRONT,
+            "speed_instruction": SpeedInstruction.NO_CHANGE,
+            "turn_instruction": TurnInstruction.NO_CHANGE,
         }
 
     def follow_track_movement_instruction(
         self, live_car_data: LiveCarData, manoeuvre: IntersectionManoeuvre
-    ) -> MovementInstruction:
-        desired_end_state = manoeuvre.phases[0].desired_end_state
-        track = manoeuvre.phases[0].track
-        return self.track_follower.get_movement_instruction(
-            live_car_data, track, desired_end_state
+    ) -> CarControlInstructions:
+        current_phase = manoeuvre.get_current_phase()
+        if not current_phase:
+            return self.get_default_movement_instruction()
+        track = current_phase.track
+        stop_point = current_phase.stop_point
+        return self.track_follower.get_car_control_instructions(
+            live_car_data, track, stop_point
         )
 
     def approach_intersection_movement_instruction(
@@ -50,33 +56,39 @@ class IntersectionControlCenterSoftware:
         live_cars_data: dict[str, LiveCarData],
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
         time: int,
-    ) -> MovementInstruction:
-        # first just follow track, then validate
-        movement_instructions: list[MovementInstruction] = [
-            {
-                "speed_modification": speed_modification,
-                "turn_direction": self.track_follower.get_best_turn_direction(
-                    speed_modification
+    ) -> CarControlInstructions:
+        live_car_data = live_cars_data[registry_number]
+        valid_speed_instructions = self.track_follower.get_valid_speed_instructions(
+            live_car_data["live_state"]["velocity"]
+        )
+        current_phase = cars_manoeuvre_info[registry_number][
+            "manoeuvre"
+        ].get_current_phase()
+        track = current_phase.track
+        stop_point = current_phase.stop_point
+        for speed_instruction in valid_speed_instructions[:-1]:
+            if not self.track_follower.is_speed_instruction_safe(
+                live_car_data, track, stop_point, speed_instruction
+            ):
+                continue
+            car_control_instructions: CarControlInstructions = {
+                "speed_modification": speed_instruction,
+                "turn_direction": self.track_follower.get_turn_instruction(
+                    live_car_data, track, speed_instruction
                 ),
             }
-            for speed_modification in [
-                SpeedModifications.SPEED_UP,
-                SpeedModifications.NO_CHANGE,
-            ]
-        ]
-        for movement_instruction in movement_instructions:
             if self.is_approaching_instruction_safe(
                 registry_number,
                 live_cars_data,
-                movement_instruction,
+                car_control_instructions,
                 cars_manoeuvre_info,
                 time,
             ):
-                return movement_instruction
+                return car_control_instructions
         return {
-            "speed_modification": SpeedModifications.BRAKE,
-            "turn_direction": self.track_follower.get_best_turn_direction(
-                SpeedModifications.BRAKE
+            "speed_modification": valid_speed_instructions[-1],
+            "turn_direction": self.track_follower.get_turn_instruction(
+                live_car_data, track, valid_speed_instructions[-1]
             ),
         }
 
@@ -84,23 +96,24 @@ class IntersectionControlCenterSoftware:
         self,
         registry_number: str,
         live_cars_data: dict[str, LiveCarData],
-        movement_instruction: MovementInstruction,
+        car_control_instructions: CarControlInstructions,
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
         time: int,
     ) -> bool:
         live_car_data = live_cars_data[registry_number]
         manoeuvre_info = cars_manoeuvre_info[registry_number]
+        track = manoeuvre_info["manoeuvre"].get_current_phase().track
         if can_stop_before_zone(
             live_car_data,
-            manoeuvre_info["manoeuvre"].phases[0].track,
+            track,
             self.intersection.intersection_parts["intersection_area"],
-            movement_instruction,
+            car_control_instructions,
         ):
             return True
         return self.can_safely_cross_the_intersection(
             registry_number,
             live_cars_data,
-            movement_instruction,
+            car_control_instructions,
             cars_manoeuvre_info,
             time,
         )
@@ -109,18 +122,18 @@ class IntersectionControlCenterSoftware:
         self,
         registry_number: str,
         live_cars_data: dict[str, LiveCarData],
-        movement_instruction: MovementInstruction,
+        car_control_instructions: CarControlInstructions,
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
         time: int,
     ) -> bool:
         manoeuvre_info = cars_manoeuvre_info[registry_number]
         live_car_data = live_cars_data[registry_number]
-        track = manoeuvre_info["manoeuvre"].phases[0].track
+        track = manoeuvre_info["manoeuvre"].get_current_phase().track
         entering_intersection_status = get_status_before_entering_zone(
             live_car_data,
             track,
             self.intersection.intersection_parts["intersection_area"],
-            movement_instruction,
+            car_control_instructions,
         )
         entering_intersection_time = (
             entering_intersection_status["time_to_enter_zone"] + time
@@ -130,10 +143,12 @@ class IntersectionControlCenterSoftware:
         ]
         if not self.intersection_rules.can_enter_intersection(
             {
-                "live_car_data": entering_intersection_live_car_data,
                 "manoeuvre_description": manoeuvre_info[
                     "manoeuvre"
                 ].manoeuvre_description,
+                "high_priority": entering_intersection_live_car_data["live_state"][
+                    "high_priority"
+                ],
             },
             entering_intersection_time,
         ):
@@ -150,7 +165,7 @@ class IntersectionControlCenterSoftware:
             cars_with_priority,
             live_cars_data,
             cars_manoeuvre_info,
-            movement_instruction,
+            car_control_instructions,
         )
 
     def get_cars_with_priority(
@@ -166,13 +181,17 @@ class IntersectionControlCenterSoftware:
             if _registry_number != registry_number
             and self.intersection_rules.has_priority(
                 {
-                    "live_car_data": live_cars_data[_registry_number],
+                    "high_priority": live_cars_data[_registry_number]["live_state"][
+                        "high_priority"
+                    ],
                     "manoeuvre_description": car_manoeuvre_info[
                         "manoeuvre"
                     ].manoeuvre_description,
                 },
                 {
-                    "live_car_data": live_cars_data[registry_number],
+                    "high_priority": live_cars_data[registry_number]["live_state"][
+                        "high_priority"
+                    ],
                     "manoeuvre_description": cars_manoeuvre_info[registry_number][
                         "manoeuvre"
                     ].manoeuvre_description,
@@ -187,7 +206,7 @@ class IntersectionControlCenterSoftware:
         cars_with_priority: list[str],
         live_cars_data: dict[str, LiveCarData],
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
-        movement_instruction: MovementInstruction,
+        car_control_instructions: CarControlInstructions,
     ) -> bool:
         if not cars_with_priority:
             return True
@@ -210,14 +229,9 @@ class IntersectionControlCenterSoftware:
             "car_simulation": CarSimulation(live_cars_data[registry_number]),
             "car_manoeuvre_info": cars_manoeuvre_info[registry_number],
         }
-        car_simulation["car_simulation"].apply_movement_instruction(
-            movement_instruction
-        )
-        car_simulation["car_simulation"].move()
+        car_simulation["car_simulation"].move(car_control_instructions)
         for car in priority_cars:
             self._move_car_simulation(car)
-        # if at least one car closing to intersetion would enter the intersection, you CAN'T go
-        # if you would get to close to any of cars already on intersection, you CAN'T go
         while not self.has_car_crossed_intersection(car_simulation):
             if self._priority_violation(
                 car_simulation,
@@ -237,11 +251,8 @@ class IntersectionControlCenterSoftware:
         manoeuvre_description = intersection_car_simulation["car_manoeuvre_info"][
             "manoeuvre"
         ].manoeuvre_description
-        intersection = intersection_car_simulation["car_manoeuvre_info"][
-            "manoeuvre"
-        ].intersection
-        intersection_area = intersection.intersection_parts["intersection_area"]
-        outcoming_lane = intersection.intersection_parts["outcoming_lines"][
+        intersection_area = self.intersection.intersection_parts["intersection_area"]
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
             manoeuvre_description["ending_side"]
         ]
         return car_simulation.collides(intersection_area) or car_simulation.collides(
@@ -256,11 +267,8 @@ class IntersectionControlCenterSoftware:
         manoeuvre_description = intersection_car_simulation["car_manoeuvre_info"][
             "manoeuvre"
         ].manoeuvre_description
-        intersection = intersection_car_simulation["car_manoeuvre_info"][
-            "manoeuvre"
-        ].intersection
-        intersection_area = intersection.intersection_parts["intersection_area"]
-        outcoming_lane = intersection.intersection_parts["outcoming_lines"][
+        intersection_area = self.intersection.intersection_parts["intersection_area"]
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
             manoeuvre_description["ending_side"]
         ]
         return not car_simulation.collides(
@@ -273,13 +281,10 @@ class IntersectionControlCenterSoftware:
     ):
         manoeuvre = intersection_car_simulation["car_manoeuvre_info"]["manoeuvre"]
         car_simulation = intersection_car_simulation["car_simulation"]
-        track = manoeuvre.phases[0].track
-        end_state = manoeuvre.phases[0].desired_end_state
-        movement_instruction = TrackFollower().get_movement_instruction(
-            car_simulation.get_live_data(), track, end_state
+        car_control_instructions = self.follow_track_movement_instruction(
+            car_simulation.get_live_data(), manoeuvre
         )
-        car_simulation.apply_movement_instruction(movement_instruction)
-        car_simulation.move()
+        car_simulation.move(car_control_instructions)
 
     def _priority_violation(
         self,
@@ -287,8 +292,7 @@ class IntersectionControlCenterSoftware:
         priority_cars_crossing_intersection: list[CarOnIntersectionSimulation],
         priority_cars_closing_to_intersection: list[CarOnIntersectionSimulation],
     ) -> bool:
-        intersection = car["car_manoeuvre_info"]["manoeuvre"].intersection
-        intersection_area = intersection.intersection_parts["intersection_area"]
+        intersection_area = self.intersection.intersection_parts["intersection_area"]
         return any(
             car["car_simulation"].collides(intersection_area)
             for car in priority_cars_closing_to_intersection

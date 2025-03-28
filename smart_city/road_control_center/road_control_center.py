@@ -1,9 +1,9 @@
-from car.instruction_controlled_car import MovementInstruction
+from car.instruction_controlled_car import CarControlInstructions
 from road_control_center.road_car_controller import RoadCarController
-from smart_city.schemas import LiveCarData
-from traffic_control_center_software.car_movement_simulator import (
+from smart_city.road_control_center.software.car_movement_simulator import (
     get_predicted_live_car_data,
 )
+from smart_city.schemas import LiveCarData
 
 
 class RoadControlCenter(RoadCarController):
@@ -20,7 +20,7 @@ class RoadControlCenter(RoadCarController):
 
     def send_movement_instruction(
         self, live_car_data: LiveCarData
-    ) -> MovementInstruction:
+    ) -> CarControlInstructions:
         registry_number = live_car_data["registry_number"]
         if registry_number not in self.live_cars_data:
             self.register_new_active_car(live_car_data)

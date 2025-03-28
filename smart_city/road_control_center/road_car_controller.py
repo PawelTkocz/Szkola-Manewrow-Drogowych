@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from car.instruction_controlled_car import MovementInstruction
+from car.instruction_controlled_car import CarControlInstructions
 from smart_city.schemas import LiveCarData
 
 
@@ -12,7 +12,7 @@ class RoadCarController(ABC):
     @abstractmethod
     def calculate_movement_instruction(
         self, registry_number: str
-    ) -> MovementInstruction:
+    ) -> CarControlInstructions:
         raise NotImplementedError
 
     @abstractmethod

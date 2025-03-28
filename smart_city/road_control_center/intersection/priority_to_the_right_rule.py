@@ -16,6 +16,10 @@ class PriorityToTheRightRule(IntersectionRules):
         car2_info: IntersectionPriorityCarInfo,
         time: int,
     ) -> bool:
+        if car1_info["high_priority"] and not car2_info["high_priority"]:
+            return True
+        if not car1_info["high_priority"] and car2_info["high_priority"]:
+            return False
         sides = [Directions.DOWN, Directions.RIGHT, Directions.UP, Directions.LEFT]
         car1_starting_side = car1_info["manoeuvre_description"]["starting_side"]
         car1_ending_side = car1_info["manoeuvre_description"]["ending_side"]

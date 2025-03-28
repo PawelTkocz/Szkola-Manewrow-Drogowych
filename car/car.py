@@ -61,7 +61,6 @@ class Car(CarBody):
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_direction: Direction = Direction(Point(1, 0)),
-        gearbox_state: GearboxState = GearboxState.NEUTRAL,
     ):
         """
         Initialize car
@@ -72,7 +71,6 @@ class Car(CarBody):
         self.color = color
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
-        self.gearbox_state = gearbox_state
         self._car_drafter = CarDrafter(model, color)
 
     @property
@@ -103,28 +101,18 @@ class Car(CarBody):
     def wheels_direction(self) -> Direction:
         return self.wheels.direction
 
-    def shift_gear(self, gear: GearboxState) -> bool:
-        if gear == GearboxState.DRIVE and self.velocity < 0:
-            return False
-        if gear == GearboxState.REVERSE and self.velocity > 0:
-            return False
-        self.gearbox_state = gear
-        return True
-
     def turn_left(self) -> None:
         self.wheels.turn(self.wheels_turn_speed, Directions.LEFT)
 
     def turn_right(self) -> None:
         self.wheels.turn(self.wheels_turn_speed, Directions.RIGHT)
 
-    def accelerate(self) -> None:
-        if self.gearbox_state == GearboxState.NEUTRAL:
-            return
-        if self.gearbox_state == GearboxState.DRIVE:
+    def accelerate(self, direction: Directions) -> None:
+        if direction == Directions.FRONT:
             self.velocity = min(
                 self.velocity + self.max_acceleration, self.max_velocity
             )
-        elif self.gearbox_state == GearboxState.REVERSE:
+        elif direction == Directions.BACK:
             self.velocity = max(
                 self.velocity - self.max_acceleration, -1 * self.max_velocity
             )

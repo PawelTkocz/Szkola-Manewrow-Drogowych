@@ -1,4 +1,4 @@
-from car.instruction_controlled_car import MovementInstruction
+from car.instruction_controlled_car import CarControlInstructions
 from road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData
 
@@ -10,7 +10,7 @@ class TrafficControlCenter:
 
     def send_movement_instruction(
         self, live_car_data: LiveCarData
-    ) -> MovementInstruction:
+    ) -> CarControlInstructions:
         road_control_center = self._get_current_road_control_center(live_car_data)
         return road_control_center.send_movement_instruction(live_car_data)
 

@@ -1,29 +1,26 @@
-from abc import ABC, abstractmethod
-from typing import TypedDict
-from traffic_control_center_software.track import Track, TrackPath
 from geometry import Point
+from smart_city.road_control_center.manoeuvres.track import Track, TrackPath
 
 
-class ManoeuvrePhaseEndState(TypedDict):
-    front_middle_position: Point
-    velocity: float
-
-
-class ManoeuvrePhase(ABC):
+class ManoeuvrePhase:
     """
     Class representing one phase of a manoeuvre.
     """
 
+    stop_point_tolerance = 1
+
     def __init__(
         self,
         track_path: TrackPath,
-        reversing: bool,
-        desired_end_state: ManoeuvrePhaseEndState,
+        stop_point: Point | None = None,
     ):
         self.track = Track(track_path)
-        self.reversing = reversing
-        self.desired_end_state = desired_end_state
+        self.stop_point = stop_point
 
-    @abstractmethod
     def is_phase_over(self, front_middle_position: Point, velocity: float) -> bool:
-        pass
+        if not self.stop_point:
+            return False
+        return (
+            self.stop_point.distance(front_middle_position) < self.stop_point_tolerance
+            and velocity == 0
+        )

@@ -1,4 +1,4 @@
-from car.instruction_controlled_car import MovementInstruction
+from car.instruction_controlled_car import CarControlInstructions
 from manoeuvres.intersection_manoeuvre import IntersectionManoeuvre
 from road_control_center.intersection.intersection_control_center_software import (
     IntersectionControlCenterSoftware,
@@ -25,7 +25,7 @@ class IntersectionControlCenter(RoadControlCenter):
 
     def calculate_movement_instruction(
         self, registry_number: str
-    ) -> MovementInstruction:
+    ) -> CarControlInstructions:
         if registry_number not in self.cars_manoeuvre_info:
             return self.software.get_default_movement_instruction()
 

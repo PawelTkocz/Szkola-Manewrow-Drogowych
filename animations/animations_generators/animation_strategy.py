@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from animations.animations_generators.schemas import CarStartingPosition
 from car.car import Car
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 
 
 class AnimationStrategy(ABC):

@@ -7,7 +7,11 @@ from animations.animations_generators.schemas import (
 )
 from car.car import Car
 from car.toyota_yaris import ToyotaYaris
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 from smart_city.road_control_center.road_control_center import RoadControlCenter
+from smart_city.smart_city_car import SmartCityCar
 from smart_city.traffic_control_center import (
     TrafficControlCenter,
 )
@@ -31,7 +35,7 @@ class RuntimeAnimation(AnimationStrategy):
         manoeuvre_description: IntersectionManoeuvreDescription,
         start_frame_number: int,
     ):
-        car = SmartTrafficCar(
+        car = SmartCityCar(
             manoeuvre_description,
             registry_number,
             ToyotaYaris(),

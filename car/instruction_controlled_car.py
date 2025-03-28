@@ -3,13 +3,14 @@ from typing import TypedDict
 from car.car import Car
 from car.model import CarModel
 from car.schemas import GearboxState
-from geometry import Direction, Point
+from geometry import Direction, Directions, Point
 
 
 class SpeedInstruction(Enum):
-    ACCELERATE = "ACCELERATE"
+    ACCELERATE_FRONT = "ACCELERATE_FRONT"
     NO_CHANGE = "NO_CHANGE"
     BRAKE = "BRAKE"
+    ACCELERATE_REVERSE = "ACCELERATE_REVERSE"
 
 
 class TurnInstruction(Enum):
@@ -21,7 +22,6 @@ class TurnInstruction(Enum):
 class CarControlInstructions(TypedDict):
     speed_instruction: SpeedInstruction
     turn_instruction: TurnInstruction
-    gearbox_instruction: GearboxState
 
 
 class InstructionControlledCar(Car):
@@ -59,12 +59,14 @@ class InstructionControlledCar(Car):
         self.shift_gear(gearbox_instruction)
 
     def _apply_speed_instruction(self, speed_instruction: SpeedInstruction):
-        if speed_instruction == SpeedInstruction.ACCELERATE:
-            self.accelerate()
+        if speed_instruction == SpeedInstruction.ACCELERATE_FRONT:
+            self.accelerate(Directions.FRONT)
         elif speed_instruction == SpeedInstruction.NO_CHANGE:
             pass
         elif speed_instruction == SpeedInstruction.BRAKE:
             self.brake()
+        elif speed_instruction == SpeedInstruction.ACCELERATE_REVERSE:
+            self.accelerate(Directions.BACK)
 
     def _apply_turn_instruction(self, turn_instruction: TurnInstruction) -> None:
         if turn_instruction == TurnInstruction.TURN_LEFT:

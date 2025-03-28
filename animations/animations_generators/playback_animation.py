@@ -7,13 +7,15 @@ from animations.animations_generators.schemas import (
 )
 from car.car import Car
 from car.instruction_controlled_car import (
+    CarControlInstructions,
     InstructionControlledCar,
-    MovementInstruction,
-    SpeedModifications,
+    SpeedInstruction,
+    TurnInstruction,
 )
 from car.toyota_yaris import ToyotaYaris
-from geometry import Directions
-from road_control_center.intersection.schemas import IntersectionManoeuvreDescription
+from smart_city.road_control_center.manoeuvres.schemas import (
+    IntersectionManoeuvreDescription,
+)
 
 
 # think about not writing to txt but json
@@ -57,13 +59,12 @@ class PlaybackAnimation(AnimationStrategy):
             movement_instruction = car["movement_instructions"][
                 movement_instruction_index
             ]
-            car["car"].apply_movement_instruction(movement_instruction)
-            car["car"].move()
+            car["car"].move(movement_instruction)
         return [car["car"] for car in self.cars]
 
     def _load_movement_instructions(
         self, registry_number: str
-    ) -> list[MovementInstruction]:
+    ) -> list[CarControlInstructions]:
         file_path = os.path.join(
             self.movement_instructions_dir_path,
             f"car_{registry_number}.txt",
@@ -71,8 +72,8 @@ class PlaybackAnimation(AnimationStrategy):
         with open(file_path, "r") as file:
             return [
                 {
-                    "speed_modification": SpeedModifications[speed_mod],
-                    "turn_direction": Directions[turn_mod],
+                    "speed_modification": SpeedInstruction[speed_mod],
+                    "turn_direction": TurnInstruction[turn_mod],
                 }
                 for speed_mod, turn_mod in (line.split() for line in file)
             ]
