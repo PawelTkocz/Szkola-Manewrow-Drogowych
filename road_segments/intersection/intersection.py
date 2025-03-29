@@ -32,32 +32,32 @@ class Intersection:
         area_center = area.center
         return {
             "intersection_area": Rectangle(
-                Point(area_center.x, area_center.y - lane_width),
+                Point(area_center.x, area_center.y + lane_width),
                 street_width,
                 street_width,
                 Direction(Point(0, 1)),
             ),
             "incoming_lines": {
                 Directions.UP: Rectangle(
-                    Point(area_center.x - lane_width / 2, area_center.y - lane_width),
+                    Point(area_center.x - lane_width / 2, area_center.y + lane_width),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, -1)),
                 ),
                 Directions.RIGHT: Rectangle(
-                    Point(area_center.x + lane_width, area_center.y - lane_width / 2),
+                    Point(area_center.x + lane_width, area_center.y + lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(-1, 0)),
                 ),
                 Directions.DOWN: Rectangle(
-                    Point(area_center.x + lane_width / 2, area_center.y + lane_width),
+                    Point(area_center.x + lane_width / 2, area_center.y - lane_width),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, 1)),
                 ),
                 Directions.LEFT: Rectangle(
-                    Point(area_center.x - lane_width, area_center.y + lane_width / 2),
+                    Point(area_center.x - lane_width, area_center.y - lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(1, 0)),
@@ -71,19 +71,19 @@ class Intersection:
                     Direction(Point(0, 1)),
                 ),
                 Directions.RIGHT: Rectangle(
-                    Point(area_x + area.width, area_center.y + lane_width / 2),
+                    Point(area_x + area.width, area_center.y - lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(1, 0)),
                 ),
                 Directions.DOWN: Rectangle(
-                    Point(area_center.x - lane_width / 2, area_y + area.length),
+                    Point(area_center.x - lane_width / 2, 0),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, -1)),
                 ),
                 Directions.LEFT: Rectangle(
-                    Point(area_x, area_center.y - lane_width / 2),
+                    Point(area_x, area_center.y + lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(-1, 0)),

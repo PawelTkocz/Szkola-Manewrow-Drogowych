@@ -43,7 +43,7 @@ def get_right_angle_turn(
         return []
 
     track_vector = Vector(end_point, start_point).get_negative_of_a_vector()
-    middle_point = end_point.copy().add_vector(track_vector.scale(0.5))
+    middle_point = end_point.copy().add_vector(track_vector.copy().scale(0.5))
     turn_corner = middle_point.copy().add_vector(
         track_vector.get_orthogonal_vector(turn_direction).scale(0.5)
     )
