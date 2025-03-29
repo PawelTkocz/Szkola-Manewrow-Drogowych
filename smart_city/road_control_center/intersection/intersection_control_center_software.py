@@ -173,6 +173,8 @@ class IntersectionControlCenterSoftware:
             live_cars_data,
             cars_manoeuvre_info,
         )
+        if registry_number == "DW001":
+            print(cars_with_priority)
         return self.can_cross_intersection_without_priority_violation(
             registry_number,
             cars_with_priority,
@@ -192,20 +194,20 @@ class IntersectionControlCenterSoftware:
             _registry_number
             for _registry_number, car_manoeuvre_info in cars_manoeuvre_info.items()
             if _registry_number != registry_number
-            and self.intersection_rules.has_priority(
-                {
-                    "high_priority": live_cars_data[_registry_number]["live_state"][
-                        "high_priority"
-                    ],
-                    "manoeuvre_description": car_manoeuvre_info[
-                        "manoeuvre"
-                    ].manoeuvre_description,
-                },
+            and not self.intersection_rules.has_priority(
                 {
                     "high_priority": live_cars_data[registry_number]["live_state"][
                         "high_priority"
                     ],
                     "manoeuvre_description": cars_manoeuvre_info[registry_number][
+                        "manoeuvre"
+                    ].manoeuvre_description,
+                },
+                {
+                    "high_priority": live_cars_data[_registry_number]["live_state"][
+                        "high_priority"
+                    ],
+                    "manoeuvre_description": car_manoeuvre_info[
                         "manoeuvre"
                     ].manoeuvre_description,
                 },
