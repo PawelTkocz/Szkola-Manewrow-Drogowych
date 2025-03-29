@@ -120,13 +120,17 @@ class IntersectionControlCenterSoftware:
             car_control_instructions,
         ):
             return True
-        return self.can_safely_cross_the_intersection(
+        can_safely_cross_the_intersection = self.can_safely_cross_the_intersection(
             registry_number,
             live_cars_data,
             car_control_instructions,
             cars_manoeuvre_info,
             time,
         )
+        cars_manoeuvre_info[registry_number]["manoeuvre_status"][
+            "can_safely_cross_intersection"
+        ] = can_safely_cross_the_intersection
+        return can_safely_cross_the_intersection
 
     def can_safely_cross_the_intersection(
         self,
@@ -173,8 +177,6 @@ class IntersectionControlCenterSoftware:
             live_cars_data,
             cars_manoeuvre_info,
         )
-        if registry_number == "DW001":
-            print(cars_with_priority)
         return self.can_cross_intersection_without_priority_violation(
             registry_number,
             cars_with_priority,
@@ -308,10 +310,23 @@ class IntersectionControlCenterSoftware:
         priority_cars_closing_to_intersection: list[CarOnIntersectionSimulation],
     ) -> bool:
         intersection_area = self.intersection.intersection_parts["intersection_area"]
-        return any(
-            car["car_simulation"].collides(intersection_area)
-            for car in priority_cars_closing_to_intersection
-        ) or any(
-            car_["car_simulation"].collides(car["car_simulation"].car)
-            for car_ in priority_cars_crossing_intersection
+        return (
+            any(
+                car["car_simulation"].collides(intersection_area)
+                for car in priority_cars_closing_to_intersection
+            )
+            or any(
+                car_["car_simulation"].collides(car["car_simulation"].car)
+                for car_ in priority_cars_crossing_intersection
+            )
+            or any(
+                car["car_simulation"].collides(
+                    self.intersection.intersection_parts["incoming_lines"][
+                        car["car_manoeuvre_info"]["manoeuvre"].manoeuvre_description[
+                            "starting_side"
+                        ]
+                    ]
+                )
+                for car in priority_cars_crossing_intersection
+            )
         )
