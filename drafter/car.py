@@ -1,8 +1,8 @@
 from pygame import Surface
-import pygame
 from car.model import CarModel
 from car.schemas import CarPartPosition, CarPointPosition
-from geometry import Directions, Point, Rectangle, tuples_list
+from drafter.utils import draw_polygon
+from geometry import Directions, Point, Rectangle
 
 
 class CarDrafter:
@@ -55,13 +55,13 @@ class CarDrafter:
         screen: Surface,
     ) -> None:
         corners = self._get_car_part_corners(car_body, car_part_position)
-        pygame.draw.polygon(screen, color, tuples_list(corners))
+        draw_polygon(screen, color, corners)
 
     def _draw_body(
         self, car_body: Rectangle, screen: Surface, bumpers_color: str = "black"
     ) -> None:
         # Draw bumpers
-        pygame.draw.polygon(screen, bumpers_color, tuples_list(car_body.corners_list))
+        draw_polygon(screen, bumpers_color, car_body.corners_list)
 
         # Draw the car shell
         self._draw_car_part(
@@ -136,7 +136,7 @@ class CarDrafter:
                 corner.rotate_over_point(wheel_middle, wheels_angle)
                 for corner in wheel_corners
             ]
-            pygame.draw.polygon(screen, color, tuples_list(rotated_wheel_corners))
+            draw_polygon(screen, color, rotated_wheel_corners)
 
     def draw(self, car_body: Rectangle, wheels_angle: float, screen: Surface) -> None:
         """

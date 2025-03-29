@@ -138,7 +138,6 @@ class TrackFollower:
         if self.distance_to_track(car_simulation, track) > self.max_distance_to_track:
             return True
         for _ in range(self.simulation_max_future_steps):
-            print(car_simulation.get_live_data())
             car_simulation.move(
                 {
                     "speed_instruction": SpeedInstruction.BRAKE,

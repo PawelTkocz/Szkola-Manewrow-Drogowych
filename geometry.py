@@ -369,3 +369,6 @@ def tuples_list(point_list: list[Point]) -> list[tuple[float, float]]:
     Convert list of points to list of tuples
     """
     return [(p.x, p.y) for p in point_list]
+
+
+# split into geometry directory and seperate files inside it
