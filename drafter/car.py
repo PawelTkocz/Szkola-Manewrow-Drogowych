@@ -1,6 +1,4 @@
-import math
 from pygame import Surface
-import pygame
 from car.model import CarModel
 from car.schemas import CarPartPosition, CarPointPosition
 from drafter.utils import draw_polygon
@@ -21,13 +19,6 @@ class CarDrafter:
         """
         self.model = model
         self.color = color
-        # _car_image = pygame.image.load(
-        #     "animations/animations_menus/car.png"
-        # ).convert_alpha()
-        # self.car_image = pygame.transform.smoothscale(
-        #     _car_image,
-        #     (1.3 * model.appearance["length"], 1.3 * model.appearance["width"]),
-        # )
 
     def _get_car_point_position(
         self, car_body: Rectangle, position: CarPointPosition
@@ -155,12 +146,6 @@ class CarDrafter:
         :wheels_angle: angle of the wheels turn
         :param screen: pygame screen to draw the car on
         """
-        # rotated_image = pygame.transform.rotate(
-        #     self.car_image, 180 - car_body.direction.angle * 180 / math.pi
-        # )
-        # new_rect = rotated_image.get_rect(center=(car_body.center.x, car_body.center.y))
-        # screen.blit(rotated_image, new_rect.topleft)
-        # return
         self._draw_wheels(car_body, screen, wheels_angle)
         self._draw_body(car_body, screen)
         self._draw_lights(car_body, screen)
