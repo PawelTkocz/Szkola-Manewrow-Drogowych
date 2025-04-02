@@ -3,6 +3,7 @@ from car.instruction_controlled_car import (
     CarControlInstructions,
     SpeedInstruction,
     TurnInstruction,
+    TurnSignalsInstruction,
 )
 
 from road_segments.intersection.intersection import Intersection
@@ -39,8 +40,11 @@ class IntersectionControlCenterSoftware:
 
     def get_default_movement_instruction(self) -> CarControlInstructions:
         return {
-            "speed_instruction": SpeedInstruction.NO_CHANGE,
-            "turn_instruction": TurnInstruction.NO_CHANGE,
+            "movement_instructions": {
+                "speed_instruction": SpeedInstruction.NO_CHANGE,
+                "turn_instruction": TurnInstruction.NO_CHANGE,
+            },
+            "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
 
     def follow_track_movement_instruction(

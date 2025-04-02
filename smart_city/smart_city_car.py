@@ -39,7 +39,7 @@ class SmartCityCar(InstructionControlledCar):
 
     def tick(self) -> CarControlInstructions | None:
         movement_instruction = self.fetch_movement_instruction()
-        self.move(movement_instruction)
+        super().tick(movement_instruction)
         return movement_instruction
 
     def connect_to_traffic_control_center(

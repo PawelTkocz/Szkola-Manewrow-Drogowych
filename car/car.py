@@ -1,8 +1,10 @@
 from pygame import Surface
+from car.turn_signals import TurnSignals
 from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
+from schemas import HorizontalDirection
 
 
 class CarBody(Rectangle):
@@ -37,6 +39,7 @@ class Car(CarBody):
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_direction: Direction = Direction(Point(1, 0)),
+        turn_signal: HorizontalDirection | None = HorizontalDirection.LEFT,
     ):
         """
         Initialize car
@@ -47,6 +50,7 @@ class Car(CarBody):
         self.color = color
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
+        self.turn_signals = TurnSignals(model.turn_signals_tick_interval, turn_signal)
         self._car_drafter = CarDrafter(model, color)
 
     @property
@@ -103,6 +107,12 @@ class Car(CarBody):
     def brake(self) -> None:
         self._slow_down(self.max_brake)
 
+    def acitvate_turn_signal(self, side: HorizontalDirection) -> None:
+        self.turn_signals.activate(side)
+
+    def deactivate_turn_signal(self) -> None:
+        self.turn_signals.deactivate()
+
     def move(self) -> None:
         if self.velocity == 0:
             return
@@ -114,4 +124,13 @@ class Car(CarBody):
         self._slow_down(self.model.resistance)
 
     def draw(self, screen: Surface) -> None:
-        self._car_drafter.draw(self, self.wheels_angle, screen)
+        self._car_drafter.draw(
+            self,
+            self.wheels_angle,
+            self.turn_signals.are_turn_signals_lights_on(),
+            screen,
+        )
+
+    def tick(self) -> None:
+        self.move()
+        self.turn_signals.tick()

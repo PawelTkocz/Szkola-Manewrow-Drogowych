@@ -59,7 +59,7 @@ class PlaybackAnimation(AnimationStrategy):
             movement_instruction = car["movement_instructions"][
                 movement_instruction_index
             ]
-            car["car"].move(movement_instruction)
+            car["car"].tick(movement_instruction)
         return [car["car"] for car in self.cars]
 
     def _load_movement_instructions(

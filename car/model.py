@@ -45,6 +45,7 @@ class CarModelSpecification(TypedDict):
     max_acceleration: float
     max_brake: float
     resistance: float
+    turn_signals_tick_interval: int
 
 
 class CarModel:
@@ -121,3 +122,7 @@ class CarModel:
     @property
     def resistance(self) -> float:
         return self.specification["resistance"]
+
+    @property
+    def turn_signals_tick_interval(self) -> int:
+        return self.specification["turn_signals_tick_interval"]
