@@ -15,7 +15,7 @@ from smart_city.road_control_center.manoeuvres.track import (
 vertical = [Directions.UP, Directions.DOWN]
 horizontal = [Directions.LEFT, Directions.RIGHT]
 directions = [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]
-TURN_SHARPNESS = 0.66
+TURN_SHARPNESS = 0.7
 
 
 def calculate_turn_track(

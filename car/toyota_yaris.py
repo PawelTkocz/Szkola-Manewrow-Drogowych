@@ -5,8 +5,8 @@ from car.model import CarModel, CarModelAppearance, CarModelSpecification
 class ToyotaYaris(CarModel):
     name = "Toyota Yaris"
     specification: CarModelSpecification = {
-        "max_acceleration": 0.05,
-        "max_velocity": 5,
+        "max_acceleration": 0.07,
+        "max_velocity": 6,
         "max_brake": 0.1,
         "max_wheels_turn": math.pi / 4,
         "resistance": 0.015,
