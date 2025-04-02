@@ -11,8 +11,8 @@ from smart_city.schemas import LiveCarData
 
 class TrackFollower:
     def __init__(self) -> None:
-        self.max_distance_to_track = 5
-        self.simulation_max_future_steps = 5
+        self.max_distance_to_track = 3
+        self.simulation_max_future_steps = 100
 
     def get_turn_instruction(
         self,
@@ -32,6 +32,8 @@ class TrackFollower:
             )
             return self.distance_to_track(car_simulation, track)
 
+        if live_car_data["live_state"]["velocity"] == 0:
+            return TurnInstruction.NO_CHANGE
         return min(TurnInstruction, key=_distance_to_track_after_instruction)
 
     def get_valid_speed_instructions(self, velocity: float) -> list[SpeedInstruction]:
@@ -92,7 +94,7 @@ class TrackFollower:
             "speed_instruction": speed_instruction,
         }
         car_simulation.move(car_control_instructions)
-        will_go_off_track = self.will_go_off_track(car_simulation, track)
+        will_go_off_track = self.will_go_off_track(car_simulation, track, 2)
         if will_go_off_track:
             return False
         if not stop_point or self.can_stop_at_stop_point(
@@ -131,27 +133,44 @@ class TrackFollower:
         self,
         car_simulation: CarSimulation,
         track: Track,
+        min_velocity: float | None = None,
     ) -> bool:
         """
         Check if car will go off track.
         """
+        if min_velocity is None:
+            min_velocity = 0
+        if car_simulation.velocity < min_velocity:
+            return False
         if self.distance_to_track(car_simulation, track) > self.max_distance_to_track:
             return True
         for _ in range(self.simulation_max_future_steps):
+            if car_simulation.velocity > min_velocity:
+                speed_instruction: SpeedInstruction = SpeedInstruction.BRAKE
+            elif car_simulation.velocity == min_velocity:
+                speed_instruction: SpeedInstruction = SpeedInstruction.NO_CHANGE
+            else:
+                speed_instruction: SpeedInstruction = SpeedInstruction.ACCELERATE_FRONT
             car_simulation.move(
                 {
-                    "speed_instruction": SpeedInstruction.BRAKE,
+                    "speed_instruction": speed_instruction,
                     "turn_instruction": self.get_turn_instruction(
-                        car_simulation.get_live_data(), track, SpeedInstruction.BRAKE
+                        car_simulation.get_live_data(), track, speed_instruction
                     ),
                 }
-            )  # was no change before
+            )
             if (
                 self.distance_to_track(car_simulation, track)
                 > self.max_distance_to_track
             ):
                 return True
-            if car_simulation.velocity == 0:
+            if (
+                abs(
+                    self.index_of_closest_track_point(car_simulation, track)
+                    - len(track.track_path)
+                )
+                < 10
+            ):
                 return False
         return False
 
