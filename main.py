@@ -9,8 +9,8 @@ clock = pygame.time.Clock()
 
 
 class DrivingManoeuvresApplication:
-    def __init__(self, start_state: State) -> None:
-        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    def __init__(self, start_state: State, screen: pygame.Surface) -> None:
+        self.screen = screen
         self.current_state = start_state
 
     def render_frame(self) -> None:
@@ -23,7 +23,8 @@ class DrivingManoeuvresApplication:
         self.current_state.handle_quit()
 
 
-driving_manoeuvres_application = DrivingManoeuvresApplication(MainMenu())
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+driving_manoeuvres_application = DrivingManoeuvresApplication(MainMenu(), screen)
 
 while True:
     for event in pygame.event.get():

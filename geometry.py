@@ -345,6 +345,12 @@ class Rectangle:
         return Rectangle(self.front_middle, self.width, self.length, self.direction)
 
 
+class Circle:
+    def __init__(self, center: Point, radius: float) -> None:
+        self.center = center.copy()
+        self.radius = radius
+
+
 # maybe create class Angle for wheels angle and class Direction whill extend this class
 
 
