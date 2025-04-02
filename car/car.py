@@ -11,39 +11,15 @@ class CarBody(Rectangle):
     ):
         super().__init__(front_middle, width, length, direction)
 
-    def _force_move(self, direction: Directions, front_vector: Vector) -> None:
-        if direction == Directions.RIGHT:
-            self.move_left_side(front_vector)
-        else:
-            self.move_right_side(front_vector)
-        # czemu zmiana z left na right i odwrotnie rozwiazuje problem z tym, ze jadac prosto
-        # zblizalismy sie wolniej do celu niz skrecajac
-
-    # think about unifying this to just move - vector from front middle
-    def move_left_side(self, front_vector: Vector) -> None:
-        new_front_left = self.front_left.add_vector(front_vector)
-        length_vector = Vector(new_front_left, self.rear_left).scale_to_len(self.length)
-        new_rear_left = new_front_left.copy().add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        new_direction = Direction(new_front_left, new_rear_left)
-        new_front_middle = new_front_left.copy().add_vector(
-            length_vector.get_orthogonal_vector(Directions.RIGHT, self.width / 2)
-        )
-        self.update_position(new_front_middle, new_direction)
-
-    def move_right_side(self, front_vector: Vector) -> None:
-        new_front_right = self.front_right.add_vector(front_vector)
-        length_vector = Vector(new_front_right, self.rear_right).scale_to_len(
+    def _force_move(self, front_vector: Vector) -> None:
+        new_front_middle = self.front_middle.add_vector(front_vector)
+        length_vector = Vector(new_front_middle, self.rear_middle).scale_to_len(
             self.length
         )
-        new_rear_right = new_front_right.copy().add_vector(
+        new_rear_middle = new_front_middle.copy().add_vector(
             length_vector.get_negative_of_a_vector()
         )
-        new_direction = Direction(new_front_right, new_rear_right)
-        new_front_middle = new_front_right.copy().add_vector(
-            length_vector.get_orthogonal_vector(Directions.LEFT, self.width / 2)
-        )
+        new_direction = Direction(new_front_middle, new_rear_middle)
         self.update_position(new_front_middle, new_direction)
 
 
@@ -134,7 +110,7 @@ class Car(CarBody):
         front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
             self.velocity
         )
-        self._force_move(self.turn_direction, front_movement_vector)
+        self._force_move(front_movement_vector)
         self._slow_down(self.model.resistance)
 
     def draw(self, screen: Surface) -> None:
