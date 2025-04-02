@@ -29,7 +29,7 @@ class IntersectionControlCenter(RoadControlCenter):
 
     def calculate_movement_instruction(
         self, registry_number: str
-    ) -> CarControlInstructions:
+    ) -> CarControlInstructions:  # decide when to turn on/off turn signal
         if registry_number not in self.cars_manoeuvre_info:
             return self.software.get_default_movement_instruction()
 

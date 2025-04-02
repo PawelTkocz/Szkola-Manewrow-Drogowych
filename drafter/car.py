@@ -3,6 +3,7 @@ from car.model import CarModel
 from car.schemas import CarPartPosition, CarPointPosition
 from drafter.utils import draw_polygon
 from geometry import Directions, Point, Rectangle
+from schemas import HorizontalDirection
 
 
 class CarDrafter:
@@ -69,12 +70,28 @@ class CarDrafter:
         )
 
     def _draw_lights(
-        self, car_body: Rectangle, screen: Surface, color: str = "yellow"
+        self,
+        car_body: Rectangle,
+        turn_signals_lights_on: dict[HorizontalDirection, bool],
+        screen: Surface,
+        no_turn_signal_color: str = "#fbee0f",
+        turn_signal_color: str = "#F86F15",
     ) -> None:
+        def _get_light_color(light_side: HorizontalDirection) -> str:
+            if turn_signals_lights_on[light_side]:
+                return turn_signal_color
+            return no_turn_signal_color
+
         front_lights_appearance = self.model.appearance["front_lights"]
-        for lights_positions in [
-            front_lights_appearance["left"],
-            front_lights_appearance["right"],
+        for lights_positions, color in [
+            [
+                front_lights_appearance["left"],
+                _get_light_color(HorizontalDirection.LEFT),
+            ],
+            [
+                front_lights_appearance["right"],
+                _get_light_color(HorizontalDirection.RIGHT),
+            ],
         ]:
             self._draw_car_part(
                 car_body,
@@ -138,7 +155,13 @@ class CarDrafter:
             ]
             draw_polygon(screen, color, rotated_wheel_corners)
 
-    def draw(self, car_body: Rectangle, wheels_angle: float, screen: Surface) -> None:
+    def draw(
+        self,
+        car_body: Rectangle,
+        wheels_angle: float,
+        turn_signals_lights_on: dict[HorizontalDirection, bool],
+        screen: Surface,
+    ) -> None:
         """
         Draw the car on the screen.
 
@@ -148,6 +171,6 @@ class CarDrafter:
         """
         self._draw_wheels(car_body, screen, wheels_angle)
         self._draw_body(car_body, screen)
-        self._draw_lights(car_body, screen)
+        self._draw_lights(car_body, turn_signals_lights_on, screen)
         self._draw_side_mirrors(car_body, screen)
         self._draw_windows(car_body, screen)

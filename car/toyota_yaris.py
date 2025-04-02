@@ -11,6 +11,7 @@ class ToyotaYaris(CarModel):
         "max_wheels_turn": math.pi / 4,
         "resistance": 0.015,
         "wheels_turn_speed": 0.05,
+        "turn_signals_tick_interval": 12,
     }
     appearance: CarModelAppearance = {
         "width": 50,
