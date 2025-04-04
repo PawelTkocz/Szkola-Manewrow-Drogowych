@@ -9,3 +9,10 @@ class HorizontalDirection(Enum):
 class VerticalDirection(Enum):
     UP = "UP"
     DOWN = "DOWN"
+
+
+class CardinalDirection(Enum):
+    UP = "UP"
+    RIGHT = "RIGHT"
+    DOWN = "DOWN"
+    LEFT = "LEFT"

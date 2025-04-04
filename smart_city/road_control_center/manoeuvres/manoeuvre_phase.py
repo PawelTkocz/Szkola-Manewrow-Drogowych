@@ -1,5 +1,5 @@
 from geometry import Point
-from smart_city.road_control_center.manoeuvres.track import Track, TrackPath
+from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
 
 
 class ManoeuvrePhase:
@@ -11,10 +11,10 @@ class ManoeuvrePhase:
 
     def __init__(
         self,
-        track_path: TrackPath,
+        track: ManoeuvreTrack,
         stop_point: Point | None = None,
     ):
-        self.track = Track(track_path)
+        self.track = track
         self.stop_point = stop_point
 
     def is_phase_over(self, front_middle_position: Point, velocity: float) -> bool:
