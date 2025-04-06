@@ -13,7 +13,7 @@ from smart_city.road_control_center.intersection.intersection_rules import (
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
-from smart_city.road_control_center.manoeuvres.intersection_manoeuvre import (
+from smart_city.road_control_center.intersection.intersection_manoeuvres.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from smart_city.road_control_center.software.car_movement_simulator import (
@@ -83,10 +83,13 @@ class IntersectionControlCenterSoftware:
             ):
                 continue
             car_control_instructions: CarControlInstructions = {
-                "speed_instruction": speed_instruction,
-                "turn_instruction": self.track_follower.get_turn_instruction(
-                    live_car_data, track, speed_instruction
-                ),
+                "movement_instructions": {
+                    "speed_instruction": speed_instruction,
+                    "turn_instruction": self.track_follower.get_turn_instruction(
+                        live_car_data, track, speed_instruction
+                    ),
+                },
+                "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
             }
             if self.is_approaching_instruction_safe(
                 registry_number,
@@ -97,10 +100,13 @@ class IntersectionControlCenterSoftware:
             ):
                 return car_control_instructions
         return {
-            "speed_instruction": valid_speed_instructions[-1],
-            "turn_instruction": self.track_follower.get_turn_instruction(
-                live_car_data, track, valid_speed_instructions[-1]
-            ),
+            "movement_instructions": {
+                "speed_instruction": valid_speed_instructions[-1],
+                "turn_instruction": self.track_follower.get_turn_instruction(
+                    live_car_data, track, valid_speed_instructions[-1]
+                ),
+            },
+            "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
 
     def is_approaching_instruction_safe(
@@ -233,7 +239,9 @@ class IntersectionControlCenterSoftware:
             return True
         priority_cars: list[CarOnIntersectionSimulation] = [
             {
-                "car_simulation": CarSimulation(live_cars_data[_registry_number]),
+                "car_simulation": CarSimulation.from_live_car_data(
+                    live_cars_data[_registry_number]
+                ),
                 "car_manoeuvre_info": cars_manoeuvre_info[_registry_number],
             }
             for _registry_number in cars_with_priority
@@ -247,7 +255,9 @@ class IntersectionControlCenterSoftware:
             if car not in priority_cars_crossing_intersection
         ]
         car_simulation: CarOnIntersectionSimulation = {
-            "car_simulation": CarSimulation(live_cars_data[registry_number]),
+            "car_simulation": CarSimulation.from_live_car_data(
+                live_cars_data[registry_number]
+            ),
             "car_manoeuvre_info": cars_manoeuvre_info[registry_number],
         }
         car_simulation["car_simulation"].move(car_control_instructions)

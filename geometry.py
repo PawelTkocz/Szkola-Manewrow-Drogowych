@@ -1,7 +1,15 @@
 from enum import Enum
 import math
+from typing import TypedDict
 
 import numpy as np
+
+from schemas import HorizontalDirection
+
+
+class Cooridinates(TypedDict):
+    x: float
+    y: float
 
 
 class Directions(Enum):
@@ -90,6 +98,9 @@ class Point:
         self.y = rotated_point.y
         return self
 
+    def to_dict(self) -> Cooridinates:
+        return {"x": self.x, "y": self.y}
+
 
 class Vector(Point):
     """
@@ -139,7 +150,7 @@ class Vector(Point):
             return self.scale(len / self.len())
 
     def get_orthogonal_vector(
-        self, dir: Directions, len: float | None = None
+        self, dir: HorizontalDirection, len: float | None = None
     ) -> "Vector":
         """
         Get orthogonal vector
@@ -148,11 +159,9 @@ class Vector(Point):
         :param len: length of result vector (length unchanged if len is None)
         :return: orthogonal vector with desired length
         """
-        if dir not in [Directions.LEFT, Directions.RIGHT]:
-            return self.copy()
         v = (
             Vector(Point(self.y, -1 * self.x))
-            if dir == Directions.RIGHT
+            if dir == HorizontalDirection.RIGHT
             else Vector(Point(-1 * self.y, self.x))
         )
         return v.scale_to_len(len) if len is not None else v
@@ -284,8 +293,12 @@ class Rectangle:
     def update_position(self, front_middle: Point, direction: Direction) -> None:
         self._direction = direction.copy()
         self._front_middle = front_middle.copy()
-        width_vec = direction.get_orthogonal_vector(Directions.RIGHT, self.width)
-        length_vec = width_vec.get_orthogonal_vector(Directions.RIGHT, self.length)
+        width_vec = direction.get_orthogonal_vector(
+            HorizontalDirection.RIGHT, self.width
+        )
+        length_vec = width_vec.get_orthogonal_vector(
+            HorizontalDirection.RIGHT, self.length
+        )
         self._front_left = self.front_middle.add_vector(
             width_vec.copy().scale(0.5).get_negative_of_a_vector()
         )

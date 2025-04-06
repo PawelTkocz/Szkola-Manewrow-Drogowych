@@ -1,4 +1,4 @@
-from geometry import Directions
+from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
 )
@@ -25,7 +25,12 @@ class PriorityToTheRightRule(IntersectionRules):
             return True
         if not car1_info["high_priority"] and car2_info["high_priority"]:
             return False
-        sides = [Directions.DOWN, Directions.RIGHT, Directions.UP, Directions.LEFT]
+        sides = [
+            CardinalDirection.DOWN,
+            CardinalDirection.RIGHT,
+            CardinalDirection.UP,
+            CardinalDirection.LEFT,
+        ]
         car1_starting_side = car1_info["manoeuvre_description"]["starting_side"]
         car1_ending_side = car1_info["manoeuvre_description"]["ending_side"]
         car2_starting_side = car2_info["manoeuvre_description"]["starting_side"]

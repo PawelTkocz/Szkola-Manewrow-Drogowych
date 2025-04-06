@@ -1,15 +1,21 @@
-from abc import ABC, abstractmethod
 from enum import Enum
-from car.model import CarModel
-from smart_city.road_control_center.manoeuvres.track import TrackPath
+from geometry import Point
+from smart_city.road_control_center.manoeuvres.schemas import TrackPath
 
 
 class TrackSegmentType(Enum):
     STRAIGHT_PATH = "STRAIGHT_PATH"
-    TURN = "TURN"
+    TURN_LEFT = "TURN_LEFT"
+    TURN_RIGHT = "TURN_RIGHT"
 
 
-class TrackSegment(ABC):
+class TrackSegment:
+    """
+    Track Segment should have such track path, that allows car to leave it
+    having some expected direction and wheels angle equal to 0 - in case of
+    further movement the car should hold the expected direction.
+    """
+
     def __init__(
         self,
         type: TrackSegmentType,
@@ -18,6 +24,10 @@ class TrackSegment(ABC):
         self.type = type
         self.track_path = track_path
 
-    @abstractmethod
-    def get_max_safe_velocity(self, car_model: CarModel) -> float:
-        raise NotImplementedError
+    @property
+    def start_point(self) -> Point:
+        return Point(self.track_path[0][0], self.track_path[0][1])
+
+    @property
+    def end_point(self) -> Point:
+        return Point(self.track_path[-1][0], self.track_path[-1][1])

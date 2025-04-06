@@ -58,10 +58,6 @@ class Car(CarBody):
         return self.wheels.angle
 
     @property
-    def turn_direction(self) -> Directions:
-        return self.wheels.current_direction
-
-    @property
     def max_acceleration(self) -> float:
         return self.model.max_acceleration
 
@@ -82,10 +78,10 @@ class Car(CarBody):
         return self.wheels.direction
 
     def turn_left(self) -> None:
-        self.wheels.turn(self.wheels_turn_speed, Directions.LEFT)
+        self.wheels.turn(self.wheels_turn_speed, HorizontalDirection.LEFT)
 
     def turn_right(self) -> None:
-        self.wheels.turn(self.wheels_turn_speed, Directions.RIGHT)
+        self.wheels.turn(self.wheels_turn_speed, HorizontalDirection.RIGHT)
 
     def accelerate(self, direction: Directions) -> None:
         if direction == Directions.FRONT:

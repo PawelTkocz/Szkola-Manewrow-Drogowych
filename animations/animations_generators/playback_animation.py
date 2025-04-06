@@ -11,6 +11,7 @@ from car.instruction_controlled_car import (
     InstructionControlledCar,
     SpeedInstruction,
     TurnInstruction,
+    TurnSignalsInstruction,
 )
 from car.toyota_yaris import ToyotaYaris
 from smart_city.road_control_center.manoeuvres.schemas import (
@@ -72,8 +73,11 @@ class PlaybackAnimation(AnimationStrategy):
         with open(file_path, "r") as file:
             return [
                 {
-                    "speed_instruction": SpeedInstruction[speed_mod],
-                    "turn_instruction": TurnInstruction[turn_mod],
+                    "movement_instructions": {
+                        "speed_instruction": SpeedInstruction[speed_mod],
+                        "turn_instruction": TurnInstruction[turn_mod],
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
                 }
                 for speed_mod, turn_mod in (line.split() for line in file)
             ]

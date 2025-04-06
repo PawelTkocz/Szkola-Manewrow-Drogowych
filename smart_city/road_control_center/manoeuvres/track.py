@@ -1,21 +1,26 @@
-from typing import TypeAlias
-
+from typing import TypedDict
 from geometry import Point
 from scipy.spatial import KDTree
 
 from smart_city.road_control_center.manoeuvres.schemas import (
-    SegmentOnManoeuvreTrackDescription,
+    ManoeuvreStartCarState,
 )
 from smart_city.road_control_center.manoeuvres.segment_on_manoeuvre_track import (
     SegmentOnManoeuvreTrack,
 )
+from smart_city.road_control_center.manoeuvres.track_segment import TrackSegment
 
-TrackPath: TypeAlias = list[tuple[float, float]]
+
+class SegmentOnManoeuvreTrackDescription(TypedDict):
+    track_segment: TrackSegment
+    expected_min_velocity: float | None
 
 
 class ManoeuvreTrack:
     def __init__(
-        self, track_segments_descriptions: list[SegmentOnManoeuvreTrackDescription]
+        self,
+        track_segments_descriptions: list[SegmentOnManoeuvreTrackDescription],
+        expected_car_start_state: ManoeuvreStartCarState,
     ) -> None:
         if not track_segments_descriptions:
             raise ValueError(
@@ -23,10 +28,13 @@ class ManoeuvreTrack:
             )
         self.track_path = []
         for track_segment_description in track_segments_descriptions:
-            self.track_path.extend(track_segment_description["track_segment"])
+            self.track_path.extend(
+                track_segment_description["track_segment"].track_path
+            )
         self.first_segment = self._get_segments_on_manoeuvre_track(
             track_segments_descriptions
         )
+        self.expected_car_start_state = expected_car_start_state
         self.kd_tree = KDTree(self.track_path)
 
     def _get_segments_on_manoeuvre_track(
@@ -57,7 +65,7 @@ class ManoeuvreTrack:
 
     def get_closest_segment_on_track(self, point: Point) -> SegmentOnManoeuvreTrack:
         index = self.find_index_of_closest_point(point)
-        current_segment = self.first_segment
+        current_segment: SegmentOnManoeuvreTrack | None = self.first_segment
         while current_segment:
             if index < current_segment.cumulative_track_length:
                 return current_segment

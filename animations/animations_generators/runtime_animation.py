@@ -78,7 +78,7 @@ class RuntimeAnimation(AnimationStrategy):
             with open(file_path, "w") as file:
                 for movement_instruction in car["movement_instructions"]:
                     file.write(
-                        f"{movement_instruction['speed_instruction'].name} {movement_instruction['turn_instruction'].name}\n"
+                        f"{movement_instruction['movement_instructions']['speed_instruction'].name} {movement_instruction['movement_instructions']['turn_instruction'].name}\n"
                     )
 
     def handle_quit(self) -> None:

@@ -2,7 +2,7 @@ from pygame import Surface
 from car.model import CarModel
 from car.schemas import CarPartPosition, CarPointPosition
 from drafter.utils import draw_polygon
-from geometry import Directions, Point, Rectangle
+from geometry import Point, Rectangle
 from schemas import HorizontalDirection
 
 
@@ -28,7 +28,9 @@ class CarDrafter:
         Based on car point position, return current point position.
         """
         length_vector = car_body.direction
-        width_vector = car_body.direction.get_orthogonal_vector(Directions.RIGHT)
+        width_vector = car_body.direction.get_orthogonal_vector(
+            HorizontalDirection.RIGHT
+        )
         length_position_vector = length_vector.copy().scale_to_len(position["y"])
         width_position_vector = width_vector.copy().scale_to_len(position["x"])
         return (
@@ -84,14 +86,14 @@ class CarDrafter:
 
         front_lights_appearance = self.model.appearance["front_lights"]
         for lights_positions, color in [
-            [
+            (
                 front_lights_appearance["left"],
                 _get_light_color(HorizontalDirection.LEFT),
-            ],
-            [
+            ),
+            (
                 front_lights_appearance["right"],
                 _get_light_color(HorizontalDirection.RIGHT),
-            ],
+            ),
         ]:
             self._draw_car_part(
                 car_body,

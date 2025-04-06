@@ -1,6 +1,10 @@
-from car.instruction_controlled_car import CarControlInstructions, SpeedInstruction
+from car.instruction_controlled_car import (
+    CarControlInstructions,
+    SpeedInstruction,
+    TurnSignalsInstruction,
+)
 from geometry import Rectangle
-from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.road_control_center.software.schemas import EnteringZoneStatus
 from smart_city.road_control_center.software.track_follower import TrackFollower
@@ -9,11 +13,11 @@ from smart_city.schemas import LiveCarData
 
 def can_stop_before_zone(
     live_car_data: LiveCarData,
-    track: Track,
+    track: ManoeuvreTrack,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions | None = None,
 ) -> bool:
-    car_simulation = CarSimulation(live_car_data)
+    car_simulation = CarSimulation.from_live_car_data(live_car_data)
     if car_control_instructions:
         car_simulation.move(car_control_instructions)
     if car_simulation.collides(zone):
@@ -25,8 +29,11 @@ def can_stop_before_zone(
         )
         car_simulation.move(
             {
-                "speed_instruction": speed_instruction,
-                "turn_instruction": turn_instruction,
+                "movement_instructions": {
+                    "speed_instruction": speed_instruction,
+                    "turn_instruction": turn_instruction,
+                },
+                "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
             }
         )
         if car_simulation.collides(zone):
@@ -36,11 +43,11 @@ def can_stop_before_zone(
 
 def get_status_before_entering_zone(
     live_car_data: LiveCarData,
-    track: Track,
+    track: ManoeuvreTrack,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions,
 ) -> EnteringZoneStatus:
-    car_simulation = CarSimulation(live_car_data)
+    car_simulation = CarSimulation.from_live_car_data(live_car_data)
     previous_live_car_data = live_car_data
     current_live_car_data = live_car_data
     time = 0
@@ -63,6 +70,6 @@ def get_status_before_entering_zone(
 def get_predicted_live_car_data(
     live_car_data: LiveCarData, car_control_instructions: CarControlInstructions
 ) -> LiveCarData:
-    car_simulation = CarSimulation(live_car_data)
+    car_simulation = CarSimulation.from_live_car_data(live_car_data)
     car_simulation.move(car_control_instructions)
     return car_simulation.get_live_data()

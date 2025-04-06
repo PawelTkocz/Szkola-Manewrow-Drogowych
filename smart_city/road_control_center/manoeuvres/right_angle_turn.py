@@ -1,12 +1,13 @@
 import math
 
 import numpy as np
-from car.model import CarModel
 from geometry import Point, Vector
 from schemas import HorizontalDirection
-from smart_city.road_control_center.manoeuvres.schemas import TrackSegmentType
-from smart_city.road_control_center.manoeuvres.track import TrackPath
-from smart_city.road_control_center.manoeuvres.track_segment import TrackSegment
+from smart_city.road_control_center.manoeuvres.schemas import TrackPath
+from smart_city.road_control_center.manoeuvres.track_segment import (
+    TrackSegment,
+    TrackSegmentType,
+)
 
 TURN_SHARPNESS = 0.7
 
@@ -36,8 +37,13 @@ class RightAngleTurn(TrackSegment):
         end_point: Point,
         turn_direction: HorizontalDirection,
     ) -> None:
+        track_segment_type = (
+            TrackSegmentType.TURN_LEFT
+            if turn_direction == HorizontalDirection.LEFT
+            else TrackSegmentType.TURN_RIGHT
+        )
         super().__init__(
-            TrackSegmentType.TURN,
+            track_segment_type,
             self.calculate_track_path(
                 start_point, end_point, turn_direction, TURN_SHARPNESS
             ),
@@ -70,6 +76,3 @@ class RightAngleTurn(TrackSegment):
         return [
             _cubic_bezier(t, p0, p1, p2, p3) for t in np.linspace(0, 1, points_on_track)
         ]
-
-    def get_max_safe_velocity(self, car_model: CarModel) -> float:
-        return 5  # make simulation here

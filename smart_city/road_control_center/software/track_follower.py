@@ -2,9 +2,10 @@ from car.instruction_controlled_car import (
     CarControlInstructions,
     SpeedInstruction,
     TurnInstruction,
+    TurnSignalsInstruction,
 )
 from geometry import Point
-from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
@@ -17,17 +18,20 @@ class TrackFollower:
     def get_turn_instruction(
         self,
         live_car_data: LiveCarData,
-        track: Track,
+        track: ManoeuvreTrack,
         speed_instruction: SpeedInstruction,
     ) -> TurnInstruction:
         def _distance_to_track_after_instruction(
             turn_instruction: TurnInstruction,
         ) -> float:
-            car_simulation = CarSimulation(live_car_data)
+            car_simulation = CarSimulation.from_live_car_data(live_car_data)
             car_simulation.move(
                 {
-                    "speed_instruction": speed_instruction,
-                    "turn_instruction": turn_instruction,
+                    "movement_instructions": {
+                        "speed_instruction": speed_instruction,
+                        "turn_instruction": turn_instruction,
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
                 }
             )
             return self.distance_to_track(car_simulation, track)
@@ -54,7 +58,7 @@ class TrackFollower:
     def get_car_control_instructions(
         self,
         live_car_data: LiveCarData,
-        track: Track,
+        track: ManoeuvreTrack,
         stop_point: Point | None = None,
     ) -> CarControlInstructions:
         speed_instructions = self.get_valid_speed_instructions(
@@ -68,30 +72,39 @@ class TrackFollower:
                     live_car_data, track, speed_instruction
                 )
                 return {
-                    "turn_instruction": turn_instruction,
-                    "speed_instruction": speed_instruction,
+                    "movement_instructions": {
+                        "turn_instruction": turn_instruction,
+                        "speed_instruction": speed_instruction,
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
                 }
         return {
-            "speed_instruction": speed_instructions[-1],
-            "turn_instruction": self.get_turn_instruction(
-                live_car_data, track, speed_instruction
-            ),
+            "movement_instructions": {
+                "speed_instruction": speed_instructions[-1],
+                "turn_instruction": self.get_turn_instruction(
+                    live_car_data, track, speed_instruction
+                ),
+            },
+            "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
 
     def is_speed_instruction_safe(
         self,
         live_car_data: LiveCarData,
-        track: Track,
+        track: ManoeuvreTrack,
         stop_point: Point | None,
         speed_instruction: SpeedInstruction,
     ) -> bool:
-        car_simulation = CarSimulation(live_car_data)
+        car_simulation = CarSimulation.from_live_car_data(live_car_data)
         turn_instruction = self.get_turn_instruction(
             live_car_data, track, speed_instruction
         )
         car_control_instructions: CarControlInstructions = {
-            "turn_instruction": turn_instruction,
-            "speed_instruction": speed_instruction,
+            "movement_instructions": {
+                "turn_instruction": turn_instruction,
+                "speed_instruction": speed_instruction,
+            },
+            "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
         car_simulation.move(car_control_instructions)
         will_go_off_track = self.will_go_off_track(car_simulation, track, 2)
@@ -106,7 +119,7 @@ class TrackFollower:
     def can_stop_at_stop_point(
         self,
         car_simulation: CarSimulation,
-        track: Track,
+        track: ManoeuvreTrack,
         stop_point: Point,
     ) -> bool:
         closest_track_point_index = self.index_of_closest_track_point(
@@ -118,10 +131,15 @@ class TrackFollower:
                 return True
             car_simulation.move(
                 {
-                    "speed_instruction": SpeedInstruction.BRAKE,
-                    "turn_instruction": self.get_turn_instruction(
-                        car_simulation.get_live_data(), track, SpeedInstruction.BRAKE
-                    ),
+                    "movement_instructions": {
+                        "speed_instruction": SpeedInstruction.BRAKE,
+                        "turn_instruction": self.get_turn_instruction(
+                            car_simulation.get_live_data(),
+                            track,
+                            SpeedInstruction.BRAKE,
+                        ),
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
                 }
             )
             closest_track_point_index = self.index_of_closest_track_point(
@@ -132,7 +150,7 @@ class TrackFollower:
     def will_go_off_track(
         self,
         car_simulation: CarSimulation,
-        track: Track,
+        track: ManoeuvreTrack,
         min_velocity: float | None = None,
     ) -> bool:
         """
@@ -145,18 +163,20 @@ class TrackFollower:
         if self.distance_to_track(car_simulation, track) > self.max_distance_to_track:
             return True
         for _ in range(self.simulation_max_future_steps):
+            speed_instruction: SpeedInstruction = SpeedInstruction.NO_CHANGE
             if car_simulation.velocity > min_velocity:
-                speed_instruction: SpeedInstruction = SpeedInstruction.BRAKE
-            elif car_simulation.velocity == min_velocity:
-                speed_instruction: SpeedInstruction = SpeedInstruction.NO_CHANGE
-            else:
-                speed_instruction: SpeedInstruction = SpeedInstruction.ACCELERATE_FRONT
+                speed_instruction = SpeedInstruction.BRAKE
+            elif car_simulation.velocity < min_velocity:
+                speed_instruction = SpeedInstruction.ACCELERATE_FRONT
             car_simulation.move(
                 {
-                    "speed_instruction": speed_instruction,
-                    "turn_instruction": self.get_turn_instruction(
-                        car_simulation.get_live_data(), track, speed_instruction
-                    ),
+                    "movement_instructions": {
+                        "speed_instruction": speed_instruction,
+                        "turn_instruction": self.get_turn_instruction(
+                            car_simulation.get_live_data(), track, speed_instruction
+                        ),
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
                 }
             )
             if (
@@ -174,10 +194,12 @@ class TrackFollower:
                 return False
         return False
 
-    def distance_to_track(self, car_simulation: CarSimulation, track: Track) -> float:
+    def distance_to_track(
+        self, car_simulation: CarSimulation, track: ManoeuvreTrack
+    ) -> float:
         return track.get_distance_to_point(car_simulation.front_middle)
 
     def index_of_closest_track_point(
-        self, car_simulation: CarSimulation, track: Track
+        self, car_simulation: CarSimulation, track: ManoeuvreTrack
     ) -> int:
         return track.find_index_of_closest_point(car_simulation.front_middle)
