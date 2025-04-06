@@ -1,12 +1,15 @@
-from typing import TypedDict
+from typing import TypeAlias, TypedDict
 
+from geometry import Direction, Point
 from schemas import CardinalDirection
-from smart_city.road_control_center.manoeuvres.track_segment import TrackSegment
+
+TrackPath: TypeAlias = list[tuple[float, float]]
 
 
-class SegmentOnManoeuvreTrackDescription(TypedDict):
-    track_segment: TrackSegment
-    expected_min_velocity: float | None
+class ManoeuvreStartCarState(TypedDict):
+    front_middle: Point
+    direction: Direction
+    wheels_direction: Direction
 
 
 class IntersectionManoeuvreDescription(TypedDict):

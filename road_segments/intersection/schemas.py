@@ -1,12 +1,13 @@
 from typing import TypedDict
 
-from geometry import Directions, Rectangle
+from geometry import Rectangle
+from schemas import CardinalDirection
 
 
 class IntersectionParts(TypedDict):
     intersection_area: Rectangle
-    incoming_lines: dict[Directions, Rectangle]
-    outcoming_lines: dict[Directions, Rectangle]
+    incoming_lines: dict[CardinalDirection, Rectangle]
+    outcoming_lines: dict[CardinalDirection, Rectangle]
 
 
 class IntersectionColors(TypedDict):

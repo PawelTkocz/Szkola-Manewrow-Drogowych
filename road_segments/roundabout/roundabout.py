@@ -1,7 +1,8 @@
 import math
 from pygame import Surface
-from geometry import Circle, Direction, Directions, Point, Rectangle
+from geometry import Circle, Direction, Point, Rectangle
 from road_segments.roundabout.schemas import RoundaboutColors, RoundaboutParts
+from schemas import CardinalDirection
 
 
 # make lane width global
@@ -40,25 +41,25 @@ class Roundabout:
             "roundabout_area": Circle(area_center, self.roundabout_radius),
             "central_island": Circle(area_center, self.central_island_radius),
             "incoming_lines": {
-                Directions.UP: Rectangle(
+                CardinalDirection.UP: Rectangle(
                     Point(area_center.x - lane_width / 2, area_center.y + x),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, -1)),
                 ),
-                Directions.RIGHT: Rectangle(
+                CardinalDirection.RIGHT: Rectangle(
                     Point(area_center.x + x, area_center.y + lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(-1, 0)),
                 ),
-                Directions.DOWN: Rectangle(
+                CardinalDirection.DOWN: Rectangle(
                     Point(area_center.x + lane_width / 2, area_center.y - x),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, 1)),
                 ),
-                Directions.LEFT: Rectangle(
+                CardinalDirection.LEFT: Rectangle(
                     Point(area_center.x - x, area_center.y - lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
@@ -66,25 +67,25 @@ class Roundabout:
                 ),
             },
             "outcoming_lines": {
-                Directions.UP: Rectangle(
+                CardinalDirection.UP: Rectangle(
                     Point(area_center.x + lane_width / 2, area_y),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, 1)),
                 ),
-                Directions.RIGHT: Rectangle(
+                CardinalDirection.RIGHT: Rectangle(
                     Point(area_x + area.width, area_center.y - lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,
                     Direction(Point(1, 0)),
                 ),
-                Directions.DOWN: Rectangle(
+                CardinalDirection.DOWN: Rectangle(
                     Point(area_center.x - lane_width / 2, 0),
                     lane_width,
                     vertical_lanes_length,
                     Direction(Point(0, -1)),
                 ),
-                Directions.LEFT: Rectangle(
+                CardinalDirection.LEFT: Rectangle(
                     Point(area_x, area_center.y + lane_width / 2),
                     lane_width,
                     horizontal_lanes_length,

@@ -5,7 +5,7 @@ from geometry import Point, Rectangle
 
 
 def _get_pygame_coordinates(point: Point) -> tuple[float, float]:
-    return [point.x, SCREEN_HEIGHT - point.y]
+    return (point.x, SCREEN_HEIGHT - point.y)
 
 
 def draw_polygon(screen: pygame.Surface, color: str, corners: list[Point]) -> None:

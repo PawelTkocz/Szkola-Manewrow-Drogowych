@@ -1,3 +1,4 @@
+from typing import Union
 from smart_city.road_control_center.manoeuvres.track_segment import TrackSegment
 
 
@@ -7,7 +8,7 @@ class SegmentOnManoeuvreTrack:
         track_segment: TrackSegment,
         expected_min_velocity: float | None,
         *,
-        previous_segment_on_track: "SegmentOnManoeuvreTrack" | None = None,
+        previous_segment_on_track: Union["SegmentOnManoeuvreTrack", None] = None,
     ) -> None:
         self.track_segment: TrackSegment = track_segment
         self.next_segment_on_track: "SegmentOnManoeuvreTrack" | None = None

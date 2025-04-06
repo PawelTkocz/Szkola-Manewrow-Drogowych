@@ -1,6 +1,7 @@
 import math
 import pytest
 from geometry import Directions, Point, Vector
+from schemas import HorizontalDirection
 
 
 @pytest.mark.parametrize(
@@ -82,18 +83,32 @@ def test_copy() -> None:
 @pytest.mark.parametrize(
     ["vector", "dir", "len", "expected"],
     [
-        (Vector(Point(0, 0)), Directions.LEFT, 4.1, Vector(Point(0, 0))),
-        (Vector(Point(10.23, 98.99)), Directions.LEFT, 0, Vector(Point(0, 0))),
-        (Vector(Point(10.23, 98.99)), Directions.FRONT, 1, Vector(Point(10.23, 98.99))),
-        (Vector(Point(12.56, 0)), Directions.RIGHT, None, Vector(Point(0, -12.56))),
-        (Vector(Point(12.56, 0)), Directions.LEFT, None, Vector(Point(0, 12.56))),
-        (Vector(Point(12.56, 0)), Directions.LEFT, 15.09, Vector(Point(0, 15.09))),
-        (Vector(Point(3, 4)), Directions.RIGHT, 10, Vector(Point(8, -6))),
-        (Vector(Point(3, 4)), Directions.LEFT, 10, Vector(Point(-8, 6))),
+        (Vector(Point(0, 0)), HorizontalDirection.LEFT, 4.1, Vector(Point(0, 0))),
+        (Vector(Point(10.23, 98.99)), HorizontalDirection.LEFT, 0, Vector(Point(0, 0))),
+        (
+            Vector(Point(12.56, 0)),
+            HorizontalDirection.RIGHT,
+            None,
+            Vector(Point(0, -12.56)),
+        ),
+        (
+            Vector(Point(12.56, 0)),
+            HorizontalDirection.LEFT,
+            None,
+            Vector(Point(0, 12.56)),
+        ),
+        (
+            Vector(Point(12.56, 0)),
+            HorizontalDirection.LEFT,
+            15.09,
+            Vector(Point(0, 15.09)),
+        ),
+        (Vector(Point(3, 4)), HorizontalDirection.RIGHT, 10, Vector(Point(8, -6))),
+        (Vector(Point(3, 4)), HorizontalDirection.LEFT, 10, Vector(Point(-8, 6))),
     ],
 )
 def test_get_orthogonal_vector(
-    vector: Vector, dir: Directions, len: float | None, expected: Vector
+    vector: Vector, dir: HorizontalDirection, len: float | None, expected: Vector
 ) -> None:
     max_rel_tol = 1e-12
     start_vector = vector.copy()

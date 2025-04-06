@@ -1,4 +1,5 @@
-from geometry import Direction, Directions, Point
+from geometry import Direction, Point
+from schemas import HorizontalDirection
 
 
 class Wheels:
@@ -14,13 +15,6 @@ class Wheels:
     @property
     def direction(self) -> Direction:
         return self._direction.copy()
-
-    @property
-    def current_direction(self) -> Directions:
-        angle = self._direction.angle
-        if angle == 0:
-            return Directions.FRONT
-        return Directions.LEFT if angle > 0 else Directions.RIGHT
 
     @property
     def angle(self) -> float:
@@ -42,11 +36,9 @@ class Wheels:
             self._direction = self.max_right_direction.copy()
         return True
 
-    def turn(self, angle: float, turn_direction: Directions) -> bool:
-        if turn_direction not in [Directions.LEFT, Directions.RIGHT]:
-            return False
+    def turn(self, angle: float, turn_direction: HorizontalDirection) -> bool:
         return (
             self.turn_left(angle)
-            if turn_direction == Directions.LEFT
+            if turn_direction == HorizontalDirection.LEFT
             else self.turn_right(-1 * angle)
         )

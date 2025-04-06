@@ -1,6 +1,7 @@
 from typing import TypedDict
 
-from geometry import Circle, Directions, Rectangle
+from geometry import Circle, Rectangle
+from schemas import CardinalDirection
 
 
 class RoundaboutColors(TypedDict):
@@ -12,5 +13,5 @@ class RoundaboutColors(TypedDict):
 class RoundaboutParts(TypedDict):
     roundabout_area: Circle
     central_island: Circle
-    incoming_lines: dict[Directions, Rectangle]
-    outcoming_lines: dict[Directions, Rectangle]
+    incoming_lines: dict[CardinalDirection, Rectangle]
+    outcoming_lines: dict[CardinalDirection, Rectangle]

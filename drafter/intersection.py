@@ -1,8 +1,9 @@
 import pygame
 from drafter.utils import draw_circle, draw_rectangle
-from geometry import Directions, Point, Rectangle
+from geometry import Point, Rectangle
 from road_segments.constants import LINES_WIDTH
 from road_segments.intersection.schemas import IntersectionColors, IntersectionParts
+from schemas import CardinalDirection
 
 
 class IntersectionDrafter:
@@ -80,29 +81,29 @@ class IntersectionDrafter:
         outcoming_lanes = self.intersection_parts["outcoming_lines"]
         intersection_area = self.intersection_parts["intersection_area"]
         vertical_length = (
-            intersection_area.length + 2 * outcoming_lanes[Directions.UP].length
+            intersection_area.length + 2 * outcoming_lanes[CardinalDirection.UP].length
         )
         horizontal_length = (
-            intersection_area.width + 2 * outcoming_lanes[Directions.LEFT].length
+            intersection_area.width + 2 * outcoming_lanes[CardinalDirection.LEFT].length
         )
         draw_rectangle(
             screen,
             color,
             Rectangle(
-                outcoming_lanes[Directions.UP].front_left,
+                outcoming_lanes[CardinalDirection.UP].front_left,
                 self.road_width,
                 vertical_length,
-                outcoming_lanes[Directions.UP].direction,
+                outcoming_lanes[CardinalDirection.UP].direction,
             ),
         )
         draw_rectangle(
             screen,
             color,
             Rectangle(
-                outcoming_lanes[Directions.LEFT].front_left,
+                outcoming_lanes[CardinalDirection.LEFT].front_left,
                 self.road_width,
                 horizontal_length,
-                outcoming_lanes[Directions.LEFT].direction,
+                outcoming_lanes[CardinalDirection.LEFT].direction,
             ),
         )
         self.draw_street_curved_turns(screen)
@@ -110,7 +111,12 @@ class IntersectionDrafter:
     def draw_lines(self, screen: pygame.Surface) -> None:
         lines_color = self.intersection_colors["lines_color"]
         outcoming_lines = self.intersection_parts["outcoming_lines"]
-        for side in [Directions.UP, Directions.RIGHT, Directions.DOWN, Directions.LEFT]:
+        for side in [
+            CardinalDirection.UP,
+            CardinalDirection.RIGHT,
+            CardinalDirection.DOWN,
+            CardinalDirection.LEFT,
+        ]:
             draw_rectangle(
                 screen,
                 lines_color,

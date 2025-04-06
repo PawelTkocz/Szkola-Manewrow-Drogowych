@@ -1,7 +1,7 @@
 from animations.animations_generators.intersection.intersection_manoeuvre_animation import (
     IntersectionManoeuvreAnimation,
 )
-from geometry import Directions
+from schemas import CardinalDirection
 from state import State
 from smart_city.road_control_center.intersection.intersection_A0 import (
     intersection_A0_control_center,
@@ -20,18 +20,27 @@ class IntersectionGoStraightAnimation(IntersectionManoeuvreAnimation):
         self.add_car(
             "DW001",
             "red",
-            {"starting_side": Directions.DOWN, "ending_side": Directions.RIGHT},
+            {
+                "starting_side": CardinalDirection.DOWN,
+                "ending_side": CardinalDirection.RIGHT,
+            },
             0,
         )
         self.add_car(
             "DW002",
             "pink",
-            {"starting_side": Directions.LEFT, "ending_side": Directions.RIGHT},
+            {
+                "starting_side": CardinalDirection.LEFT,
+                "ending_side": CardinalDirection.RIGHT,
+            },
             0,
         )
         self.add_car(
             "DW003",
             "purple",
-            {"starting_side": Directions.RIGHT, "ending_side": Directions.DOWN},
+            {
+                "starting_side": CardinalDirection.RIGHT,
+                "ending_side": CardinalDirection.DOWN,
+            },
             0,
         )

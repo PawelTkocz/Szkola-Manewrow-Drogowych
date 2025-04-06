@@ -1,4 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
+from car.model import CarModel
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData
 
@@ -19,6 +20,9 @@ class TrafficControlCenter:
     ) -> RoadControlCenter:
         """Based on car position, determine which road control center should give it movement instruction."""
         return self._road_control_center
+
+    # def register_car_model(self, car_model: CarModel) -> None:
+    #     self._road_control_center.register_car_model(car_model)
 
     def tick(self) -> None:
         self._time += 1
