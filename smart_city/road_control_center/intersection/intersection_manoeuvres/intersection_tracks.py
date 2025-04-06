@@ -14,7 +14,7 @@ from smart_city.road_control_center.manoeuvres.schemas import (
     IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.manoeuvres.straight_path import StraightPath
-from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
+from smart_city.road_control_center.manoeuvres.manoeuvre_track import ManoeuvreTrack
 from smart_city.road_control_center.manoeuvres.track_segment import TrackSegmentType
 
 EXPECTED_MIN_TURN_VELOCITY = 2
@@ -24,6 +24,12 @@ class TurnSignal(Enum):
     RIGHT_SIGNAL = "right_signal"
     NO_SIGNAL = "no_signal"
     LEFT_SIGNAL = "left_signal"
+
+
+class TrackPointData(TypedDict):
+    point: Point
+    max_velocity: float
+    turn_signal: TurnSignal
 
 
 class IntersectionTrackPoint(TypedDict):
@@ -169,16 +175,24 @@ class IntersectionTracks:
         else:
             return IntersectionTrackType.TURN_RIGHT
 
-    def get_track(
+    def get_track_points_data(
         self,
         manoeuvre_description: IntersectionManoeuvreDescription,
-    ) -> ManoeuvreTrack:
+    ) -> list[TrackPointData]:
         track_type = self.get_track_type(manoeuvre_description)
         with open(
             f"tracks/intersection/{self.intersection.id}/tracks/{track_type.value}.json",
             "r",
         ) as file:
-            return json.load(file)
+            intersection_track_points: list[IntersectionTrackPoint] = json.load(file)
+            return [
+                {
+                    "point": Point(point["from_down"]["x"], point["from_down"]["y"]),
+                    "turn_signal": TurnSignal(point["turn_signal"]),
+                    "max_velocity": 10,
+                }
+                for point in intersection_track_points
+            ]
 
     def get_turn_signal_for_track_point(
         self, track_point: Point, track: ManoeuvreTrack
