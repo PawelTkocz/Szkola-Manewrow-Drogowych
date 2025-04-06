@@ -5,7 +5,8 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from geometry import Point
-from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
+from smart_city.road_control_center.manoeuvres.manoeuvre_track import ManoeuvreTrack
+from smart_city.road_control_center.manoeuvres.track import Track
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
@@ -18,7 +19,7 @@ class TrackFollower:
     def get_turn_instruction(
         self,
         live_car_data: LiveCarData,
-        track: ManoeuvreTrack,
+        track: Track,
         speed_instruction: SpeedInstruction,
     ) -> TurnInstruction:
         def _distance_to_track_after_instruction(
@@ -58,7 +59,7 @@ class TrackFollower:
     def get_car_control_instructions(
         self,
         live_car_data: LiveCarData,
-        track: ManoeuvreTrack,
+        track: Track,
         stop_point: Point | None = None,
     ) -> CarControlInstructions:
         speed_instructions = self.get_valid_speed_instructions(
@@ -91,7 +92,7 @@ class TrackFollower:
     def is_speed_instruction_safe(
         self,
         live_car_data: LiveCarData,
-        track: ManoeuvreTrack,
+        track: Track,
         stop_point: Point | None,
         speed_instruction: SpeedInstruction,
     ) -> bool:
@@ -119,7 +120,7 @@ class TrackFollower:
     def can_stop_at_stop_point(
         self,
         car_simulation: CarSimulation,
-        track: ManoeuvreTrack,
+        track: Track,
         stop_point: Point,
     ) -> bool:
         closest_track_point_index = self.index_of_closest_track_point(
@@ -150,7 +151,7 @@ class TrackFollower:
     def will_go_off_track(
         self,
         car_simulation: CarSimulation,
-        track: ManoeuvreTrack,
+        track: Track,
         min_velocity: float | None = None,
     ) -> bool:
         """
@@ -194,12 +195,10 @@ class TrackFollower:
                 return False
         return False
 
-    def distance_to_track(
-        self, car_simulation: CarSimulation, track: ManoeuvreTrack
-    ) -> float:
+    def distance_to_track(self, car_simulation: CarSimulation, track: Track) -> float:
         return track.get_distance_to_point(car_simulation.front_middle)
 
     def index_of_closest_track_point(
-        self, car_simulation: CarSimulation, track: ManoeuvreTrack
+        self, car_simulation: CarSimulation, track: Track
     ) -> int:
         return track.find_index_of_closest_point(car_simulation.front_middle)

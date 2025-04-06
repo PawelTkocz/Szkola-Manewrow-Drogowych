@@ -4,7 +4,8 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from geometry import Rectangle
-from smart_city.road_control_center.manoeuvres.track import ManoeuvreTrack
+from smart_city.road_control_center.manoeuvres.manoeuvre_track import ManoeuvreTrack
+from smart_city.road_control_center.manoeuvres.track import Track
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.road_control_center.software.schemas import EnteringZoneStatus
 from smart_city.road_control_center.software.track_follower import TrackFollower
@@ -13,7 +14,7 @@ from smart_city.schemas import LiveCarData
 
 def can_stop_before_zone(
     live_car_data: LiveCarData,
-    track: ManoeuvreTrack,
+    track: Track,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions | None = None,
 ) -> bool:
@@ -43,7 +44,7 @@ def can_stop_before_zone(
 
 def get_status_before_entering_zone(
     live_car_data: LiveCarData,
-    track: ManoeuvreTrack,
+    track: Track,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions,
 ) -> EnteringZoneStatus:

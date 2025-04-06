@@ -6,6 +6,7 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 
+from geometry import Point
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
@@ -54,7 +55,8 @@ class IntersectionControlCenterSoftware:
         if not current_phase:
             return self.get_default_movement_instruction()
         track = current_phase.track
-        stop_point = current_phase.stop_point
+        # stop_point = current_phase.stop_point
+        stop_point = Point(0, 0)
         return self.track_follower.get_car_control_instructions(
             live_car_data, track, stop_point
         )
@@ -76,7 +78,8 @@ class IntersectionControlCenterSoftware:
         if not current_phase:
             return self.get_default_movement_instruction()
         track = current_phase.track
-        stop_point = current_phase.stop_point
+        # stop_point = current_phase.stop_point
+        stop_point = Point(0, 0)
         for speed_instruction in valid_speed_instructions[:-1]:
             if not self.track_follower.is_speed_instruction_safe(
                 live_car_data, track, stop_point, speed_instruction

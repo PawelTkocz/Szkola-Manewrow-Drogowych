@@ -23,7 +23,7 @@ class IntersectionManoeuvre(Manoeuvre):
         super().__init__(
             [
                 ManoeuvrePhase(
-                    IntersectionTracks(intersection, model).get_track(
+                    IntersectionTracks(intersection, model).get_track_points_data(
                         manoeuvre_description
                     )
                 )
