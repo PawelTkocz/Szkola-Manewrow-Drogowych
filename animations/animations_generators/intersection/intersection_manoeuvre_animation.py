@@ -3,7 +3,6 @@ import os
 from pygame import Surface
 from animations.animations_generators.manoeuvre_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import CarStartingPosition
-from drafter.intersection import IntersectionDrafter
 from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )
@@ -37,9 +36,6 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
             intersection_control_center,
         )
         self.intersection = intersection_control_center.intersection
-        self.intersection_drafter = IntersectionDrafter(
-            self.intersection.intersection_parts, self.intersection.intersection_colors
-        )
 
     def get_starting_position(
         self, manoeuvre_description: IntersectionManoeuvreDescription
@@ -53,5 +49,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         ].direction
         return {"front_middle": front_middle_position, "direction": direction}
 
-    def draw_road(self, screen: Surface) -> None:
-        self.intersection_drafter.draw(screen)
+    def draw_road(
+        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
+        self.intersection.draw(screen, scale=scale, screen_y_offset=screen_y_offset)

@@ -1,25 +1,15 @@
 from pygame import Surface
 from car.model import CarModel
 from car.schemas import CarPartPosition, CarPointPosition
-from drafter.utils import draw_polygon
+from drafter.drafter_base import DrafterBase
 from geometry import Point, Rectangle
 from schemas import HorizontalDirection
 
 
-class CarDrafter:
+class CarDrafter(DrafterBase):
     """
     Class responsible for drawing car on the screen.
     """
-
-    def __init__(self, model: CarModel, color: str):
-        """
-        Initialize the car drafter.
-
-        :param model: car model
-        :param color: color of the car
-        """
-        self.model = model
-        self.color = color
 
     def _get_car_point_position(
         self, car_body: Rectangle, position: CarPointPosition
@@ -56,35 +46,65 @@ class CarDrafter:
         car_part_position: CarPartPosition,
         color: str,
         screen: Surface,
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
         corners = self._get_car_part_corners(car_body, car_part_position)
-        draw_polygon(screen, color, corners)
+        self.draw_polygon(
+            screen, color, corners, scale=scale, screen_y_offset=screen_y_offset
+        )
 
     def _draw_body(
-        self, car_body: Rectangle, screen: Surface, bumpers_color: str = "black"
+        self,
+        car_model: CarModel,
+        car_body: Rectangle,
+        color: str,
+        screen: Surface,
+        bumpers_color: str = "black",
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
         # Draw bumpers
-        draw_polygon(screen, bumpers_color, car_body.corners_list)
+        self.draw_polygon(
+            screen,
+            bumpers_color,
+            car_body.corners_list,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
+        )
 
         # Draw the car shell
+        model_appearance = car_model.appearance
         self._draw_car_part(
-            car_body, self.model.appearance["shell"], self.color, screen
+            car_body,
+            model_appearance["shell"],
+            color,
+            screen,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
 
     def _draw_lights(
         self,
+        car_model: CarModel,
         car_body: Rectangle,
         turn_signals_lights_on: dict[HorizontalDirection, bool],
         screen: Surface,
         no_turn_signal_color: str = "#fbee0f",
         turn_signal_color: str = "#F86F15",
+        *,
+        scale: float = 1,
+        screen_y_offset: int = 0,
     ) -> None:
         def _get_light_color(light_side: HorizontalDirection) -> str:
             if turn_signals_lights_on[light_side]:
                 return turn_signal_color
             return no_turn_signal_color
 
-        front_lights_appearance = self.model.appearance["front_lights"]
+        model_appearance = car_model.appearance
+        front_lights_appearance = model_appearance["front_lights"]
         for lights_positions, color in [
             (
                 front_lights_appearance["left"],
@@ -100,12 +120,22 @@ class CarDrafter:
                 lights_positions,
                 color,
                 screen,
+                scale=scale,
+                screen_y_offset=screen_y_offset,
             )
 
     def _draw_side_mirrors(
-        self, car_body: Rectangle, screen: Surface, color: str = "black"
+        self,
+        car_model: CarModel,
+        car_body: Rectangle,
+        screen: Surface,
+        color: str = "black",
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
-        side_mirrors_appearance = self.model.appearance["side_mirrors"]
+        model_appearance = car_model.appearance
+        side_mirrors_appearance = model_appearance["side_mirrors"]
         for mirrors_positions in [
             side_mirrors_appearance["left"],
             side_mirrors_appearance["right"],
@@ -115,12 +145,22 @@ class CarDrafter:
                 mirrors_positions,
                 color,
                 screen,
+                scale=scale,
+                screen_y_offset=screen_y_offset,
             )
 
     def _draw_windows(
-        self, car_body: Rectangle, screen: Surface, color: str = "black"
+        self,
+        car_model: CarModel,
+        car_body: Rectangle,
+        screen: Surface,
+        color: str = "black",
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
-        windows_appearance = self.model.appearance["windows"]
+        model_appearance = car_model.appearance
+        windows_appearance = model_appearance["windows"]
         for windows_positions in [
             windows_appearance["front"],
             windows_appearance["rear"],
@@ -132,18 +172,25 @@ class CarDrafter:
                 windows_positions,
                 color,
                 screen,
+                scale=scale,
+                screen_y_offset=screen_y_offset,
             )
 
     def _draw_wheels(
         self,
+        car_model: CarModel,
         car_body: Rectangle,
         screen: Surface,
         wheels_angle: float,
         color: str = "#262626",
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
+        model_wheels_positions = car_model.wheels_positions
         for wheels_positions in [
-            self.model.wheels_positions["left"],
-            self.model.wheels_positions["right"],
+            model_wheels_positions["left"],
+            model_wheels_positions["right"],
         ]:
             wheel_corners = self._get_car_part_corners(
                 car_body, wheels_positions["corners"]
@@ -155,14 +202,25 @@ class CarDrafter:
                 corner.rotate_over_point(wheel_middle, wheels_angle)
                 for corner in wheel_corners
             ]
-            draw_polygon(screen, color, rotated_wheel_corners)
+            self.draw_polygon(
+                screen,
+                color,
+                rotated_wheel_corners,
+                scale=scale,
+                screen_y_offset=screen_y_offset,
+            )
 
     def draw(
         self,
+        model: CarModel,
+        color: str,
         car_body: Rectangle,
         wheels_angle: float,
         turn_signals_lights_on: dict[HorizontalDirection, bool],
         screen: Surface,
+        *,
+        scale=1,
+        screen_y_offset: int = 0,
     ) -> None:
         """
         Draw the car on the screen.
@@ -171,8 +229,28 @@ class CarDrafter:
         :wheels_angle: angle of the wheels turn
         :param screen: pygame screen to draw the car on
         """
-        self._draw_wheels(car_body, screen, wheels_angle)
-        self._draw_body(car_body, screen)
-        self._draw_lights(car_body, turn_signals_lights_on, screen)
-        self._draw_side_mirrors(car_body, screen)
-        self._draw_windows(car_body, screen)
+        self._draw_wheels(
+            model,
+            car_body,
+            screen,
+            wheels_angle,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
+        )
+        self._draw_body(
+            model, car_body, color, screen, scale=scale, screen_y_offset=screen_y_offset
+        )
+        self._draw_lights(
+            model,
+            car_body,
+            turn_signals_lights_on,
+            screen,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
+        )
+        self._draw_side_mirrors(
+            model, car_body, screen, scale=scale, screen_y_offset=screen_y_offset
+        )
+        self._draw_windows(
+            model, car_body, screen, scale=scale, screen_y_offset=screen_y_offset
+        )
