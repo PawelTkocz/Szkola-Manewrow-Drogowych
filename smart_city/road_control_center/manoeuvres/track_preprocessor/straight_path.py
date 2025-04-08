@@ -1,13 +1,13 @@
 import numpy as np
 from geometry import Point
 from smart_city.road_control_center.manoeuvres.schemas import TrackPath
-from smart_city.road_control_center.manoeuvres.track_segment import (
-    TrackSegment,
+from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+    ManoeuvreTrackSegment,
     TrackSegmentType,
 )
 
 
-class StraightPath(TrackSegment):
+class StraightPath(ManoeuvreTrackSegment):
     def __init__(
         self,
         start_point: Point,
@@ -16,6 +16,7 @@ class StraightPath(TrackSegment):
         super().__init__(
             TrackSegmentType.STRAIGHT_PATH,
             self.calculate_track_path(start_point, end_point),
+            None,
         )
 
     def calculate_track_path(self, start_point: Point, end_point: Point) -> TrackPath:

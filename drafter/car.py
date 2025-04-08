@@ -47,7 +47,7 @@ class CarDrafter(DrafterBase):
         color: str,
         screen: Surface,
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         corners = self._get_car_part_corners(car_body, car_part_position)
@@ -63,7 +63,7 @@ class CarDrafter(DrafterBase):
         screen: Surface,
         bumpers_color: str = "black",
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         # Draw bumpers
@@ -131,7 +131,7 @@ class CarDrafter(DrafterBase):
         screen: Surface,
         color: str = "black",
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         model_appearance = car_model.appearance
@@ -156,7 +156,7 @@ class CarDrafter(DrafterBase):
         screen: Surface,
         color: str = "black",
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         model_appearance = car_model.appearance
@@ -184,7 +184,7 @@ class CarDrafter(DrafterBase):
         wheels_angle: float,
         color: str = "#262626",
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         model_wheels_positions = car_model.wheels_positions
@@ -219,7 +219,7 @@ class CarDrafter(DrafterBase):
         turn_signals_lights_on: dict[HorizontalDirection, bool],
         screen: Surface,
         *,
-        scale=1,
+        scale: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
         """

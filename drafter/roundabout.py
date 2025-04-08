@@ -1,7 +1,4 @@
 import pygame
-from drafter.utils import draw_circle, draw_rectangle
-from geometry import Point, Rectangle
-from road_segments.constants import LINES_WIDTH
 from road_segments.roundabout.schemas import RoundaboutColors, RoundaboutParts
 from schemas import CardinalDirection
 

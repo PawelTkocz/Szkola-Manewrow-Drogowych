@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from car.model import CarModel
 from geometry import Direction, Point
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 

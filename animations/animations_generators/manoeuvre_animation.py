@@ -9,7 +9,7 @@ from animations.animations_generators.runtime_animation import RuntimeAnimation
 from animations.animations_generators.schemas import CarStartingPosition
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from road_segments.constants import SEGMENT_SIDE
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.road_control_center import RoadControlCenter
@@ -31,7 +31,7 @@ class RoadSegmentAnimation(State):
             else RuntimeAnimation(movement_instructions_dir_path, road_control_center)
         )
         self.scale = SCREEN_WIDTH / SEGMENT_SIDE
-        self.screen_y_offset = (SCREEN_HEIGHT - SEGMENT_SIDE * self.scale) / 2
+        self.screen_y_offset = int((SCREEN_HEIGHT - SEGMENT_SIDE * self.scale) // 2)
 
     @abstractmethod
     def get_starting_position(

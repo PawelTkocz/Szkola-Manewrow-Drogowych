@@ -9,20 +9,16 @@ class TrackSegmentType(Enum):
     TURN_RIGHT = "TURN_RIGHT"
 
 
-class TrackSegment:
-    """
-    Track Segment should have such track path, that allows car to leave it
-    having some expected direction and wheels angle equal to 0 - in case of
-    further movement the car should hold the expected direction.
-    """
-
+class ManoeuvreTrackSegment:
     def __init__(
         self,
         type: TrackSegmentType,
         track_path: TrackPath,
+        expected_min_velocity: float | None,
     ) -> None:
         self.type = type
         self.track_path = track_path
+        self.expected_min_velocity = expected_min_velocity
 
     @property
     def start_point(self) -> Point:

@@ -1,17 +1,18 @@
+from enum import Enum
 from typing import TypeAlias, TypedDict
 
-from geometry import Direction, Point
-from schemas import CardinalDirection
+from geometry import Point
 
 TrackPath: TypeAlias = list[tuple[float, float]]
 
 
-class ManoeuvreStartCarState(TypedDict):
-    front_middle: Point
-    direction: Direction
-    wheels_direction: Direction
+class TurnSignal(Enum):
+    RIGHT_SIGNAL = "right_signal"
+    NO_SIGNAL = "no_signal"
+    LEFT_SIGNAL = "left_signal"
 
 
-class IntersectionManoeuvreDescription(TypedDict):
-    starting_side: CardinalDirection
-    ending_side: CardinalDirection
+class TrackPointData(TypedDict):
+    point: Point
+    max_safe_velocity: float
+    turn_signal: TurnSignal
