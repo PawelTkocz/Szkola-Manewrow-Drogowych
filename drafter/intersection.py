@@ -1,12 +1,12 @@
 import pygame
-from drafter.utils import draw_circle, draw_rectangle
+from drafter.drafter_base import DrafterBase
 from geometry import Point, Rectangle
 from road_segments.constants import LINES_WIDTH
 from road_segments.intersection.schemas import IntersectionColors, IntersectionParts
 from schemas import CardinalDirection
 
 
-class IntersectionDrafter:
+class IntersectionDrafter(DrafterBase):
     """
     Class responsible for drawing the intersection.
     """
@@ -21,114 +21,133 @@ class IntersectionDrafter:
         self.road_width = self.intersection_parts["intersection_area"].width
         self.turn_curve = 90
 
-    def draw_street_curved_turns(self, screen: pygame.Surface) -> None:
+    def draw_street_curved_turns(
+        self, screen: pygame.Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
+        turn_curve = self.turn_curve  # this should be in intersection specification
         color = self.intersection_colors["street_color"]
         intersection_area = self.intersection_parts["intersection_area"]
-        draw_rectangle(
+        self.draw_rectangle(
             screen,
             color,
             Rectangle(
                 Point(
                     intersection_area.center.x,
-                    intersection_area.front_middle.y + self.turn_curve,
+                    intersection_area.front_middle.y + turn_curve,
                 ),
-                intersection_area.width + 2 * self.turn_curve,
-                intersection_area.length + 2 * self.turn_curve,
+                intersection_area.width + 2 * turn_curve,
+                intersection_area.length + 2 * turn_curve,
                 intersection_area.direction,
             ),
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
 
         pavement_color = self.intersection_colors["pavement_color"]
-        draw_circle(
+        self.draw_circle(
             screen,
             pavement_color,
             Point(
-                intersection_area.front_left.x - self.turn_curve,
-                intersection_area.front_left.y + self.turn_curve,
+                intersection_area.front_left.x - turn_curve,
+                intersection_area.front_left.y + turn_curve,
             ),
-            self.turn_curve - 1,
+            turn_curve - 1,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
-        draw_circle(
+        self.draw_circle(
             screen,
             pavement_color,
             Point(
-                intersection_area.front_right.x + self.turn_curve,
-                intersection_area.front_right.y + self.turn_curve,
+                intersection_area.front_right.x + turn_curve,
+                intersection_area.front_right.y + turn_curve,
             ),
-            self.turn_curve - 1,
+            turn_curve - 1,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
-        draw_circle(
+        self.draw_circle(
             screen,
             pavement_color,
             Point(
-                intersection_area.rear_right.x + self.turn_curve,
-                intersection_area.rear_right.y - self.turn_curve,
+                intersection_area.rear_right.x + turn_curve,
+                intersection_area.rear_right.y - turn_curve,
             ),
-            self.turn_curve - 1,
+            turn_curve - 1,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
-        draw_circle(
+        self.draw_circle(
             screen,
             pavement_color,
             Point(
-                intersection_area.rear_left.x - self.turn_curve,
-                intersection_area.rear_left.y - self.turn_curve,
+                intersection_area.rear_left.x - turn_curve,
+                intersection_area.rear_left.y - turn_curve,
             ),
-            self.turn_curve - 1,
+            turn_curve - 1,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
 
-    def draw_street(self, screen: pygame.Surface) -> None:
+    def draw_street(
+        self, screen: pygame.Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
         color = self.intersection_colors["street_color"]
         outcoming_lanes = self.intersection_parts["outcoming_lines"]
         intersection_area = self.intersection_parts["intersection_area"]
-        vertical_length = (
+        intersection_side = (
             intersection_area.length + 2 * outcoming_lanes[CardinalDirection.UP].length
         )
-        horizontal_length = (
-            intersection_area.width + 2 * outcoming_lanes[CardinalDirection.LEFT].length
-        )
-        draw_rectangle(
+        self.draw_rectangle(
             screen,
             color,
             Rectangle(
                 outcoming_lanes[CardinalDirection.UP].front_left,
                 self.road_width,
-                vertical_length,
+                intersection_side,
                 outcoming_lanes[CardinalDirection.UP].direction,
             ),
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
-        draw_rectangle(
+        self.draw_rectangle(
             screen,
             color,
             Rectangle(
                 outcoming_lanes[CardinalDirection.LEFT].front_left,
                 self.road_width,
-                horizontal_length,
+                intersection_side,
                 outcoming_lanes[CardinalDirection.LEFT].direction,
             ),
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
-        self.draw_street_curved_turns(screen)
+        self.draw_street_curved_turns(
+            screen, scale=scale, screen_y_offset=screen_y_offset
+        )
 
-    def draw_lines(self, screen: pygame.Surface) -> None:
+    def draw_lines(
+        self, screen: pygame.Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
         lines_color = self.intersection_colors["lines_color"]
-        outcoming_lines = self.intersection_parts["outcoming_lines"]
-        for side in [
-            CardinalDirection.UP,
-            CardinalDirection.RIGHT,
-            CardinalDirection.DOWN,
-            CardinalDirection.LEFT,
-        ]:
-            draw_rectangle(
+        outcoming_lanes = self.intersection_parts["outcoming_lines"]
+        for side in CardinalDirection:
+            self.draw_rectangle(
                 screen,
                 lines_color,
                 Rectangle(
-                    outcoming_lines[side].front_left,
+                    outcoming_lanes[side].front_left,
                     LINES_WIDTH,
-                    outcoming_lines[side].length,
-                    outcoming_lines[side].direction,
+                    outcoming_lanes[side].length,
+                    outcoming_lanes[side].direction,
                 ),
+                scale=scale,
+                screen_y_offset=screen_y_offset,
             )
 
-    def draw(self, screen: pygame.Surface) -> None:
+    def draw(
+        self, screen: pygame.Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
         screen.fill(self.intersection_colors["pavement_color"])
-        self.draw_street(screen)
-        self.draw_lines(screen)
+        self.draw_street(screen, scale=scale, screen_y_offset=screen_y_offset)
+        self.draw_lines(screen, scale=scale, screen_y_offset=screen_y_offset)

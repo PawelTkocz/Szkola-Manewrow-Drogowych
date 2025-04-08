@@ -51,7 +51,7 @@ class Car(CarBody):
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
         self.turn_signals = TurnSignals(model.turn_signals_tick_interval, turn_signal)
-        self._car_drafter = CarDrafter(model, color)
+        self._car_drafter = CarDrafter()
 
     @property
     def wheels_angle(self) -> float:
@@ -119,12 +119,18 @@ class Car(CarBody):
         self._force_move(front_movement_vector)
         self._slow_down(self.model.resistance)
 
-    def draw(self, screen: Surface) -> None:
+    def draw(
+        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
         self._car_drafter.draw(
+            self.model,
+            self.color,
             self,
             self.wheels_angle,
             self.turn_signals.are_turn_signals_lights_on(),
             screen,
+            scale=scale,
+            screen_y_offset=screen_y_offset,
         )
 
     def tick(self) -> None:

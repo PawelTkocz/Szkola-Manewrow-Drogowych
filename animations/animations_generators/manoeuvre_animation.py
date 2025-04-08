@@ -7,6 +7,8 @@ from animations.animations_generators.constants import PLAYBACK_ANIMATIONS
 from animations.animations_generators.playback_animation import PlaybackAnimation
 from animations.animations_generators.runtime_animation import RuntimeAnimation
 from animations.animations_generators.schemas import CarStartingPosition
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from road_segments.constants import SEGMENT_SIDE
 from smart_city.road_control_center.manoeuvres.schemas import (
     IntersectionManoeuvreDescription,
 )
@@ -28,6 +30,8 @@ class RoadSegmentAnimation(State):
             if PLAYBACK_ANIMATIONS
             else RuntimeAnimation(movement_instructions_dir_path, road_control_center)
         )
+        self.scale = SCREEN_WIDTH / SEGMENT_SIDE
+        self.screen_y_offset = (SCREEN_HEIGHT - SEGMENT_SIDE * self.scale) / 2
 
     @abstractmethod
     def get_starting_position(
@@ -36,7 +40,9 @@ class RoadSegmentAnimation(State):
         pass
 
     @abstractmethod
-    def draw_road(self, screen: Surface) -> None:
+    def draw_road(
+        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
         pass
 
     def add_car(
@@ -57,9 +63,9 @@ class RoadSegmentAnimation(State):
 
     def render_frame(self, screen: Surface) -> None:
         cars = self.animation_strategy.move_cars(self.frame_number)
-        self.draw_road(screen)
+        self.draw_road(screen, scale=self.scale, screen_y_offset=self.screen_y_offset)
         for car in cars:
-            car.draw(screen)
+            car.draw(screen, scale=self.scale, screen_y_offset=self.screen_y_offset)
         self.frame_number += 1
 
     def handle_click(self, mouse_click_position: tuple[float, float]) -> State:

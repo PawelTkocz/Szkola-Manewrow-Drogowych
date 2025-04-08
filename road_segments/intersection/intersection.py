@@ -93,5 +93,7 @@ class Intersection:
             },
         }
 
-    def draw(self, screen: Surface) -> None:
-        self.drafter.draw(screen)
+    def draw(
+        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+    ) -> None:
+        self.drafter.draw(screen, scale=scale, screen_y_offset=screen_y_offset)
