@@ -77,9 +77,13 @@ class PlaybackAnimation(AnimationStrategy):
                         "speed_instruction": SpeedInstruction[speed_mod],
                         "turn_instruction": TurnInstruction[turn_mod],
                     },
-                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
+                    "turn_signals_instruction": TurnSignalsInstruction[
+                        turn_sig_instrcution
+                    ],
                 }
-                for speed_mod, turn_mod in (line.split() for line in file)
+                for speed_mod, turn_mod, turn_sig_instrcution in (
+                    line.split() for line in file
+                )
             ]
 
     def handle_quit(self) -> None:
