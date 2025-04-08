@@ -10,7 +10,7 @@ from smart_city.road_control_center.intersection.intersection_rules import (
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
-from smart_city.road_control_center.intersection.intersection_manoeuvres.intersection_manoeuvre import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from smart_city.road_control_center.road_control_center import RoadControlCenter

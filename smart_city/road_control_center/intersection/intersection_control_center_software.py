@@ -14,7 +14,7 @@ from smart_city.road_control_center.intersection.intersection_rules import (
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
-from smart_city.road_control_center.intersection.intersection_manoeuvres.intersection_manoeuvre import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from smart_city.road_control_center.software.car_movement_simulator import (
@@ -22,7 +22,6 @@ from smart_city.road_control_center.software.car_movement_simulator import (
     get_status_before_entering_zone,
 )
 from smart_city.road_control_center.software.car_simulation import CarSimulation
-from smart_city.road_control_center.software.track_follower import TrackFollower
 from smart_city.schemas import LiveCarData
 
 
@@ -37,7 +36,6 @@ class IntersectionControlCenterSoftware:
     ):
         self.intersection = intersection
         self.intersection_rules = intersection_rules
-        self.track_follower = TrackFollower()
 
     def get_default_movement_instruction(self) -> CarControlInstructions:
         return {
@@ -54,12 +52,7 @@ class IntersectionControlCenterSoftware:
         current_phase = manoeuvre.get_current_phase()
         if not current_phase:
             return self.get_default_movement_instruction()
-        track = current_phase.track
-        # stop_point = current_phase.stop_point
-        stop_point = Point(0, 0)
-        return self.track_follower.get_car_control_instructions(
-            live_car_data, track, stop_point
-        )
+        return current_phase.get_car_control_instructions(live_car_data)
 
     def approach_intersection_movement_instruction(
         self,
@@ -69,28 +62,30 @@ class IntersectionControlCenterSoftware:
         time: int,
     ) -> CarControlInstructions:
         live_car_data = live_cars_data[registry_number]
-        valid_speed_instructions = self.track_follower.get_valid_speed_instructions(
-            live_car_data["live_state"]["velocity"]
-        )
         current_phase = cars_manoeuvre_info[registry_number][
             "manoeuvre"
         ].get_current_phase()
         if not current_phase:
             return self.get_default_movement_instruction()
-        track = current_phase.track
-        # stop_point = current_phase.stop_point
-        stop_point = Point(0, 0)
-        for speed_instruction in valid_speed_instructions[:-1]:
-            if not self.track_follower.is_speed_instruction_safe(
-                live_car_data, track, stop_point, speed_instruction
-            ):
-                continue
-            car_control_instructions: CarControlInstructions = {
+        car_control_instructions = current_phase.get_car_control_instructions(
+            live_car_data
+        )
+        safe_speed_instruction = car_control_instructions["movement_instructions"][
+            "speed_instruction"
+        ]
+        speed_instructions = [
+            SpeedInstruction.ACCELERATE_FRONT,
+            SpeedInstruction.NO_CHANGE,
+            SpeedInstruction.BRAKE,
+        ]
+        speed_instruction_index = speed_instructions.index(safe_speed_instruction)
+        for speed_instruction in speed_instructions[speed_instruction_index:-1]:
+            car_control_instructions = {
                 "movement_instructions": {
                     "speed_instruction": speed_instruction,
-                    "turn_instruction": self.track_follower.get_turn_instruction(
-                        live_car_data, track, speed_instruction
-                    ),
+                    "turn_instruction": CarSimulation.from_live_car_data(
+                        live_car_data
+                    ).get_turn_instruction(current_phase.track, speed_instruction),
                 },
                 "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
             }
@@ -104,10 +99,10 @@ class IntersectionControlCenterSoftware:
                 return car_control_instructions
         return {
             "movement_instructions": {
-                "speed_instruction": valid_speed_instructions[-1],
-                "turn_instruction": self.track_follower.get_turn_instruction(
-                    live_car_data, track, valid_speed_instructions[-1]
-                ),
+                "speed_instruction": SpeedInstruction.BRAKE,
+                "turn_instruction": CarSimulation.from_live_car_data(
+                    live_car_data
+                ).get_turn_instruction(current_phase.track, SpeedInstruction.BRAKE),
             },
             "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
@@ -125,10 +120,9 @@ class IntersectionControlCenterSoftware:
         current_phase = manoeuvre_info["manoeuvre"].get_current_phase()
         if not current_phase:
             return False
-        track = current_phase.track
         if can_stop_before_zone(
             live_car_data,
-            track,
+            current_phase,
             self.intersection.intersection_parts["intersection_area"],
             car_control_instructions,
         ):
@@ -158,10 +152,9 @@ class IntersectionControlCenterSoftware:
         current_phase = manoeuvre_info["manoeuvre"].get_current_phase()
         if not current_phase:
             return False
-        track = current_phase.track
         entering_intersection_status = get_status_before_entering_zone(
             live_car_data,
-            track,
+            current_phase,
             self.intersection.intersection_parts["intersection_area"],
             car_control_instructions,
         )

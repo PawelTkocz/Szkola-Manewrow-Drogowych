@@ -14,7 +14,7 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from car.toyota_yaris import ToyotaYaris
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 

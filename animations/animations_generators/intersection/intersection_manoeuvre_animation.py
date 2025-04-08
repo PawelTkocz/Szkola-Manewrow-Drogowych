@@ -6,7 +6,7 @@ from animations.animations_generators.schemas import CarStartingPosition
 from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 from state import State

@@ -4,8 +4,8 @@ import numpy as np
 from geometry import Point, Vector
 from schemas import HorizontalDirection
 from smart_city.road_control_center.manoeuvres.schemas import TrackPath
-from smart_city.road_control_center.manoeuvres.track_segment import (
-    TrackSegment,
+from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+    ManoeuvreTrackSegment,
     TrackSegmentType,
 )
 
@@ -30,12 +30,13 @@ def _cubic_bezier(
     return x, y
 
 
-class RightAngleTurn(TrackSegment):
+class RightAngleTurn(ManoeuvreTrackSegment):
     def __init__(
         self,
         start_point: Point,
         end_point: Point,
         turn_direction: HorizontalDirection,
+        expected_min_velocity: float,
     ) -> None:
         track_segment_type = (
             TrackSegmentType.TURN_LEFT
@@ -47,6 +48,7 @@ class RightAngleTurn(TrackSegment):
             self.calculate_track_path(
                 start_point, end_point, turn_direction, TURN_SHARPNESS
             ),
+            expected_min_velocity,
         )
 
     def calculate_track_path(

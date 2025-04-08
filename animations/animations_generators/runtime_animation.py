@@ -7,7 +7,7 @@ from animations.animations_generators.schemas import (
 )
 from car.car import Car
 from car.toyota_yaris import ToyotaYaris
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.road_control_center import RoadControlCenter

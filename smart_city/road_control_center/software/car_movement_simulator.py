@@ -4,17 +4,15 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from geometry import Rectangle
-from smart_city.road_control_center.manoeuvres.manoeuvre_track import ManoeuvreTrack
-from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.road_control_center.software.schemas import EnteringZoneStatus
-from smart_city.road_control_center.software.track_follower import TrackFollower
 from smart_city.schemas import LiveCarData
 
 
 def can_stop_before_zone(
     live_car_data: LiveCarData,
-    track: Track,
+    manoeuvre_phase: ManoeuvrePhase,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions | None = None,
 ) -> bool:
@@ -25,8 +23,8 @@ def can_stop_before_zone(
         return False
     while car_simulation.velocity > 0:
         speed_instruction = SpeedInstruction.BRAKE
-        turn_instruction = TrackFollower().get_turn_instruction(
-            car_simulation.get_live_data(), track, speed_instruction
+        turn_instruction = car_simulation.get_turn_instruction(
+            manoeuvre_phase.track, speed_instruction
         )
         car_simulation.move(
             {
@@ -44,7 +42,7 @@ def can_stop_before_zone(
 
 def get_status_before_entering_zone(
     live_car_data: LiveCarData,
-    track: Track,
+    manoeuvre_phase: ManoeuvrePhase,
     zone: Rectangle,
     car_control_instructions: CarControlInstructions,
 ) -> EnteringZoneStatus:
@@ -59,8 +57,8 @@ def get_status_before_entering_zone(
 
     while not car_simulation.collides(zone):
         previous_live_car_data = current_live_car_data
-        control_instructions = TrackFollower().get_car_control_instructions(
-            current_live_car_data, track
+        control_instructions = manoeuvre_phase.get_car_control_instructions(
+            current_live_car_data
         )
         car_simulation.move(control_instructions)
         current_live_car_data = car_simulation.get_live_data()

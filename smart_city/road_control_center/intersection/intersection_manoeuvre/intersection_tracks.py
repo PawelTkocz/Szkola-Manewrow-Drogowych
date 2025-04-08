@@ -9,27 +9,24 @@ from geometry import Cooridinates, Direction, Point
 from road_segments.intersection import intersection_A0
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection, VerticalDirection
-from smart_city.road_control_center.manoeuvres.right_angle_turn import RightAngleTurn
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
-from smart_city.road_control_center.manoeuvres.straight_path import StraightPath
-from smart_city.road_control_center.manoeuvres.manoeuvre_track import ManoeuvreTrack
-from smart_city.road_control_center.manoeuvres.track_segment import TrackSegmentType
+from smart_city.road_control_center.manoeuvres.schemas import TrackPointData, TurnSignal
+from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track import (
+    ManoeuvreTrack,
+)
+from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+    TrackSegmentType,
+)
+from smart_city.road_control_center.manoeuvres.track_preprocessor.right_angle_turn import (
+    RightAngleTurn,
+)
+from smart_city.road_control_center.manoeuvres.track_preprocessor.straight_path import (
+    StraightPath,
+)
 
 EXPECTED_MIN_TURN_VELOCITY = 2
-
-
-class TurnSignal(Enum):
-    RIGHT_SIGNAL = "right_signal"
-    NO_SIGNAL = "no_signal"
-    LEFT_SIGNAL = "left_signal"
-
-
-class TrackPointData(TypedDict):
-    point: Point
-    max_velocity: float
-    turn_signal: TurnSignal
 
 
 class IntersectionTrackPoint(TypedDict):
@@ -50,19 +47,29 @@ class IntersectionTracks:
     def __init__(self, intersection: Intersection, car_model: CarModel) -> None:
         self.intersection = intersection
         self.car_model = car_model
+        self.tracks_dir_path = f"smart_city/road_control_center/intersection/intersection_manoeuvre/tracks/{self.intersection.id}/tracks"
 
     def register_tracks(self) -> None:
-        self.register_right_turn()
+        tracks = [
+            (IntersectionTrackType.TURN_LEFT, self.calculate_track_from_down_to_left()),
+            (
+                IntersectionTrackType.TURN_RIGHT,
+                self.calculate_track_from_down_to_right(),
+            ),
+            (IntersectionTrackType.GO_STRAIGHT, self.calculate_track_from_down_to_up()),
+        ]
+        os.makedirs(self.tracks_dir_path, exist_ok=True)
+        for track_type, manoeuvre_track in tracks:
+            self.register_track(track_type, manoeuvre_track)
 
-    def register_right_turn(self) -> None:
-        dir_path = f"tracks/intersection/{self.intersection.id}/tracks"
-        os.makedirs(dir_path, exist_ok=True)
+    def register_track(
+        self, track_type: IntersectionTrackType, manoeuvre_track: ManoeuvreTrack
+    ) -> None:
         file_path = os.path.join(
-            dir_path,
-            f"{IntersectionTrackType.TURN_RIGHT.value}.json",
+            self.tracks_dir_path,
+            f"{track_type.value}.json",
         )
-        track = self.calculate_track_from_down_to_right()
-        serialized_track = self.serialize_track(track)
+        serialized_track = self.serialize_track(manoeuvre_track)
         with open(
             file_path,
             "w",
@@ -109,20 +116,14 @@ class IntersectionTracks:
         )
         return ManoeuvreTrack(
             [
-                {
-                    "track_segment": StraightPath(start_point, start_turn_point),
-                    "expected_min_velocity": None,
-                },
-                {
-                    "track_segment": RightAngleTurn(
-                        start_turn_point, end_turn_point, turn_direction
-                    ),
-                    "expected_min_velocity": EXPECTED_MIN_TURN_VELOCITY,
-                },
-                {
-                    "track_segment": StraightPath(end_turn_point, end_point),
-                    "expected_min_velocity": None,
-                },
+                StraightPath(start_point, start_turn_point),
+                RightAngleTurn(
+                    start_turn_point,
+                    end_turn_point,
+                    turn_direction,
+                    EXPECTED_MIN_TURN_VELOCITY,
+                ),
+                StraightPath(end_turn_point, end_point),
             ],
             {
                 "direction": Direction(Point(1, 0)),
@@ -144,12 +145,7 @@ class IntersectionTracks:
             outcoming_lane.direction.scale_to_len(2 * self.car_model.length)
         )
         return ManoeuvreTrack(
-            [
-                {
-                    "track_segment": StraightPath(start_point, end_point),
-                    "expected_min_velocity": None,
-                }
-            ],
+            [StraightPath(start_point, end_point)],
             {
                 "direction": Direction(Point(1, 0)),
                 "front_middle": Point(0, 0),
@@ -162,10 +158,10 @@ class IntersectionTracks:
     ) -> IntersectionTrackType:
         starting_side = manoeuvre_description["starting_side"]
         ending_side = manoeuvre_description["ending_side"]
-        if (
-            starting_side in VerticalDirection and ending_side in VerticalDirection
-        ) or (
-            starting_side in HorizontalDirection and ending_side in HorizontalDirection
+        vertical_sides = [CardinalDirection.UP, CardinalDirection.DOWN]
+        horizontal_sides = [CardinalDirection.LEFT, CardinalDirection.RIGHT]
+        if (starting_side in vertical_sides and ending_side in vertical_sides) or (
+            starting_side in horizontal_sides and ending_side in horizontal_sides
         ):
             return IntersectionTrackType.GO_STRAIGHT
         directions = list(CardinalDirection)
@@ -181,7 +177,7 @@ class IntersectionTracks:
     ) -> list[TrackPointData]:
         track_type = self.get_track_type(manoeuvre_description)
         with open(
-            f"tracks/intersection/{self.intersection.id}/tracks/{track_type.value}.json",
+            f"smart_city/road_control_center/intersection/intersection_manoeuvre/tracks/{self.intersection.id}/tracks/{track_type.value}.json",
             "r",
         ) as file:
             intersection_track_points: list[IntersectionTrackPoint] = json.load(file)
@@ -189,7 +185,7 @@ class IntersectionTracks:
                 {
                     "point": Point(point["from_down"]["x"], point["from_down"]["y"]),
                     "turn_signal": TurnSignal(point["turn_signal"]),
-                    "max_velocity": 10,
+                    "max_safe_velocity": 10,
                 }
                 for point in intersection_track_points
             ]
@@ -197,10 +193,17 @@ class IntersectionTracks:
     def get_turn_signal_for_track_point(
         self, track_point: Point, track: ManoeuvreTrack
     ) -> TurnSignal:
-        current_segment = track.get_closest_segment_on_track(track_point)
-        if current_segment.track_segment.type == TrackSegmentType.TURN_LEFT:
+        track_point_index = track.find_index_of_closest_point(track_point)
+        incoming_segments_data = track.get_incoming_segments_data(track_point_index)
+        if (
+            incoming_segments_data["current_track_segment"].type
+            == TrackSegmentType.TURN_LEFT
+        ):
             return TurnSignal.LEFT_SIGNAL
-        elif current_segment.track_segment.type == TrackSegmentType.TURN_RIGHT:
+        elif (
+            incoming_segments_data["current_track_segment"].type
+            == TrackSegmentType.TURN_RIGHT
+        ):
             return TurnSignal.RIGHT_SIGNAL
         return TurnSignal.NO_SIGNAL
 
@@ -239,4 +242,4 @@ class IntersectionTracks:
 
 
 c = IntersectionTracks(intersection_A0.intersection_A0, ToyotaYaris())
-c.register_right_turn()
+c.register_tracks()

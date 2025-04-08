@@ -1,14 +1,16 @@
 from car.model import CarModel
 from road_segments.intersection.intersection import Intersection
 
-from smart_city.road_control_center.intersection.intersection_manoeuvres.intersection_tracks import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre.intersection_tracks import (
     IntersectionTracks,
+)
+from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
+    IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.manoeuvres.manoeuvre import Manoeuvre
 from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
-from smart_city.road_control_center.manoeuvres.schemas import (
-    IntersectionManoeuvreDescription,
-)
+
+# stop point should be passed when calculating track (with max velocities) for manoeuvre phase
 
 
 class IntersectionManoeuvre(Manoeuvre):
