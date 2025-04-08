@@ -175,6 +175,17 @@ class IntersectionTracks:
         self,
         manoeuvre_description: IntersectionManoeuvreDescription,
     ) -> list[TrackPointData]:
+        def _get_point(p: IntersectionTrackPoint) -> Point:
+            starting_side = manoeuvre_description["starting_side"]
+            if starting_side == CardinalDirection.DOWN:
+                return Point(p["from_down"]["x"], p["from_down"]["y"])
+            elif starting_side == CardinalDirection.RIGHT:
+                return Point(p["from_right"]["x"], p["from_right"]["y"])
+            elif starting_side == CardinalDirection.UP:
+                return Point(p["from_up"]["x"], p["from_up"]["y"])
+            else:
+                return Point(p["from_left"]["x"], p["from_left"]["y"])
+
         track_type = self.get_track_type(manoeuvre_description)
         with open(
             f"smart_city/road_control_center/intersection/intersection_manoeuvre/tracks/{self.intersection.id}/tracks/{track_type.value}.json",
@@ -183,7 +194,7 @@ class IntersectionTracks:
             intersection_track_points: list[IntersectionTrackPoint] = json.load(file)
             return [
                 {
-                    "point": Point(point["from_down"]["x"], point["from_down"]["y"]),
+                    "point": _get_point(point),
                     "turn_signal": TurnSignal(point["turn_signal"]),
                     "max_safe_velocity": 10,
                 }
