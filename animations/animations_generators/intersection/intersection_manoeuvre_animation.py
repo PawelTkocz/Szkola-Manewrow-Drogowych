@@ -3,13 +3,13 @@ import os
 from pygame import Surface
 from animations.animations_generators.manoeuvre_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import CarStartingPosition
+from application_screen.application_screen import ApplicationScreen
 from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )
 from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
-from state import State
 from animations.animations_generators.constants import (
     MOVEMENT_INSTRUCTIONS_DIR as movement_instructions_dir,
 )
@@ -21,7 +21,7 @@ from animations.animations_generators.intersection.constants import (
 class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
     def __init__(
         self,
-        previous_state: State,
+        previous_state: ApplicationScreen,
         manoeuvre_movement_instructions_dir: str,
         intersection_control_center: IntersectionControlCenter,
     ):

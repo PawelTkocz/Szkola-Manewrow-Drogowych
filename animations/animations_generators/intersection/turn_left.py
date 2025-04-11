@@ -1,8 +1,8 @@
 from animations.animations_generators.intersection.intersection_manoeuvre_animation import (
     IntersectionManoeuvreAnimation,
 )
+from application_screen.application_screen import ApplicationScreen
 from schemas import CardinalDirection
-from state import State
 from smart_city.road_control_center.intersection.intersection_A0 import (
     intersection_A0_control_center,
 )
@@ -11,7 +11,7 @@ from smart_city.road_control_center.intersection.intersection_A0 import (
 class IntersectionTurnLeftAnimation(IntersectionManoeuvreAnimation):
     manoeuvre_movement_instructions_dir = "turn_left"
 
-    def __init__(self, previous_state: State):
+    def __init__(self, previous_state: ApplicationScreen):
         super().__init__(
             previous_state,
             self.manoeuvre_movement_instructions_dir,
