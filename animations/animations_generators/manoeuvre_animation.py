@@ -9,6 +9,7 @@ from animations.animations_generators.runtime_animation import RuntimeAnimation
 from animations.animations_generators.schemas import CarStartingPosition
 from application_screen.application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from geometry import Point
 from road_segments.constants import SEGMENT_SIDE
 from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
@@ -68,9 +69,7 @@ class RoadSegmentAnimation(ApplicationScreen):
             car.draw(screen, scale=self.scale, screen_y_offset=self.screen_y_offset)
         self.frame_number += 1
 
-    def handle_click(
-        self, mouse_click_position: tuple[float, float]
-    ) -> ApplicationScreen:
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen:
         return self.previous_state
 
     def handle_quit(self) -> None:

@@ -25,9 +25,7 @@ class BackNavigableApplicationScreen(ApplicationScreen):
         self.app_screen.render_frame(screen)
         self.render_button(screen)
 
-    def handle_click(
-        self, mouse_click_position: tuple[float, float]
-    ) -> ApplicationScreen:
-        if self.button_rectangle.is_point_inside(Point(*mouse_click_position)):
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen:
+        if self.button_rectangle.is_point_inside(mouse_click_point):
             return self.previous_app_screen
-        return self.app_screen.handle_click(mouse_click_position)
+        return self.app_screen.handle_click(mouse_click_point)

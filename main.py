@@ -3,6 +3,8 @@ import pygame
 from animations.animations_menus.main_menu import MainMenu
 from application_screen.application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from geometry import Point
+from utils import get_pygame_point
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -20,7 +22,7 @@ class IntersectionManoeuvresApplication:
 
     def handle_click(self, mouse_click_position: tuple[float, float]) -> None:
         self.current_app_screen = self.current_app_screen.handle_click(
-            mouse_click_position
+            get_pygame_point(Point(*mouse_click_position))
         )
 
 

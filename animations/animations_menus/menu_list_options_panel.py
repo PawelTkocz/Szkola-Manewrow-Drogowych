@@ -4,6 +4,7 @@ from animations.animations_menus.constants import (
     FONT_NAME,
     MENU_LIST_OPTIONS_HEIGHT,
     MENU_LIST_OPTIONS_MIN_WIDTH,
+    MENU_LIST_OPTIONS_TEXT_LEFT_OFFSET,
     MENU_OPTIONS_LIST_FONT_SIZE,
     MENU_OPTIONS_LIST_LEFT_OFFSET,
     MENU_OPTIONS_Y_SPACING,
@@ -13,7 +14,8 @@ from animations.animations_menus.menu_options_panel import MenuOptionsPanel
 from animations.animations_menus.schemas import ListOptionDescription
 from application_screen.application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
-from geometry import Direction, Point, Rectangle
+from drafter.drafter_base import DrafterBase
+from geometry import Direction, Point, Rectangle, Vector
 
 
 class ListOption:
@@ -29,21 +31,32 @@ class ListOption:
         self.font = pygame.font.SysFont(FONT_NAME, MENU_OPTIONS_LIST_FONT_SIZE)
 
     def render(self, screen: pygame.Surface) -> None:
-        rect_surface = pygame.Surface(
-            (self.rectangle.width, self.rectangle.length), pygame.SRCALPHA
+        DrafterBase().draw_basic_rectangle(
+            screen,
+            "white",
+            self.rectangle.front_left,
+            self.rectangle.width,
+            self.rectangle.length,
+            border_front_right_radius=10,
+            border_rear_left_radius=10,
+            border_rear_right_radius=10,
+            transparency=190,
         )
-        rect_surface.fill((255, 255, 255, 128))
-        rect_position = (self.rectangle.front_left.x, self.rectangle.front_left.y)
-        screen.blit(rect_surface, rect_position)
-
         text_surface = self.font.render(self.text, True, FONT_COLOR)
-        # text_rect = text_surface.get_rect(
-        #     center=(screen.get_width() // 2, self.title_top_offset)
-        # )
-        screen.blit(text_surface, rect_position)
+        DrafterBase().blit_surface(
+            screen,
+            text_surface,
+            self.rectangle.front_left.add_vector(
+                Vector(Point(0, -1))
+                .scale_to_len((self.rectangle.length - text_surface.get_height()) / 2)
+                .add_vector(
+                    Vector(Point(1, 0)).scale_to_len(MENU_LIST_OPTIONS_TEXT_LEFT_OFFSET)
+                )
+            ),
+        )
 
-    def is_clicked(self, mouse_click_position: tuple[float, float]) -> bool:
-        return self.rectangle.is_point_inside(Point(*mouse_click_position))
+    def is_clicked(self, mouse_click_point: Point) -> bool:
+        return self.rectangle.is_point_inside(mouse_click_point)
 
     def on_click(self) -> ApplicationScreen:
         return self.on_click_app_screen
@@ -74,8 +87,9 @@ class MenuListOptionsPanel(MenuOptionsPanel):
         self.options_panel = Rectangle(
             Point(
                 list_options_left_offset + self.list_options_width / 2,
-                2 * title_top_offset
-                + (height - 2 * title_top_offset - options_panel_height) // 2,
+                height
+                - 2 * title_top_offset
+                - (height - 2 * title_top_offset - options_panel_height) // 2,
             ),
             self.list_options_width,
             options_panel_height,
@@ -101,6 +115,7 @@ class MenuListOptionsPanel(MenuOptionsPanel):
     ) -> int:
         max_width = max(
             font.render(list_option["text"], True, FONT_COLOR).get_width()
+            + MENU_LIST_OPTIONS_TEXT_LEFT_OFFSET
             for list_option in list_options_descriptions
         )
         return max(max_width, list_options_min_width)
@@ -121,10 +136,8 @@ class MenuListOptionsPanel(MenuOptionsPanel):
         for list_option in self.list_options:
             list_option.render(screen)
 
-    def handle_click(
-        self, mouse_click_position: tuple[float, float]
-    ) -> ApplicationScreen | None:
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
         for list_option in self.list_options:
-            if list_option.is_clicked(mouse_click_position):
+            if list_option.is_clicked(mouse_click_point):
                 return list_option.on_click()
         return None

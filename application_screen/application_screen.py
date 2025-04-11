@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 from pygame import Surface
 
+from geometry import Point
+
 
 class ApplicationScreen(ABC):
     @abstractmethod
@@ -9,7 +11,5 @@ class ApplicationScreen(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_click(
-        self, mouse_click_position: tuple[float, float]
-    ) -> "ApplicationScreen":
+    def handle_click(self, mouse_click_point: Point) -> "ApplicationScreen":
         raise NotImplementedError

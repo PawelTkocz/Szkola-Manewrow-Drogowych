@@ -8,6 +8,8 @@ from animations.animations_menus.constants import (
 from animations.animations_menus.menu_options_panel import MenuOptionsPanel
 from application_screen.application_screen import ApplicationScreen
 from constants import BACKGROUND_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH
+from drafter.drafter_base import DrafterBase
+from geometry import Point
 
 
 class MenuScreen(ApplicationScreen):
@@ -39,12 +41,17 @@ class MenuScreen(ApplicationScreen):
         title_rect = title_surface.get_rect(
             center=(screen.get_width() // 2, self.title_top_offset)
         )
-        stripe_height = 2 * self.title_top_offset
-        stripe_surface = pygame.Surface(
-            (screen.get_width(), stripe_height), pygame.SRCALPHA
+        side_margin = 20
+        DrafterBase().draw_basic_rectangle(
+            screen,
+            "white",
+            Point((SCREEN_WIDTH - title_rect.width) / 2 - side_margin, SCREEN_HEIGHT),
+            title_rect.width + 2 * side_margin,
+            2 * title_rect.height,
+            border_rear_left_radius=20,
+            border_rear_right_radius=20,
+            transparency=164,
         )
-        stripe_surface.fill((255, 255, 255, 128))
-        screen.blit(stripe_surface, (0, 0))
         screen.blit(title_surface, title_rect)
 
     def render_background(self, screen: pygame.Surface) -> None:
@@ -58,7 +65,5 @@ class MenuScreen(ApplicationScreen):
         self.render_title(screen)
         self.options_panel.render(screen)
 
-    def handle_click(
-        self, mouse_click_position: tuple[float, float]
-    ) -> ApplicationScreen:
-        return self.options_panel.handle_click(mouse_click_position) or self
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen:
+        return self.options_panel.handle_click(mouse_click_point) or self
