@@ -1,9 +1,13 @@
 from typing import TypedDict
 
-from state import State
+from application_screen.application_screen import ApplicationScreen
 
 
-class OptionItemDescription(TypedDict):
-    title: str
+class OptionTileDescription(TypedDict):
     image_path: str
-    on_click_state: State
+    on_click_app_screen: ApplicationScreen
+
+
+class ListOptionDescription(TypedDict):
+    text: str
+    on_click_app_screen: ApplicationScreen
