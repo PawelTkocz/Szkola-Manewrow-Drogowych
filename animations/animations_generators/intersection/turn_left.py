@@ -1,7 +1,7 @@
 from animations.animations_generators.intersection.intersection_manoeuvre_animation import (
     IntersectionManoeuvreAnimation,
 )
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_A0 import (
     intersection_A0_control_center,

@@ -12,7 +12,7 @@ from animations.animations_menus.constants import (
 )
 from animations.animations_menus.menu_options_panel import MenuOptionsPanel
 from animations.animations_menus.schemas import ListOptionDescription
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from drafter.drafter_base import DrafterBase
 from geometry import Direction, Point, Rectangle, Vector

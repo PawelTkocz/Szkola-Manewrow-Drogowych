@@ -6,7 +6,8 @@ from animations.animations_menus.constants import (
     MENU_TITLE_TOP_OFFSET,
 )
 from animations.animations_menus.menu_options_panel import MenuOptionsPanel
-from application_screen.application_screen import ApplicationScreen
+from animations.previous_screen_button import PreviousScreenButton
+from application_screen import ApplicationScreen
 from constants import BACKGROUND_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.drafter_base import DrafterBase
 from geometry import Point
@@ -18,10 +19,14 @@ class MenuScreen(ApplicationScreen):
         title: str,
         options_panel: MenuOptionsPanel,
         *,
+        previous_app_screen: ApplicationScreen | None = None,
         background_image_path: str
         | None = "animations/animations_menus/screenshots/background.jpg",
         title_top_offset: int = MENU_TITLE_TOP_OFFSET,
     ) -> None:
+        self.previous_screen_button = (
+            PreviousScreenButton(previous_app_screen) if previous_app_screen else None
+        )
         self.background_image = (
             pygame.transform.scale(
                 pygame.image.load(background_image_path),
@@ -64,6 +69,14 @@ class MenuScreen(ApplicationScreen):
         self.render_background(screen)
         self.render_title(screen)
         self.options_panel.render(screen)
+        if self.previous_screen_button:
+            self.previous_screen_button.render(screen)
 
-    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen:
-        return self.options_panel.handle_click(mouse_click_point) or self
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
+        if self.previous_screen_button:
+            previous_screen_requested = self.previous_screen_button.handle_click(
+                mouse_click_point
+            )
+            if previous_screen_requested:
+                return previous_screen_requested
+        return self.options_panel.handle_click(mouse_click_point)

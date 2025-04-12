@@ -11,14 +11,11 @@ from animations.animations_menus.constants import INTERSECTION_MENU_TITLE
 from animations.animations_menus.menu_list_options_panel import MenuListOptionsPanel
 from animations.animations_menus.menu_screen import MenuScreen
 from animations.animations_menus.schemas import ListOptionDescription
-from application_screen.application_screen import ApplicationScreen
-from application_screen.back_navigable_application_screen import (
-    BackNavigableApplicationScreen,
-)
+from application_screen import ApplicationScreen
 
 
-class SignA5ManoeuvresScreen(MenuScreen):
-    def __init__(self) -> None:
+class SignA5ManoeuvresMenu(MenuScreen):
+    def __init__(self, previous_app_screen: ApplicationScreen | None = None) -> None:
         list_options_descriptions: list[ListOptionDescription] = [
             {
                 "text": "Skret w prawo",
@@ -34,10 +31,7 @@ class SignA5ManoeuvresScreen(MenuScreen):
             },
         ]
         super().__init__(
-            INTERSECTION_MENU_TITLE, MenuListOptionsPanel(list_options_descriptions)
+            INTERSECTION_MENU_TITLE,
+            MenuListOptionsPanel(list_options_descriptions),
+            previous_app_screen=previous_app_screen,
         )
-
-
-class SignA5ManoeuvresMenu(BackNavigableApplicationScreen):
-    def __init__(self, previous_app_screen: ApplicationScreen) -> None:
-        super().__init__(SignA5ManoeuvresScreen(), previous_app_screen)
