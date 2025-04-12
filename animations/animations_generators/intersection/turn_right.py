@@ -11,11 +11,11 @@ from smart_city.road_control_center.intersection.intersection_A0 import (
 class IntersectionTurnRightAnimation(IntersectionManoeuvreAnimation):
     manoeuvre_movement_instructions_dir = "turn_right"
 
-    def __init__(self, previous_state: ApplicationScreen):
+    def __init__(self, *, previous_app_screen: ApplicationScreen | None = None):
         super().__init__(
-            previous_state,
             self.manoeuvre_movement_instructions_dir,
             intersection_A0_control_center,
+            previous_app_screen=previous_app_screen,
         )
         self.add_car(
             "DW001",

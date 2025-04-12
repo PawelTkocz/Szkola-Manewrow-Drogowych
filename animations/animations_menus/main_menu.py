@@ -28,23 +28,33 @@ class MainMenu(MenuScreen):
             },
             {
                 "image_path": "animations/animations_menus/screenshots/sign_D1_and_A7.png",
-                "on_click_app_screen": IntersectionTurnRightAnimation(self),
+                "on_click_app_screen": IntersectionTurnRightAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "image_path": "animations/animations_menus/screenshots/sign_B20.png",
-                "on_click_app_screen": IntersectionGoStraightAnimation(self),
+                "on_click_app_screen": IntersectionGoStraightAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "image_path": "animations/animations_menus/screenshots/sign_T6a.png",
-                "on_click_app_screen": IntersectionTurnLeftAnimation(self),
+                "on_click_app_screen": IntersectionTurnLeftAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "image_path": "animations/animations_menus/screenshots/traffic_lights.png",
-                "on_click_app_screen": IntersectionTurnLeftAnimation(self),
+                "on_click_app_screen": IntersectionTurnLeftAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "image_path": "animations/animations_menus/screenshots/traffic_lights_arrow.png",
-                "on_click_app_screen": IntersectionTurnLeftAnimation(self),
+                "on_click_app_screen": IntersectionTurnLeftAnimation(
+                    previous_app_screen=self
+                ),
             },
         ]
         super().__init__(
