@@ -3,7 +3,7 @@ import os
 from pygame import Surface
 from animations.animations_generators.manoeuvre_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import CarStartingPosition
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )

@@ -7,7 +7,7 @@ from animations.animations_generators.constants import PLAYBACK_ANIMATIONS
 from animations.animations_generators.playback_animation import PlaybackAnimation
 from animations.animations_generators.runtime_animation import RuntimeAnimation
 from animations.animations_generators.schemas import CarStartingPosition
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry import Point
 from road_segments.constants import SEGMENT_SIDE
@@ -69,7 +69,7 @@ class RoadSegmentAnimation(ApplicationScreen):
             car.draw(screen, scale=self.scale, screen_y_offset=self.screen_y_offset)
         self.frame_number += 1
 
-    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen:
+    def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
         return self.previous_state
 
     def handle_quit(self) -> None:

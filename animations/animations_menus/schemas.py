@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 
 
 class OptionTileDescription(TypedDict):

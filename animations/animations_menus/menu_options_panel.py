@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
 
-from application_screen.application_screen import ApplicationScreen
+from application_screen import ApplicationScreen
 from geometry import Point
 
 
