@@ -19,15 +19,21 @@ class SignA5ManoeuvresMenu(MenuScreen):
         list_options_descriptions: list[ListOptionDescription] = [
             {
                 "text": "Skret w prawo",
-                "on_click_app_screen": IntersectionTurnRightAnimation(self),
+                "on_click_app_screen": IntersectionTurnRightAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "text": "Przejazd na wprost",
-                "on_click_app_screen": IntersectionGoStraightAnimation(self),
+                "on_click_app_screen": IntersectionGoStraightAnimation(
+                    previous_app_screen=self
+                ),
             },
             {
                 "text": "Skret w lewo",
-                "on_click_app_screen": IntersectionTurnLeftAnimation(self),
+                "on_click_app_screen": IntersectionTurnLeftAnimation(
+                    previous_app_screen=self
+                ),
             },
         ]
         super().__init__(

@@ -21,9 +21,10 @@ from animations.animations_generators.intersection.constants import (
 class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
     def __init__(
         self,
-        previous_state: ApplicationScreen,
         manoeuvre_movement_instructions_dir: str,
         intersection_control_center: IntersectionControlCenter,
+        *,
+        previous_app_screen: ApplicationScreen | None = None,
     ):
         movement_instructions_dir_path = os.path.join(
             movement_instructions_dir,
@@ -31,9 +32,9 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
             manoeuvre_movement_instructions_dir,
         )
         super().__init__(
-            previous_state,
             movement_instructions_dir_path,
             intersection_control_center,
+            previous_app_screen=previous_app_screen,
         )
         self.intersection = intersection_control_center.intersection
 
