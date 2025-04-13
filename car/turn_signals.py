@@ -8,6 +8,8 @@ class TurnSignal:
         self.ticks_counter = 0
 
     def activate(self) -> None:
+        if self.activated:
+            return
         self.activated = True
         self.ticks_counter = 0
 
