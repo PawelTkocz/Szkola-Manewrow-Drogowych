@@ -78,7 +78,9 @@ class RoadSegmentAnimation(ApplicationScreen):
     def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
         if not self.previous_screen_button:
             return None
-        return self.previous_screen_button.handle_click(mouse_click_point)
-
-    def handle_quit(self) -> None:
-        self.animation_strategy.handle_quit()
+        previous_screen_requested = self.previous_screen_button.handle_click(
+            mouse_click_point
+        )
+        if previous_screen_requested:
+            self.animation_strategy.handle_quit()
+        return previous_screen_requested
