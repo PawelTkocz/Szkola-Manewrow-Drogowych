@@ -1,4 +1,5 @@
 from pygame import Surface
+import pygame
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from drafter.drafter_base import DrafterBase
@@ -13,22 +14,17 @@ class PreviousScreenButton:
             Point(50, SCREEN_HEIGHT), 100, 100, Direction(Point(0, 1))
         ),
     ) -> None:
+        self.image = pygame.transform.scale(
+            pygame.image.load(
+                "animations/animations_menus/screenshots/go_back_button.png"
+            ),
+            (rectangle.width, rectangle.length),
+        )
         self.previous_app_screen = previous_app_screen
         self.rectangle = rectangle
 
     def render(self, screen: Surface) -> None:
-        DrafterBase().draw_basic_rectangle(
-            screen,
-            "purple",
-            self.rectangle.front_left,
-            self.rectangle.width,
-            self.rectangle.length,
-            transparency=255,
-            border_front_left_radius=20,
-            border_front_right_radius=20,
-            border_rear_left_radius=20,
-            border_rear_right_radius=20,
-        )
+        DrafterBase().blit_surface(screen, self.image, self.rectangle.front_left)
 
     def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
         if self.rectangle.is_point_inside(mouse_click_point):
