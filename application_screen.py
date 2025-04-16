@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from typing import Union
 
 from pygame import Surface
 
@@ -12,7 +11,5 @@ class ApplicationScreen(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_click(
-        self, mouse_click_point: Point
-    ) -> Union["ApplicationScreen", None]:
+    def handle_click(self, mouse_click_point: Point) -> "ApplicationScreen":
         raise NotImplementedError

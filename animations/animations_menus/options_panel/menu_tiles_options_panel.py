@@ -1,18 +1,24 @@
 import math
 import pygame
 from animations.animations_menus.constants import (
-    MENU_TILES_SIDE,
-    MENU_TILES_X_SPACING,
-    MENU_TILES_Y_SPACING,
-    MENU_TITLE_TOP_OFFSET,
+    OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+    OPTION_TILE_BACKGROUND_COLOR,
+    OPTION_TILE_BACKGROUND_TRANSPARENCY,
+    OPTION_TILE_SIDE,
+    OPTION_TILE_X_SPACING,
+    OPTION_TILE_Y_SPACING,
+    TITLE_TOP_OFFSET,
 )
-from animations.animations_menus.menu_options_panel import MenuOptionsPanel
-from animations.animations_menus.schemas import (
+from animations.animations_menus.options_panel.menu_options_panel import (
+    MenuOptionsPanel,
+)
+from animations.animations_menus.options_panel.schemas import (
     OptionTileDescription,
 )
+from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from drafter.drafter_base import DrafterBase
+from drafter.utils import blit_surface, draw_axis_aligned_rectangle
 from geometry import Direction, Point, Rectangle
 
 
@@ -22,45 +28,37 @@ class OptionTile:
         tile_description: OptionTileDescription,
         rectangle: Rectangle,
     ):
-        self.image = self.get_image(tile_description["image_path"], rectangle)
-        self.rectangle = rectangle
-        self.on_click_app_screen = tile_description["on_click_app_screen"]
-
-    def get_image(self, image_path: str, rectangle: Rectangle) -> pygame.Surface:
-        original_image = pygame.image.load(image_path)
-        original_image_rect = original_image.get_rect()
-        max_size = rectangle.width
-        scale = min(
-            max_size / original_image_rect.width, max_size / original_image_rect.height
-        )
-        return pygame.transform.scale(
-            original_image,
-            (
-                int(original_image_rect.width * scale),
-                int(original_image_rect.height * scale),
+        self.image = pygame.transform.scale(
+            pygame.image.load(
+                f"{IMAGES_DIR_PATH}/{tile_description['image_file_name']}"
             ),
+            (rectangle.width, rectangle.length),
         )
+        self.rectangle = rectangle
+        self.on_click_app_screen_generator = tile_description[
+            "on_click_app_screen_generator"
+        ]
 
     def render(self, screen: pygame.Surface) -> None:
-        DrafterBase().draw_basic_rectangle(
+        draw_axis_aligned_rectangle(
             screen,
-            "white",
+            OPTION_TILE_BACKGROUND_COLOR,
             self.rectangle.front_left,
             self.rectangle.width,
             self.rectangle.length,
-            border_front_left_radius=20,
-            border_front_right_radius=20,
-            border_rear_left_radius=20,
-            border_rear_right_radius=20,
-            transparency=164,
+            border_front_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_front_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_rear_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_rear_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            transparency=OPTION_TILE_BACKGROUND_TRANSPARENCY,
         )
-        DrafterBase().blit_surface(screen, self.image, self.rectangle.front_left)
+        blit_surface(screen, self.image, self.rectangle.front_left)
 
     def is_clicked(self, mouse_click_point: Point) -> bool:
         return self.rectangle.is_point_inside(mouse_click_point)
 
     def on_click(self) -> ApplicationScreen:
-        return self.on_click_app_screen
+        return self.on_click_app_screen_generator()
 
 
 class MenuTilesOptionsPanel(MenuOptionsPanel):
@@ -68,32 +66,24 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
         self,
         columns_number: int,
         option_tiles_description: list[OptionTileDescription],
-        height: int = SCREEN_HEIGHT,
-        width: int = SCREEN_WIDTH,
-        tile_x_spacing: int = MENU_TILES_X_SPACING,
-        tile_y_spacing: int = MENU_TILES_Y_SPACING,
-        tile_side: int = MENU_TILES_SIDE,
-        title_top_offset: int = MENU_TITLE_TOP_OFFSET,
     ) -> None:
         rows_number = math.ceil(len(option_tiles_description) / columns_number)
         options_panel_height = (
-            rows_number * tile_side + (rows_number - 1) * tile_y_spacing
+            rows_number * OPTION_TILE_SIDE + (rows_number - 1) * OPTION_TILE_Y_SPACING
         )
         self.options_panel = Rectangle(
             Point(
-                width // 2,
-                height
-                - 2 * title_top_offset
-                - (height - 2 * title_top_offset - options_panel_height) // 2,
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT
+                - 2 * TITLE_TOP_OFFSET
+                - (SCREEN_HEIGHT - 2 * TITLE_TOP_OFFSET - options_panel_height) // 2,
             ),
-            columns_number * tile_side + (columns_number - 1) * tile_x_spacing,
+            columns_number * OPTION_TILE_SIDE
+            + (columns_number - 1) * OPTION_TILE_X_SPACING,
             options_panel_height,
             Direction(Point(0, 1)),
         )
         self.columns_number = columns_number
-        self.tile_x_spacing = tile_x_spacing
-        self.tile_y_spacing = tile_y_spacing
-        self.tile_side = tile_side
         self.option_tiles = [
             OptionTile(tile_description, self._calculate_tile_rectangle(tile_index))
             for tile_index, tile_description in enumerate(option_tiles_description)
@@ -104,16 +94,16 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
         row = option_tile_index // self.columns_number
         front_middle_x = (
             self.options_panel.front_left.x
-            + column * (self.tile_side + self.tile_x_spacing)
-            + self.tile_side // 2
+            + column * (OPTION_TILE_SIDE + OPTION_TILE_X_SPACING)
+            + OPTION_TILE_SIDE // 2
         )
         front_middle_y = self.options_panel.front_middle.y - row * (
-            self.tile_side + self.tile_y_spacing
+            OPTION_TILE_SIDE + OPTION_TILE_Y_SPACING
         )
         return Rectangle(
             Point(front_middle_x, front_middle_y),
-            self.tile_side,
-            self.tile_side,
+            OPTION_TILE_SIDE,
+            OPTION_TILE_SIDE,
             Direction(Point(0, 1)),
         )
 

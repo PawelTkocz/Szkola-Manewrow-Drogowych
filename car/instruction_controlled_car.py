@@ -36,26 +36,6 @@ class CarControlInstructions(TypedDict):
 
 
 class InstructionControlledCar(Car):
-    def __init__(
-        self,
-        registry_number: str,
-        model: CarModel,
-        color: str,
-        front_middle_position: Point,
-        direction: Direction = Direction(Point(1, 0)),
-        velocity: float = 0,
-        wheels_direction: Direction = Direction(Point(1, 0)),
-    ):
-        super().__init__(
-            registry_number,
-            model,
-            color,
-            front_middle_position,
-            direction,
-            velocity,
-            wheels_direction,
-        )
-
     def move(
         self, movement_instructions: CarMovementInstructions | None = None
     ) -> None:

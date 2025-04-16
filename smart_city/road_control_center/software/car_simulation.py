@@ -6,10 +6,6 @@ from car.instruction_controlled_car import (
 )
 from car.model import CarModel
 from geometry import Direction, Point, Rectangle
-from schemas import CardinalDirection
-from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
-    IntersectionManoeuvreDescription,
-)
 from smart_city.road_control_center.manoeuvres.track import Track
 from smart_city.schemas import LiveCarData
 import smart_city.smart_city_car as smart_city_car
@@ -28,27 +24,20 @@ class CarSimulation:
         velocity: float,
         model: CarModel,
         *,
-        manoeuvre_description: IntersectionManoeuvreDescription = {
-            "starting_side": CardinalDirection.LEFT,
-            "ending_side": CardinalDirection.RIGHT,
-        },
         registry_number: str = "",
-        color: str = "red",
         high_priority: bool = False,
     ) -> None:
         """
         Initialize car simulation.
         """
         self.car = smart_city_car.SmartCityCar(
-            manoeuvre_description,
             registry_number,
             model,
-            color,
             front_middle,
             direction,
             velocity,
             wheels_direction,
-            high_priority,
+            high_priority=high_priority,
         )
 
     @classmethod
@@ -62,7 +51,6 @@ class CarSimulation:
             live_car_data["live_state"]["velocity"],
             live_car_data["specification"]["model"],
             registry_number=live_car_data["specification"]["registry_number"],
-            color=live_car_data["specification"]["color"],
             high_priority=live_car_data["live_state"]["high_priority"],
         )
 

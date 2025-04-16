@@ -1,10 +1,21 @@
 from pygame import Surface
+from car.schemas import CarColoristics
 from car.turn_signals import TurnSignals
 from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
 from schemas import HorizontalDirection
+
+DEFAULT_CAR_COLORISTICS: CarColoristics = {
+    "bumpers": "#000000",
+    "shell": "#ff0000",
+    "wheels": "#262626",
+    "lights": "#ffc100",
+    "turn_signals": "#ff6500",
+    "side_mirrors": "#000000",
+    "windows": "#000000",
+}
 
 
 class CarBody(Rectangle):
@@ -34,12 +45,14 @@ class Car(CarBody):
         self,
         registry_number: str,
         model: CarModel,
-        color: str,
         front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_direction: Direction = Direction(Point(1, 0)),
-        turn_signal: HorizontalDirection | None = HorizontalDirection.LEFT,
+        turn_signal: HorizontalDirection | None = None,
+        coloristics: CarColoristics = DEFAULT_CAR_COLORISTICS,
+        *,
+        color: str | None = None,
     ):
         """
         Initialize car
@@ -51,7 +64,10 @@ class Car(CarBody):
         self.velocity = velocity
         self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
         self.turn_signals = TurnSignals(model.turn_signals_tick_interval, turn_signal)
-        self._car_drafter = CarDrafter()
+        self.coloristics = coloristics
+        if color:
+            self.coloristics["shell"] = color
+        self._car_drafter = CarDrafter(model, self.coloristics)
 
     @property
     def wheels_angle(self) -> float:
@@ -120,16 +136,14 @@ class Car(CarBody):
         self._slow_down(self.model.resistance)
 
     def draw(
-        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+        self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
     ) -> None:
         self._car_drafter.draw(
-            self.model,
-            self.color,
             self,
             self.wheels_angle,
             self.turn_signals.are_turn_signals_lights_on(),
             screen,
-            scale=scale,
+            scale_factor=scale_factor,
             screen_y_offset=screen_y_offset,
         )
 

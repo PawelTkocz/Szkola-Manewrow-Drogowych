@@ -24,4 +24,4 @@ class LiveCarState(TypedDict):
 class LiveCarData(TypedDict):
     specification: CarSpecification
     live_state: LiveCarState
-    manoeuvre_description: IntersectionManoeuvreDescription
+    manoeuvre_description: IntersectionManoeuvreDescription | None

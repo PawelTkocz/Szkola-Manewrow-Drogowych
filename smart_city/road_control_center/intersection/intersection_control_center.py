@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from car.model import CarModel
+from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
     IntersectionControlCenterSoftware,
@@ -53,6 +53,11 @@ class IntersectionControlCenter(RoadControlCenter):
 
     def register_new_active_car(self, live_car_data: LiveCarData) -> None:
         manoeuvre_description = live_car_data["manoeuvre_description"]
+        if not manoeuvre_description:
+            manoeuvre_description = {
+                "starting_side": CardinalDirection.DOWN,
+                "ending_side": CardinalDirection.UP,
+            }
         manoeuvre = IntersectionManoeuvre(
             live_car_data["specification"]["model"],
             self.intersection,

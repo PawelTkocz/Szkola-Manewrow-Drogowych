@@ -1,6 +1,6 @@
 import pygame
 
-from animations.animations_menus.main_menu import MainMenu
+from animations.animations_menus.interesction_manoeuvres_menus.main_menu import MainMenu
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry import Point
@@ -21,10 +21,9 @@ class IntersectionManoeuvresApplication:
         self.current_app_screen.render_frame(self.screen)
 
     def handle_click(self, mouse_click_position: tuple[float, float]) -> None:
-        new_app_screen = self.current_app_screen.handle_click(
+        self.current_app_screen = self.current_app_screen.handle_click(
             get_pygame_point(Point(*mouse_click_position))
         )
-        self.current_app_screen = new_app_screen or self.current_app_screen
 
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -36,7 +35,6 @@ intersection_manoeuvres_application = IntersectionManoeuvresApplication(
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            intersection_manoeuvres_application.handle_quit()
             pygame.quit()
             exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:

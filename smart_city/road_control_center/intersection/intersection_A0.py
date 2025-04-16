@@ -1,4 +1,4 @@
-from road_segments.intersection import intersection_A0
+from road_segments.intersection.intersection_I0 import IntersectionI0
 from smart_city.road_control_center.intersection.intersection_control_center import (
     IntersectionControlCenter,
 )
@@ -6,6 +6,10 @@ from smart_city.road_control_center.intersection.priority_to_the_right_rule impo
     PriorityToTheRightRule,
 )
 
-intersection_A0_control_center = IntersectionControlCenter(
-    intersection_A0.intersection_A0, PriorityToTheRightRule()
-)
+INTERSECTION = IntersectionI0()
+INTERSECTION_RULES = PriorityToTheRightRule()
+
+
+class IntersectionI0ControlCenter(IntersectionControlCenter):
+    def __init__(self) -> None:
+        super().__init__(INTERSECTION, INTERSECTION_RULES)

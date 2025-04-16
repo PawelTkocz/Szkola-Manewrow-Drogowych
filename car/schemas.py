@@ -15,3 +15,13 @@ class CarPointPosition(TypedDict):
 
 # Position of a car part can be defined as list of points creating polygon
 CarPartPosition: TypeAlias = list[CarPointPosition]
+
+
+class CarColoristics(TypedDict):
+    wheels: str
+    windows: str
+    side_mirrors: str
+    lights: str
+    turn_signals: str
+    bumpers: str
+    shell: str
