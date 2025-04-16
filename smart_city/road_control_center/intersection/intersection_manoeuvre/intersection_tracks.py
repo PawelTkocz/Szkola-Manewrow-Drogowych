@@ -6,9 +6,9 @@ from typing import TypedDict
 from car.model import CarModel
 from car.toyota_yaris import ToyotaYaris
 from geometry import Cooridinates, Direction, Point
-from road_segments.intersection import intersection_A0
 from road_segments.intersection.intersection import Intersection
-from schemas import CardinalDirection, HorizontalDirection, VerticalDirection
+from road_segments.intersection.intersection_I0 import IntersectionI0
+from schemas import CardinalDirection, HorizontalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
@@ -96,11 +96,11 @@ class IntersectionTracks:
             else CardinalDirection.RIGHT
         )
         turn_direction = ending_side_horizontal
-        incoming_lane = self.intersection.intersection_parts["incoming_lines"][
+        incoming_lane = self.intersection.intersection_parts["incoming_lanes"][
             starting_side
         ]
         start_point = incoming_lane.rear_middle
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
             ending_side
         ]
         end_point = outcoming_lane.front_middle.add_vector(
@@ -135,10 +135,10 @@ class IntersectionTracks:
     def calculate_track_from_down_to_up(self) -> ManoeuvreTrack:
         starting_side = CardinalDirection.DOWN
         ending_side = CardinalDirection.UP
-        start_point = self.intersection.intersection_parts["incoming_lines"][
+        start_point = self.intersection.intersection_parts["incoming_lanes"][
             starting_side
         ].rear_middle
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
             ending_side
         ]
         end_point = outcoming_lane.front_middle.add_vector(
@@ -252,5 +252,5 @@ class IntersectionTracks:
         return serialized_track
 
 
-c = IntersectionTracks(intersection_A0.intersection_A0, ToyotaYaris())
+c = IntersectionTracks(IntersectionI0(), ToyotaYaris())
 c.register_tracks()

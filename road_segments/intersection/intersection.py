@@ -1,30 +1,34 @@
 from pygame import Surface
 from drafter.intersection import IntersectionDrafter
 from geometry import Direction, Point, Rectangle
-from road_segments.constants import LANE_WIDTH, SEGMENT_SIDE
-from road_segments.intersection.schemas import IntersectionColors, IntersectionParts
+from road_segments.constants import LANE_WIDTH, ROAD_SEGMENT_SIDE
+from road_segments.intersection.schemas import (
+    IntersectionColoristics,
+    IntersectionParts,
+)
+from road_segments.road_segment import RoadSegment
 from schemas import CardinalDirection
+# mozna dodac linie na skrzozowaniu
+# plus znaki
 
 
-class Intersection:
+class Intersection(RoadSegment):
     def __init__(
         self,
         id: str,
-        intersection_colors: IntersectionColors,
+        colorisitcs: IntersectionColoristics,
     ):
         self.id = id
         self.lane_width = LANE_WIDTH
-        self.intersection_colors = intersection_colors
+        self.colorisitcs = colorisitcs
         self.area = Rectangle(
-            Point(SEGMENT_SIDE / 2, SEGMENT_SIDE),
-            SEGMENT_SIDE,
-            SEGMENT_SIDE,
+            Point(ROAD_SEGMENT_SIDE / 2, ROAD_SEGMENT_SIDE),
+            ROAD_SEGMENT_SIDE,
+            ROAD_SEGMENT_SIDE,
             Direction(Point(0, 1)),
         )
         self.intersection_parts = self._calculate_intersection_parts()
-        self.drafter = IntersectionDrafter(
-            self.intersection_parts, self.intersection_colors
-        )
+        self.drafter = IntersectionDrafter(self.intersection_parts, self.colorisitcs)
 
     def _calculate_intersection_parts(self) -> IntersectionParts:
         lane_width = self.lane_width
@@ -39,7 +43,7 @@ class Intersection:
                 street_width,
                 Direction(Point(0, 1)),
             ),
-            "incoming_lines": {
+            "incoming_lanes": {
                 CardinalDirection.UP: Rectangle(
                     Point(area_center.x - lane_width / 2, area_center.y + lane_width),
                     lane_width,
@@ -65,7 +69,7 @@ class Intersection:
                     Direction(Point(1, 0)),
                 ),
             },
-            "outcoming_lines": {
+            "outcoming_lanes": {
                 CardinalDirection.UP: Rectangle(
                     Point(area_center.x + lane_width / 2, area.length),
                     lane_width,
@@ -94,6 +98,8 @@ class Intersection:
         }
 
     def draw(
-        self, screen: Surface, *, scale: float = 1, screen_y_offset: int = 0
+        self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
     ) -> None:
-        self.drafter.draw(screen, scale=scale, screen_y_offset=screen_y_offset)
+        self.drafter.draw(
+            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
+        )

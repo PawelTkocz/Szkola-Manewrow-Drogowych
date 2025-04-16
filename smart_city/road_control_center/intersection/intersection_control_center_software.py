@@ -6,7 +6,6 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 
-from geometry import Point
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
@@ -279,7 +278,7 @@ class IntersectionControlCenterSoftware:
             "manoeuvre"
         ].manoeuvre_description
         intersection_area = self.intersection.intersection_parts["intersection_area"]
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
             manoeuvre_description["ending_side"]
         ]
         return car_simulation.collides(intersection_area) or car_simulation.collides(
@@ -295,7 +294,7 @@ class IntersectionControlCenterSoftware:
             "manoeuvre"
         ].manoeuvre_description
         intersection_area = self.intersection.intersection_parts["intersection_area"]
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lines"][
+        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
             manoeuvre_description["ending_side"]
         ]
         return not car_simulation.collides(
@@ -331,7 +330,7 @@ class IntersectionControlCenterSoftware:
             )
             or any(
                 car["car_simulation"].collides(
-                    self.intersection.intersection_parts["incoming_lines"][
+                    self.intersection.intersection_parts["incoming_lanes"][
                         car["car_manoeuvre_info"]["manoeuvre"].manoeuvre_description[
                             "starting_side"
                         ]

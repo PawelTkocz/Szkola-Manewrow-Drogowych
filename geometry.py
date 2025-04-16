@@ -101,6 +101,9 @@ class Point:
     def to_dict(self) -> Cooridinates:
         return {"x": self.x, "y": self.y}
 
+    def to_tuple(self) -> tuple[float, float]:
+        return (self.x, self.y)
+
 
 class Vector(Point):
     """
@@ -174,6 +177,17 @@ class Vector(Point):
         Scale the vector to the length of 1
         """
         return self.scale_to_len(1)
+
+    def add_vector(self, vector: "Vector") -> "Vector":
+        """
+        Add vector to vector
+
+        :param vector: Vector to add
+        :return: sum of vectors
+        """
+        self.x += vector.x
+        self.y += vector.y
+        return self
 
     def copy(self) -> "Vector":
         """

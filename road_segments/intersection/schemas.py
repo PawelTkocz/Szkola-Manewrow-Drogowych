@@ -6,11 +6,11 @@ from schemas import CardinalDirection
 
 class IntersectionParts(TypedDict):
     intersection_area: Rectangle
-    incoming_lines: dict[CardinalDirection, Rectangle]
-    outcoming_lines: dict[CardinalDirection, Rectangle]
+    incoming_lanes: dict[CardinalDirection, Rectangle]
+    outcoming_lanes: dict[CardinalDirection, Rectangle]
 
 
-class IntersectionColors(TypedDict):
-    street_color: str
-    pavement_color: str
-    lines_color: str
+class IntersectionColoristics(TypedDict):
+    street: str
+    pavement: str
+    lines: str
