@@ -67,7 +67,7 @@ class IntersectionDrafter:
         draw_axis_aligned_rectangle(
             screen,
             pavement_color,
-            incoming_lanes[CardinalDirection.DOWN].front_left,
+            incoming_lanes[CardinalDirection.DOWN].front_right,
             outcoming_lanes[CardinalDirection.LEFT].length,
             outcoming_lanes[CardinalDirection.DOWN].length,
             scale_factor=scale_factor,

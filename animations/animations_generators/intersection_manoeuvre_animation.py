@@ -28,6 +28,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ):
+        self.intersection = intersection
         control_instructions_dir_path = os.path.join(
             CONTROL_INSTRUCTIONS_DIR,
             intersection.id,
@@ -54,7 +55,6 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
             traffic_control_center,
             previous_app_screen=previous_app_screen,
         )
-        self.intersection = intersection
 
     def get_starting_position(
         self, manoeuvre_description: IntersectionManoeuvreDescription
