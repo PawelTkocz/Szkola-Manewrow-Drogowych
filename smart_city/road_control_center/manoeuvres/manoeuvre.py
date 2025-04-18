@@ -92,7 +92,7 @@ class Manoeuvre:
     ) -> bool:
         car_simulation = CarSimulation.from_live_car_data(live_car_data)
         if car_control_instructions:
-            car_simulation.move(car_control_instructions)
+            car_simulation.move(car_control_instructions["movement_instructions"])
         if car_simulation.collides(zone):
             return False
         while car_simulation.velocity > 0:
@@ -102,12 +102,9 @@ class Manoeuvre:
             )
             car_simulation.move(
                 {
-                    "movement_instructions": {
-                        "speed_instruction": speed_instruction,
-                        "turn_instruction": turn_instruction,
-                    },
-                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
-                }
+                    "speed_instruction": speed_instruction,
+                    "turn_instruction": turn_instruction,
+                },
             )
             if car_simulation.collides(zone):
                 return False
@@ -125,7 +122,7 @@ class Manoeuvre:
         current_live_car_data = live_car_data
         time = 0
         if car_control_instructions:
-            car_simulation.move(car_control_instructions)
+            car_simulation.move(car_control_instructions["movement_instructions"])
             current_live_car_data = car_simulation.get_live_data()
             time += 1
 
@@ -134,7 +131,7 @@ class Manoeuvre:
             control_instructions = self.get_car_control_instructions(
                 current_live_car_data
             )
-            car_simulation.move(control_instructions)
+            car_simulation.move(control_instructions["movement_instructions"])
             current_live_car_data = car_simulation.get_live_data()
             time += 1
         return {"time_to_enter_zone": time, "live_car_data": previous_live_car_data}

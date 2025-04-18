@@ -239,7 +239,9 @@ class IntersectionControlCenterSoftware:
             ),
             "car_manoeuvre_info": cars_manoeuvre_info[registry_number],
         }
-        car_simulation["car_simulation"].move(car_control_instructions)
+        car_simulation["car_simulation"].move(
+            car_control_instructions["movement_instructions"]
+        )
         for car in priority_cars:
             self._move_car_simulation(car)
         while not self.has_car_crossed_intersection(car_simulation):
@@ -294,7 +296,7 @@ class IntersectionControlCenterSoftware:
         car_control_instructions = self.follow_track_movement_instruction(
             car_simulation.get_live_data(), manoeuvre
         )
-        car_simulation.move(car_control_instructions)
+        car_simulation.move(car_control_instructions["movement_instructions"])
 
     def _priority_violation(
         self,
@@ -309,7 +311,7 @@ class IntersectionControlCenterSoftware:
                 for car in priority_cars_closing_to_intersection
             )
             or any(
-                car_["car_simulation"].collides(car["car_simulation"].car)
+                car_["car_simulation"].collides(car["car_simulation"].body)
                 for car_ in priority_cars_crossing_intersection
             )
             or any(

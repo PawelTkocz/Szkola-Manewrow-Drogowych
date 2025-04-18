@@ -1,8 +1,7 @@
 from car.instruction_controlled_car import (
-    CarControlInstructions,
+    CarMovementInstructions,
     SpeedInstruction,
     TurnInstruction,
-    TurnSignalsInstruction,
 )
 from smart_city.road_control_center.manoeuvres.track import Track
 from smart_city.road_control_center.car_simulation import CarSimulation
@@ -18,12 +17,9 @@ def get_turn_instruction(
         car_simulation = CarSimulation.from_live_car_data(live_car_data)
         car_simulation.move(
             {
-                "movement_instructions": {
-                    "speed_instruction": speed_instruction,
-                    "turn_instruction": turn_instruction,
-                },
-                "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
-            }
+                "speed_instruction": speed_instruction,
+                "turn_instruction": turn_instruction,
+            },
         )
         return track.get_distance_to_point(car_simulation.front_middle)
 
@@ -33,8 +29,8 @@ def get_turn_instruction(
 
 
 def get_predicted_live_car_data(
-    live_car_data: LiveCarData, car_control_instructions: CarControlInstructions
+    live_car_data: LiveCarData, movement_instructions: CarMovementInstructions
 ) -> LiveCarData:
     car_simulation = CarSimulation.from_live_car_data(live_car_data)
-    car_simulation.move(car_control_instructions)
+    car_simulation.move(movement_instructions)
     return car_simulation.get_live_data()

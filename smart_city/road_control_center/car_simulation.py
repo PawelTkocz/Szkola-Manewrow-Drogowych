@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import (
-    CarControlInstructions,
+    CarMovementInstructions,
 )
 from car.model import CarModel
 from geometry import Direction, Point, Rectangle
@@ -26,7 +26,7 @@ class CarSimulation:
         """
         Initialize car simulation.
         """
-        self.car = smart_city_car.SmartCityCar(
+        self._car = smart_city_car.SmartCityCar(
             registry_number,
             model,
             front_middle,
@@ -51,22 +51,33 @@ class CarSimulation:
         )
 
     def get_live_data(self) -> LiveCarData:
-        return self.car.get_live_data()
+        return self._car.get_live_data()
 
-    def move(self, control_instructions: CarControlInstructions | None = None) -> None:
-        if control_instructions:
-            self.car._apply_movement_instructions(
-                control_instructions["movement_instructions"]
-            )
-        self.car.move()
+    def move(
+        self, movement_instructions: CarMovementInstructions | None = None
+    ) -> None:
+        if movement_instructions:
+            self._car._apply_movement_instructions(movement_instructions)
+        self._car.move()
 
     def collides(self, obj: Rectangle) -> bool:
-        return self.car.collides(obj)
+        return self._car.collides(obj)
+
+    def is_point_inside(self, point: Point) -> bool:
+        return self._car.is_point_inside(point)
 
     @property
     def velocity(self) -> float:
-        return self.car.velocity
+        return self._car.velocity
 
     @property
     def front_middle(self) -> Point:
-        return self.car.front_middle
+        return self._car.front_middle
+
+    @property
+    def max_velocity(self) -> float:
+        return self._car.model.max_velocity
+
+    @property
+    def body(self) -> Rectangle:
+        return self._car

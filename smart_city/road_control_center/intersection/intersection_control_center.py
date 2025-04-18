@@ -1,4 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
+from car.model import CarModel
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
@@ -28,7 +29,7 @@ class IntersectionControlCenter(RoadControlCenter):
         self.intersection = intersection
         self.cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo] = {}
 
-    def calculate_movement_instruction(
+    def calculate_control_instructions(
         self, registry_number: str
     ) -> CarControlInstructions:  # decide when to turn on/off turn signal
         if registry_number not in self.cars_manoeuvre_info:
@@ -68,3 +69,9 @@ class IntersectionControlCenter(RoadControlCenter):
             "manoeuvre": manoeuvre,
             "manoeuvre_status": {"can_safely_cross_intersection": False},
         }
+
+    def register_car_model(self, car_model: CarModel) -> bool:
+        return True
+
+    def register_tracks(self) -> bool:
+        return True
