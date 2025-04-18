@@ -43,6 +43,11 @@ class RoadSegmentAnimation(ApplicationScreen):
                 cars_descriptions, control_instructions_dir_path, traffic_control_center
             )
         )
+        # can pass here road_control_center and create traffic_control_center
+        for car_model in {
+            car_description["model"] for car_description in cars_descriptions
+        }:
+            traffic_control_center.register_car_model(car_model)
         self.scale_factor = SCREEN_WIDTH / ROAD_SEGMENT_SIDE
         self.screen_y_offset = int(
             (SCREEN_HEIGHT - ROAD_SEGMENT_SIDE * self.scale_factor) // 2

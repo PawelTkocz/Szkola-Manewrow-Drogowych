@@ -1,4 +1,6 @@
 from car.instruction_controlled_car import CarControlInstructions
+from car.model import CarModel
+from geometry import Rectangle
 from smart_city.road_control_center.road_car_controller import RoadCarController
 from smart_city.road_control_center.software.car_movement_simulator import (
     get_predicted_live_car_data,
@@ -7,10 +9,14 @@ from smart_city.schemas import LiveCarData
 
 
 class RoadControlCenter(RoadCarController):
-    def __init__(self) -> None:
+    def __init__(self, area: Rectangle) -> None:
         self.time = 0
         self.live_cars_data: dict[str, LiveCarData] = {}
         self._predicted_live_cars_data: dict[str, LiveCarData] = {}
+        self.area = area
+
+    def is_car_inside_control_area(self, live_car_data: LiveCarData) -> bool:
+        return self.area.is_point_inside(live_car_data["live_state"]["front_middle"])
 
     def tick(self, current_time: int) -> None:
         self._time = current_time
@@ -30,3 +36,6 @@ class RoadControlCenter(RoadCarController):
             live_car_data, movement_instruction
         )
         return movement_instruction
+
+    def register_car_model(self, car_model: CarModel) -> bool:
+        return True

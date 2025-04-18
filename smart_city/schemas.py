@@ -10,7 +10,6 @@ from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas 
 class CarSpecification(TypedDict):
     registry_number: str
     model: CarModel
-    color: str
 
 
 class LiveCarState(TypedDict):
