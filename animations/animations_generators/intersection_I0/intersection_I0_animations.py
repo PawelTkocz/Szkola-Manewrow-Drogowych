@@ -9,9 +9,6 @@ from smart_city.road_control_center.intersection.intersection_A0 import (
 )
 from smart_city.traffic_control_center import TrafficControlCenter
 
-INTERSECTION = IntersectionI0()
-TRAFFIC_CONTROL_CENTER = TrafficControlCenter(IntersectionI0ControlCenter())
-
 
 class IntersectionI0Animation(IntersectionManoeuvreAnimation):
     def __init__(
@@ -22,9 +19,9 @@ class IntersectionI0Animation(IntersectionManoeuvreAnimation):
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
         super().__init__(
-            INTERSECTION,
+            IntersectionI0(),
             cars_descriptions,
             manoeuvre_control_instructions_dir_name,
-            TRAFFIC_CONTROL_CENTER,
+            TrafficControlCenter(IntersectionI0ControlCenter()),
             previous_app_screen=previous_app_screen,
         )
