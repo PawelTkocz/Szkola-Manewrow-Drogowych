@@ -10,6 +10,9 @@ from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_trac
 from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
     TrackSegmentType,
 )
+from smart_city.road_control_center.software.car_movement_simulator import (
+    get_turn_instruction,
+)
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 
 
@@ -113,8 +116,10 @@ class ManoeuvreTrackPreprocessor(ABC):
                 {
                     "movement_instructions": {
                         "speed_instruction": speed_instruction,
-                        "turn_instruction": car_simulation.get_turn_instruction(
-                            manoeuvre_track, speed_instruction
+                        "turn_instruction": get_turn_instruction(
+                            manoeuvre_track,
+                            car_simulation.get_live_data(),
+                            speed_instruction,
                         ),
                     },
                     "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,

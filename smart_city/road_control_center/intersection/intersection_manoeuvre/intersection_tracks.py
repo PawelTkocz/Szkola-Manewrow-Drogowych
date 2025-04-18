@@ -252,5 +252,5 @@ class IntersectionTracks:
         return serialized_track
 
 
-c = IntersectionTracks(IntersectionI0(), ToyotaYaris())
-c.register_tracks()
+# c = IntersectionTracks(IntersectionI0(), ToyotaYaris())
+# c.register_tracks()

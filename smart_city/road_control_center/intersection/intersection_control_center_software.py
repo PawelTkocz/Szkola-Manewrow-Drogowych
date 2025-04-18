@@ -17,8 +17,7 @@ from smart_city.road_control_center.intersection.intersection_manoeuvre.intersec
     IntersectionManoeuvre,
 )
 from smart_city.road_control_center.software.car_movement_simulator import (
-    can_stop_before_zone,
-    get_status_before_entering_zone,
+    get_turn_instruction,
 )
 from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
@@ -48,10 +47,7 @@ class IntersectionControlCenterSoftware:
     def follow_track_movement_instruction(
         self, live_car_data: LiveCarData, manoeuvre: IntersectionManoeuvre
     ) -> CarControlInstructions:
-        current_phase = manoeuvre.get_current_phase()
-        if not current_phase:
-            return self.get_default_movement_instruction()
-        return current_phase.get_car_control_instructions(live_car_data)
+        return manoeuvre.get_car_control_instructions(live_car_data)
 
     def approach_intersection_movement_instruction(
         self,
@@ -61,14 +57,8 @@ class IntersectionControlCenterSoftware:
         time: int,
     ) -> CarControlInstructions:
         live_car_data = live_cars_data[registry_number]
-        current_phase = cars_manoeuvre_info[registry_number][
-            "manoeuvre"
-        ].get_current_phase()
-        if not current_phase:
-            return self.get_default_movement_instruction()
-        car_control_instructions = current_phase.get_car_control_instructions(
-            live_car_data
-        )
+        manoeuvre = cars_manoeuvre_info[registry_number]["manoeuvre"]
+        car_control_instructions = manoeuvre.get_car_control_instructions(live_car_data)
         safe_speed_instruction = car_control_instructions["movement_instructions"][
             "speed_instruction"
         ]
@@ -82,9 +72,9 @@ class IntersectionControlCenterSoftware:
             car_control_instructions = {
                 "movement_instructions": {
                     "speed_instruction": speed_instruction,
-                    "turn_instruction": CarSimulation.from_live_car_data(
-                        live_car_data
-                    ).get_turn_instruction(current_phase.track, speed_instruction),
+                    "turn_instruction": get_turn_instruction(
+                        manoeuvre.track, live_car_data, speed_instruction
+                    ),
                 },
                 "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
             }
@@ -99,9 +89,9 @@ class IntersectionControlCenterSoftware:
         return {
             "movement_instructions": {
                 "speed_instruction": SpeedInstruction.BRAKE,
-                "turn_instruction": CarSimulation.from_live_car_data(
-                    live_car_data
-                ).get_turn_instruction(current_phase.track, SpeedInstruction.BRAKE),
+                "turn_instruction": get_turn_instruction(
+                    manoeuvre.track, live_car_data, SpeedInstruction.BRAKE
+                ),
             },
             "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
@@ -116,14 +106,10 @@ class IntersectionControlCenterSoftware:
     ) -> bool:
         live_car_data = live_cars_data[registry_number]
         manoeuvre_info = cars_manoeuvre_info[registry_number]
-        current_phase = manoeuvre_info["manoeuvre"].get_current_phase()
-        if not current_phase:
-            return False
-        if can_stop_before_zone(
+        if manoeuvre_info["manoeuvre"].can_stop_before_zone(
             live_car_data,
-            current_phase,
             self.intersection.intersection_parts["intersection_area"],
-            car_control_instructions,
+            car_control_instructions=car_control_instructions,
         ):
             return True
         can_safely_cross_the_intersection = self.can_safely_cross_the_intersection(
@@ -148,14 +134,12 @@ class IntersectionControlCenterSoftware:
     ) -> bool:
         manoeuvre_info = cars_manoeuvre_info[registry_number]
         live_car_data = live_cars_data[registry_number]
-        current_phase = manoeuvre_info["manoeuvre"].get_current_phase()
-        if not current_phase:
-            return False
-        entering_intersection_status = get_status_before_entering_zone(
+        entering_intersection_status = manoeuvre_info[
+            "manoeuvre"
+        ].get_status_before_entering_zone(
             live_car_data,
-            current_phase,
             self.intersection.intersection_parts["intersection_area"],
-            car_control_instructions,
+            car_control_instructions=car_control_instructions,
         )
         entering_intersection_time = (
             entering_intersection_status["time_to_enter_zone"] + time

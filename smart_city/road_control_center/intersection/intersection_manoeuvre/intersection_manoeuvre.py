@@ -8,9 +8,6 @@ from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas 
     IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.manoeuvres.manoeuvre import Manoeuvre
-from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
-
-# stop point should be passed when calculating track (with max velocities) for manoeuvre phase
 
 
 class IntersectionManoeuvre(Manoeuvre):
@@ -23,11 +20,7 @@ class IntersectionManoeuvre(Manoeuvre):
         self.intersection = intersection
         self.manoeuvre_description = manoeuvre_description
         super().__init__(
-            [
-                ManoeuvrePhase(
-                    IntersectionTracks(intersection, model).get_track_points_data(
-                        manoeuvre_description
-                    )
-                )
-            ]
+            IntersectionTracks(intersection, model).get_track_points_data(
+                manoeuvre_description
+            )
         )
