@@ -69,7 +69,8 @@ class PlaybackAnimation(AnimationStrategy):
             control_instructions = car["control_instructions"][
                 control_instructions_index
             ]
-            car["car"].tick(control_instructions)
+            car["car"].apply_control_instructions(control_instructions)
+            car["car"].tick()
         self.frame_number += 1
         return [car["car"] for car in self.cars]
 

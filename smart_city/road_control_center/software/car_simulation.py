@@ -58,11 +58,11 @@ class CarSimulation:
         return self.car.get_live_data()
 
     def move(self, control_instructions: CarControlInstructions | None = None) -> None:
-        self.car.move(
-            control_instructions["movement_instructions"]
-            if control_instructions
-            else None
-        )
+        if control_instructions:
+            self.car._apply_movement_instructions(
+                control_instructions["movement_instructions"]
+            )
+        self.car.move()
 
     def collides(self, obj: Rectangle) -> bool:
         return self.car.collides(obj)
