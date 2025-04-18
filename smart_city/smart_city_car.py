@@ -43,16 +43,24 @@ class SmartCityCar(InstructionControlledCar):
         self.high_priority = high_priority
         self.manoeuvre_description: IntersectionManoeuvreDescription | None = None
         self.traffic_control_center: TrafficControlCenter | None = None
+        self.control_instructions_history: list[CarControlInstructions] = []
 
     def set_manoeuvre(
         self, manoeuvre_description: IntersectionManoeuvreDescription
     ) -> None:
         self.manoeuvre_description = manoeuvre_description
 
-    def tick(self) -> CarControlInstructions | None:
-        movement_instruction = self.fetch_movement_instruction()
-        super().tick(movement_instruction)
-        return movement_instruction
+    def apply_control_instructions(
+        self, control_instructions: CarControlInstructions
+    ) -> None:
+        self.control_instructions_history.append(control_instructions)
+        return super().apply_control_instructions(control_instructions)
+
+    def tick(self) -> None:
+        control_instructions = self.fetch_movement_instruction()
+        if control_instructions:
+            self.apply_control_instructions(control_instructions)
+        super().tick()
 
     def connect_to_traffic_control_center(
         self, traffic_control_center: TrafficControlCenter

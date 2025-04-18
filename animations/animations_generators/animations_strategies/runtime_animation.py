@@ -22,7 +22,6 @@ from smart_city.traffic_control_center import (
 
 class RuntimeAnimationCarInfo(TypedDict):
     car: SmartCityCar
-    control_instructions: list[CarControlInstructions]
     start_frame_number: int
 
 
@@ -39,7 +38,6 @@ class RuntimeAnimation(AnimationStrategy):
             {
                 "car": self._generate_car(car_description),
                 "start_frame_number": car_description["start_frame_number"],
-                "control_instructions": [],
             }
             for car_description in cars_descriptions
         ]
@@ -65,9 +63,7 @@ class RuntimeAnimation(AnimationStrategy):
         for car in self.cars:
             if self.frame_number < car["start_frame_number"]:
                 continue
-            control_instructions = car["car"].tick()
-            if control_instructions:
-                car["control_instructions"].append(control_instructions)
+            car["car"].tick()
         self.frame_number += 1
         return [car["car"] for car in self.cars]
 
@@ -103,7 +99,9 @@ class RuntimeAnimation(AnimationStrategy):
             )
             with open(file_path, "w") as file:
                 json.dump(
-                    self._serialize_control_instructions(car["control_instructions"]),
+                    self._serialize_control_instructions(
+                        car["car"].control_instructions_history
+                    ),
                     file,
                     indent=4,
                 )

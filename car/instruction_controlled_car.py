@@ -1,8 +1,7 @@
 from enum import Enum
 from typing import TypedDict
 from car.car import Car
-from car.model import CarModel
-from geometry import Direction, Directions, Point
+from geometry import Directions
 from schemas import HorizontalDirection
 
 
@@ -36,22 +35,13 @@ class CarControlInstructions(TypedDict):
 
 
 class InstructionControlledCar(Car):
-    def move(
-        self, movement_instructions: CarMovementInstructions | None = None
+    def apply_control_instructions(
+        self, control_instructions: CarControlInstructions
     ) -> None:
-        if movement_instructions:
-            self._apply_movement_instructions(movement_instructions)
-        super().move()
-
-    def tick(self, control_instructions: CarControlInstructions | None = None) -> None:
-        if control_instructions:
-            self.move(control_instructions["movement_instructions"])
-            self._apply_turn_signal_instruction(
-                control_instructions["turn_signals_instruction"]
-            )
-        else:
-            self.move()
-        self.turn_signals.tick()
+        self._apply_movement_instructions(control_instructions["movement_instructions"])
+        self._apply_turn_signal_instruction(
+            control_instructions["turn_signals_instruction"]
+        )
 
     def _apply_movement_instructions(
         self, movement_instruction: CarMovementInstructions
