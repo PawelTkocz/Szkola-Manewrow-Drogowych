@@ -4,16 +4,16 @@ from car.instruction_controlled_car import SpeedInstruction, TurnSignalsInstruct
 from car.model import CarModel
 from geometry import Point
 from smart_city.road_control_center.manoeuvres.schemas import TrackPointData, TurnSignal
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
     TrackSegmentType,
 )
-from smart_city.road_control_center.software.car_movement_simulator import (
+from smart_city.road_control_center.utils import (
     get_turn_instruction,
 )
-from smart_city.road_control_center.software.car_simulation import CarSimulation
+from smart_city.road_control_center.car_simulation import CarSimulation
 
 
 class ManoeuvreTrackPreprocessor(ABC):

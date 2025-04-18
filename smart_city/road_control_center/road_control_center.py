@@ -2,7 +2,7 @@ from car.instruction_controlled_car import CarControlInstructions
 from car.model import CarModel
 from geometry import Rectangle
 from smart_city.road_control_center.road_car_controller import RoadCarController
-from smart_city.road_control_center.software.car_movement_simulator import (
+from smart_city.road_control_center.utils import (
     get_predicted_live_car_data,
 )
 from smart_city.schemas import LiveCarData
