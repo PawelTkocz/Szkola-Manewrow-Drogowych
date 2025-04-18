@@ -57,9 +57,14 @@ class SmartCityCar(InstructionControlledCar):
         return super().apply_control_instructions(control_instructions)
 
     def tick(self) -> None:
-        control_instructions = self.fetch_movement_instruction()
-        if control_instructions:
-            self.apply_control_instructions(control_instructions)
+        if self.traffic_control_center:
+            control_instructions = (
+                self.traffic_control_center.send_movement_instruction(
+                    self.get_live_data()
+                )
+            )
+            if control_instructions:
+                self.apply_control_instructions(control_instructions)
         super().tick()
 
     def connect_to_traffic_control_center(
@@ -67,18 +72,10 @@ class SmartCityCar(InstructionControlledCar):
     ) -> None:
         self.traffic_control_center = traffic_control_center
 
-    def fetch_movement_instruction(self) -> CarControlInstructions | None:
-        return (
-            self.traffic_control_center.send_movement_instruction(self.get_live_data())
-            if self.traffic_control_center
-            else None
-        )
-
     def get_live_data(self) -> LiveCarData:
         return {
             "specification": {
                 "registry_number": self.registry_number,
-                "color": self.coloristics["shell"],
                 "model": self.model,
             },
             "live_state": {
