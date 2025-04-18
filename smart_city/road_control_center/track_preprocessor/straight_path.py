@@ -1,7 +1,7 @@
 import numpy as np
 from geometry import Point
 from smart_city.road_control_center.manoeuvres.schemas import TrackPath
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
     TrackSegmentType,
 )

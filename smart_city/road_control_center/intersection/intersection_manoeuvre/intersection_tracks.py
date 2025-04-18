@@ -4,27 +4,23 @@ import math
 import os
 from typing import TypedDict
 from car.model import CarModel
-from car.toyota_yaris import ToyotaYaris
 from geometry import Cooridinates, Direction, Point
 from road_segments.intersection.intersection import Intersection
-from road_segments.intersection.intersection_I0 import IntersectionI0
 from schemas import CardinalDirection, HorizontalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
     IntersectionManoeuvreDescription,
 )
 from smart_city.road_control_center.manoeuvres.schemas import TrackPointData, TurnSignal
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
     TrackSegmentType,
 )
-from smart_city.road_control_center.manoeuvres.track_preprocessor.right_angle_turn import (
+from smart_city.road_control_center.track_preprocessor.right_angle_turn import (
     RightAngleTurn,
 )
-from smart_city.road_control_center.manoeuvres.track_preprocessor.straight_path import (
-    StraightPath,
-)
+from smart_city.road_control_center.track_preprocessor.straight_path import StraightPath
 
 EXPECTED_MIN_TURN_VELOCITY = 2
 

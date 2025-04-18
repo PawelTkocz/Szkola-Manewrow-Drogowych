@@ -1,10 +1,10 @@
 from typing import TypedDict
 
 from smart_city.road_control_center.manoeuvres.track import Track
-from smart_city.road_control_center.manoeuvres.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
 )
-from smart_city.road_control_center.manoeuvres.track_preprocessor.schemas import (
+from smart_city.road_control_center.track_preprocessor.schemas import (
     ManoeuvreStartCarState,
 )
 

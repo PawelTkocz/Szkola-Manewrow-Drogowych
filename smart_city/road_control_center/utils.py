@@ -5,11 +5,10 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from smart_city.road_control_center.manoeuvres.track import Track
-from smart_city.road_control_center.software.car_simulation import CarSimulation
+from smart_city.road_control_center.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
 
-# rename to utils
 def get_turn_instruction(
     track: Track, live_car_data: LiveCarData, speed_instruction: SpeedInstruction
 ) -> TurnInstruction:
