@@ -1,4 +1,19 @@
-from smart_city.road_control_center.manoeuvres.manoeuvre_phase import ManoeuvrePhase
+from car.instruction_controlled_car import (
+    CarControlInstructions,
+    SpeedInstruction,
+    TurnSignalsInstruction,
+)
+from geometry import Rectangle
+from smart_city.road_control_center.manoeuvres.schemas import (
+    EnteringZoneStatus,
+    TrackPointData,
+    TurnSignal,
+)
+from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.software.car_movement_simulator import (
+    get_turn_instruction,
+)
+from smart_city.road_control_center.software.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
 
@@ -7,23 +22,119 @@ class Manoeuvre:
     Class representing manoeuvre
     """
 
-    def __init__(self, phases: list[ManoeuvrePhase]):
-        self.phases = phases
-        self.current_phase_index = 0
-
-    def get_current_phase(self) -> ManoeuvrePhase | None:
-        return (
-            self.phases[self.current_phase_index]
-            if self.current_phase_index < len(self.phases)
-            else None
+    def __init__(
+        self,
+        track_points_data: list[TrackPointData],
+    ):
+        self.track = Track(
+            [point_data["point"].to_tuple() for point_data in track_points_data]
         )
+        self.max_safe_velocities = [
+            point_data["max_safe_velocity"] for point_data in track_points_data
+        ]
+        self.turn_signals = [
+            point_data["turn_signal"] for point_data in track_points_data
+        ]
 
-    def update_current_phase(self, live_car_data: LiveCarData) -> None:
-        current_phase = self.get_current_phase()
-        if not current_phase:
-            return
-        if current_phase.is_phase_over(
-            live_car_data["live_state"]["front_middle"],
-            live_car_data["live_state"]["velocity"],
+    def get_car_control_instructions(
+        self, live_car_data: LiveCarData
+    ) -> CarControlInstructions:
+        track_point_index = self.track.find_index_of_closest_point(
+            live_car_data["live_state"]["front_middle"]
+        )
+        speed_instruction = self._get_speed_instruction(
+            track_point_index, live_car_data
+        )
+        turn_signal_instruction = self._get_turn_singal_instruction(track_point_index)
+
+        return {
+            "movement_instructions": {
+                "speed_instruction": speed_instruction,
+                "turn_instruction": get_turn_instruction(
+                    self.track, live_car_data, speed_instruction
+                ),
+            },
+            "turn_signals_instruction": turn_signal_instruction,
+        }
+
+    def _get_speed_instruction(
+        self, track_point_index: int, live_car_data: LiveCarData
+    ) -> SpeedInstruction:
+        max_safe_velocity = self.max_safe_velocities[track_point_index]
+        current_velocity = live_car_data["live_state"]["velocity"]
+        speed_instruction = SpeedInstruction.NO_CHANGE
+        if current_velocity > max_safe_velocity:
+            speed_instruction = SpeedInstruction.BRAKE
+        elif (
+            current_velocity + live_car_data["specification"]["model"].max_acceleration
+            < max_safe_velocity
         ):
-            self.current_phase_index += 1
+            speed_instruction = SpeedInstruction.ACCELERATE_FRONT
+        return speed_instruction
+
+    def _get_turn_singal_instruction(
+        self, track_point_index: int
+    ) -> TurnSignalsInstruction:
+        turn_signal = self.turn_signals[track_point_index]
+        turn_signal_instruction = TurnSignalsInstruction.NO_SIGNALS_ON
+        if turn_signal == TurnSignal.LEFT_SIGNAL:
+            turn_signal_instruction = TurnSignalsInstruction.LEFT_SIGNAL_ON
+        elif turn_signal == TurnSignal.RIGHT_SIGNAL:
+            turn_signal_instruction = TurnSignalsInstruction.RIGHT_SIGNAL_ON
+        return turn_signal_instruction
+
+    def can_stop_before_zone(
+        self,
+        live_car_data: LiveCarData,
+        zone: Rectangle,
+        *,
+        car_control_instructions: CarControlInstructions | None = None,
+    ) -> bool:
+        car_simulation = CarSimulation.from_live_car_data(live_car_data)
+        if car_control_instructions:
+            car_simulation.move(car_control_instructions)
+        if car_simulation.collides(zone):
+            return False
+        while car_simulation.velocity > 0:
+            speed_instruction = SpeedInstruction.BRAKE
+            turn_instruction = get_turn_instruction(
+                self.track, car_simulation.get_live_data(), speed_instruction
+            )
+            car_simulation.move(
+                {
+                    "movement_instructions": {
+                        "speed_instruction": speed_instruction,
+                        "turn_instruction": turn_instruction,
+                    },
+                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
+                }
+            )
+            if car_simulation.collides(zone):
+                return False
+        return True
+
+    def get_status_before_entering_zone(
+        self,
+        live_car_data: LiveCarData,
+        zone: Rectangle,
+        *,
+        car_control_instructions: CarControlInstructions,
+    ) -> EnteringZoneStatus:
+        car_simulation = CarSimulation.from_live_car_data(live_car_data)
+        previous_live_car_data = live_car_data
+        current_live_car_data = live_car_data
+        time = 0
+        if car_control_instructions:
+            car_simulation.move(car_control_instructions)
+            current_live_car_data = car_simulation.get_live_data()
+            time += 1
+
+        while not car_simulation.collides(zone):
+            previous_live_car_data = current_live_car_data
+            control_instructions = self.get_car_control_instructions(
+                current_live_car_data
+            )
+            car_simulation.move(control_instructions)
+            current_live_car_data = car_simulation.get_live_data()
+            time += 1
+        return {"time_to_enter_zone": time, "live_car_data": previous_live_car_data}
