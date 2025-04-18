@@ -59,7 +59,7 @@ class SmartCityCar(InstructionControlledCar):
     def tick(self) -> None:
         if self.traffic_control_center:
             control_instructions = (
-                self.traffic_control_center.send_movement_instruction(
+                self.traffic_control_center.send_control_instructions(
                     self.get_live_data()
                 )
             )

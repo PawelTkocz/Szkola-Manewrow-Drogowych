@@ -1,5 +1,4 @@
 from car.instruction_controlled_car import CarControlInstructions
-from car.model import CarModel
 from geometry import Rectangle
 from smart_city.road_control_center.road_car_controller import RoadCarController
 from smart_city.road_control_center.utils import (
@@ -24,18 +23,15 @@ class RoadControlCenter(RoadCarController):
         self._predicted_live_cars_data = {}
         self.update_active_cars_on_road(list(self.live_cars_data))
 
-    def send_movement_instruction(
+    def send_control_instructions(
         self, live_car_data: LiveCarData
     ) -> CarControlInstructions:
         registry_number = live_car_data["specification"]["registry_number"]
         if registry_number not in self.live_cars_data:
             self.register_new_active_car(live_car_data)
         self.live_cars_data[registry_number] = live_car_data
-        movement_instruction = self.calculate_movement_instruction(registry_number)
+        control_instructions = self.calculate_control_instructions(registry_number)
         self._predicted_live_cars_data[registry_number] = get_predicted_live_car_data(
-            live_car_data, movement_instruction
+            live_car_data, control_instructions["movement_instructions"]
         )
-        return movement_instruction
-
-    def register_car_model(self, car_model: CarModel) -> bool:
-        return True
+        return control_instructions

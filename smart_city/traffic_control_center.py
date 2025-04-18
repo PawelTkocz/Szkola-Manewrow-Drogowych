@@ -7,15 +7,16 @@ from smart_city.schemas import LiveCarData
 class TrafficControlCenter:
     def __init__(self, road_control_center: RoadControlCenter) -> None:
         self._road_control_center = road_control_center
+        road_control_center.register_tracks()
         self._time = 0
         self.registered_car_models: set[str] = set()
 
-    def send_movement_instruction(
+    def send_control_instructions(
         self, live_car_data: LiveCarData
     ) -> CarControlInstructions | None:
         road_control_center = self._get_current_road_control_center(live_car_data)
         return (
-            road_control_center.send_movement_instruction(live_car_data)
+            road_control_center.send_control_instructions(live_car_data)
             if road_control_center
             and self._is_car_model_registered(live_car_data["specification"]["model"])
             else None

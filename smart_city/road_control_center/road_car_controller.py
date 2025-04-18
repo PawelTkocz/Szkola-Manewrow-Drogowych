@@ -11,7 +11,7 @@ class RoadCarController(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def calculate_movement_instruction(
+    def calculate_control_instructions(
         self, registry_number: str
     ) -> CarControlInstructions:
         raise NotImplementedError
@@ -20,6 +20,10 @@ class RoadCarController(ABC):
     def update_active_cars_on_road(self, registry_numbers: list[str]) -> None:
         raise NotImplementedError
 
-    # @abstractmethod
-    # def register_car_model(self, car_model: CarModel) -> None:
-    #     raise NotImplementedError
+    @abstractmethod
+    def register_car_model(self, car_model: CarModel) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def register_tracks(self) -> bool:
+        raise NotImplementedError

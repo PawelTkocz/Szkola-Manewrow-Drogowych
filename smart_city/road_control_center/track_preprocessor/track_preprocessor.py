@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from car.instruction_controlled_car import SpeedInstruction, TurnSignalsInstruction
+from car.instruction_controlled_car import SpeedInstruction
 from car.model import CarModel
 from geometry import Point
 from smart_city.road_control_center.manoeuvres.schemas import TrackPointData, TurnSignal
@@ -82,7 +82,7 @@ class ManoeuvreTrackPreprocessor(ABC):
         # min velocity mozna wyznaczyc wyznaczajac max const velocity na calym odcinku
         max_distance_to_track = 3
 
-        while not car_simulation.car.is_point_inside(manoeuvre_track.end_point):
+        while not car_simulation.is_point_inside(manoeuvre_track.end_point):
             track_point_index = manoeuvre_track.find_index_of_closest_point(
                 car_simulation.front_middle
             )
@@ -101,7 +101,7 @@ class ManoeuvreTrackPreprocessor(ABC):
                 min_velocity = (
                     next_track_segment.expected_min_velocity
                     if next_track_segment
-                    else car_simulation.car.model.max_velocity
+                    else car_simulation.max_velocity
                 )
             if min_velocity is None:
                 print("No minimum velocity set error")
@@ -114,15 +114,12 @@ class ManoeuvreTrackPreprocessor(ABC):
                 speed_instruction = SpeedInstruction.ACCELERATE_FRONT
             car_simulation.move(
                 {
-                    "movement_instructions": {
-                        "speed_instruction": speed_instruction,
-                        "turn_instruction": get_turn_instruction(
-                            manoeuvre_track,
-                            car_simulation.get_live_data(),
-                            speed_instruction,
-                        ),
-                    },
-                    "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
+                    "speed_instruction": speed_instruction,
+                    "turn_instruction": get_turn_instruction(
+                        manoeuvre_track,
+                        car_simulation.get_live_data(),
+                        speed_instruction,
+                    ),
                 }
             )
         return False
