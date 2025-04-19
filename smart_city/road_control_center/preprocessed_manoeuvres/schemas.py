@@ -13,7 +13,7 @@ class TurnSignal(Enum):
     LEFT_SIGNAL = "left_signal"
 
 
-class TrackPointData(TypedDict):
+class ManoeuvreTrackPoint(TypedDict):
     point: Point
     max_safe_velocity: float
     turn_signal: TurnSignal

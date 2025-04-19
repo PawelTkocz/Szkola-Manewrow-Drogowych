@@ -20,6 +20,7 @@ class Intersection(RoadSegment):
     ):
         self.id = id
         self.lane_width = LANE_WIDTH
+        self.turn_curve = 90
         self.colorisitcs = colorisitcs
         self.area = Rectangle(
             Point(ROAD_SEGMENT_SIDE / 2, ROAD_SEGMENT_SIDE),

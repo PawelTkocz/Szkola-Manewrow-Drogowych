@@ -9,12 +9,10 @@ from animations.animations_generators.schemas import (
 from application_screen import ApplicationScreen
 from geometry import Direction, Point
 from road_segments.intersection.intersection import Intersection
-from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
-    IntersectionManoeuvreDescription,
-)
 from animations.animations_generators.constants import (
     CONTROL_INSTRUCTIONS_DIR as CONTROL_INSTRUCTIONS_DIR,
 )
+from smart_city.schemas import IntersectionManoeuvreDescription
 from smart_city.traffic_control_center import TrafficControlCenter
 
 
