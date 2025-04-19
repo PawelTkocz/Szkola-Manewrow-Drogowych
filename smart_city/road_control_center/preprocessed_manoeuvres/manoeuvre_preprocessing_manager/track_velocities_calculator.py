@@ -100,7 +100,7 @@ class TrackVelocitiesCalculator:
     def get_max_safe_velocities(
         self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
     ) -> list[float]:
-        max_safe_velocities: list[float] = [4]
+        max_safe_velocities: list[float] = [8]
         # start_max_safe_velocity = self.get_start_max_safe_velocity(
         #     manoeuvre_track, car_model
         # )

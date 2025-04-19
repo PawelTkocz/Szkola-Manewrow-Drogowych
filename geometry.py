@@ -1,15 +1,9 @@
 from enum import Enum
 import math
-from typing import TypedDict
 
 import numpy as np
 
 from schemas import HorizontalDirection
-
-
-class Cooridinates(TypedDict):
-    x: float
-    y: float
 
 
 class Directions(Enum):
@@ -97,9 +91,6 @@ class Point:
         self.x = rotated_point.x
         self.y = rotated_point.y
         return self
-
-    def to_dict(self) -> Cooridinates:
-        return {"x": self.x, "y": self.y}
 
     def to_tuple(self) -> tuple[float, float]:
         return (self.x, self.y)

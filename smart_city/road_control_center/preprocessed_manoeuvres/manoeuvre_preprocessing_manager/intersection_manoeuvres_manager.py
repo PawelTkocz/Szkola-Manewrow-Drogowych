@@ -4,7 +4,7 @@ import math
 import os
 from typing import Any
 from car.model import CarModel
-from geometry import Cooridinates, Point
+from geometry import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
 from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.intersection_manoeuvre_tracks.go_straight_track import (
@@ -108,7 +108,7 @@ class IntersectionManoeuvresManager:
         self.dump_json(
             dir_path,
             variant.value,
-            [point.to_dict() for point in track],
+            [point.to_tuple() for point in track],
         )
 
     def register_turn_signals(
@@ -121,6 +121,9 @@ class IntersectionManoeuvresManager:
         ]
         self.dump_json(dir_path, TURN_SIGNALS_FILE_NAME, turn_signals)
 
+    def processed_car_model_name(self, car_model_name: str) -> str:
+        return car_model_name.lower().replace(" ", "_")
+
     def register_track_velocities(self, car_model: CarModel) -> None:
         for track_type, manoeuvre_track in self.tracks:
             max_safe_velocities = TrackVelocitiesCalculator().get_max_safe_velocities(
@@ -128,7 +131,9 @@ class IntersectionManoeuvresManager:
             )
             dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
             self.dump_json(
-                dir_path, f"{car_model.name}_velocities.json", max_safe_velocities
+                dir_path,
+                f"{self.processed_car_model_name(car_model.name)}_velocities",
+                max_safe_velocities,
             )
 
     def dump_json(self, dir_path: str, file_name: str, data: list[Any]) -> None:
@@ -176,7 +181,7 @@ class IntersectionManoeuvresManager:
         file_path = os.path.join(
             self.dir_with_tracks_data,
             track_type.value,
-            f"{car_model_name}_velocities.json",
+            f"{self.processed_car_model_name(car_model_name)}_velocities.json",
         )
         with open(file_path, "r") as file:
             track_velocities: list[float] = json.load(file)
@@ -191,7 +196,7 @@ class IntersectionManoeuvresManager:
             f"{INTERSECTION_SIDES_TO_VARIANTS[starting_side].value}.json",
         )
         with open(file_path, "r") as file:
-            track_points: list[Cooridinates] = json.load(file)
+            track_points: list[tuple[float, float]] = json.load(file)
             return [Point(*point) for point in track_points]
 
     def load_turn_signals(self, track_type: IntersectionTrackType) -> list[TurnSignal]:

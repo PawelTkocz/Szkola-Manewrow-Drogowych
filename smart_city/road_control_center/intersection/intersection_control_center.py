@@ -14,6 +14,9 @@ from smart_city.road_control_center.intersection.schemas import (
 from smart_city.road_control_center.preprocessed_manoeuvres.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
+from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.intersection_manoeuvres_manager import (
+    IntersectionManoeuvresManager,
+)
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData
 
@@ -28,6 +31,9 @@ class IntersectionControlCenter(RoadControlCenter):
         )
         self.intersection = intersection
         self.cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo] = {}
+        self.intersection_manoeuvres_manager = IntersectionManoeuvresManager(
+            intersection
+        )
 
     def calculate_control_instructions(
         self, registry_number: str
@@ -71,7 +77,9 @@ class IntersectionControlCenter(RoadControlCenter):
         }
 
     def register_car_model(self, car_model: CarModel) -> bool:
+        self.intersection_manoeuvres_manager.register_track_velocities(car_model)
         return True
 
     def register_tracks(self) -> bool:
+        self.intersection_manoeuvres_manager.register_tracks()
         return True
