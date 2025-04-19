@@ -3,7 +3,7 @@ from car.instruction_controlled_car import (
     SpeedInstruction,
     TurnInstruction,
 )
-from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.track import Track
 from smart_city.road_control_center.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 

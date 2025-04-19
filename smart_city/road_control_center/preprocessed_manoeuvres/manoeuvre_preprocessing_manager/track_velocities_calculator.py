@@ -1,13 +1,9 @@
-from abc import ABC, abstractmethod
-
 from car.instruction_controlled_car import SpeedInstruction
 from car.model import CarModel
-from geometry import Point
-from smart_city.road_control_center.manoeuvres.schemas import TrackPointData, TurnSignal
-from smart_city.road_control_center.track_preprocessor.manoeuvre_track import (
+from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
     TrackSegmentType,
 )
 from smart_city.road_control_center.utils import (
@@ -16,30 +12,7 @@ from smart_city.road_control_center.utils import (
 from smart_city.road_control_center.car_simulation import CarSimulation
 
 
-class ManoeuvreTrackPreprocessor(ABC):
-    def preprocess_track(
-        self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
-    ) -> list[TrackPointData]:
-        max_safe_velocities = self.get_max_safe_velocities(manoeuvre_track, car_model)
-        preprocessed_track_points: list[TrackPointData] = []
-        for point_index, track_point in enumerate(manoeuvre_track.track_path):
-            preprocessed_track_points.append(
-                {
-                    "point": Point(track_point[0], track_point[1]),
-                    "max_safe_velocity": max_safe_velocities[point_index],
-                    "turn_signal": self.get_track_point_turn_signal(
-                        point_index, manoeuvre_track
-                    ),
-                }
-            )
-        return preprocessed_track_points
-
-    @abstractmethod
-    def get_track_point_turn_signal(
-        self, track_point_index: int, manoeuvre_track: ManoeuvreTrack
-    ) -> TurnSignal:
-        raise NotImplementedError
-
+class TrackVelocitiesCalculator:
     def get_start_max_safe_velocity(
         self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
     ) -> float:
@@ -127,8 +100,8 @@ class ManoeuvreTrackPreprocessor(ABC):
     def get_max_safe_velocities(
         self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
     ) -> list[float]:
-        max_safe_velocities: list[float] = []
-        start_max_safe_velocity = self.get_start_max_safe_velocity(
-            manoeuvre_track, car_model
-        )
-        return [start_max_safe_velocity] * len(manoeuvre_track.track_path)
+        max_safe_velocities: list[float] = [4]
+        # start_max_safe_velocity = self.get_start_max_safe_velocity(
+        #     manoeuvre_track, car_model
+        # )
+        return max_safe_velocities * len(manoeuvre_track.track_path)

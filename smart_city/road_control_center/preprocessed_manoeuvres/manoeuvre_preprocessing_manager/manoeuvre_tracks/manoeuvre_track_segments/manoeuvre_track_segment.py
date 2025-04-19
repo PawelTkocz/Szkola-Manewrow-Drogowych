@@ -1,6 +1,6 @@
 from enum import Enum
 from geometry import Point
-from smart_city.road_control_center.manoeuvres.schemas import TrackPath
+from smart_city.road_control_center.preprocessed_manoeuvres.schemas import TrackPath
 
 
 class TrackSegmentType(Enum):

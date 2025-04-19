@@ -1,6 +1,7 @@
 from geometry import Point
-from smart_city.road_control_center.manoeuvres.schemas import TrackPath
 from scipy.spatial import KDTree
+
+from smart_city.road_control_center.preprocessed_manoeuvres.schemas import TrackPath
 
 
 class Track:

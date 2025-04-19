@@ -4,12 +4,12 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from geometry import Rectangle
-from smart_city.road_control_center.manoeuvres.schemas import (
+from smart_city.road_control_center.preprocessed_manoeuvres.schemas import (
     EnteringZoneStatus,
-    TrackPointData,
+    ManoeuvreTrackPoint,
     TurnSignal,
 )
-from smart_city.road_control_center.manoeuvres.track import Track
+from smart_city.road_control_center.track import Track
 from smart_city.road_control_center.utils import (
     get_turn_instruction,
 )
@@ -17,23 +17,23 @@ from smart_city.road_control_center.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
 
-class Manoeuvre:
+class PreprocessedManoeuvre:
     """
-    Class representing manoeuvre
+    Class representing preporcessed manoeuvre.
     """
 
     def __init__(
         self,
-        track_points_data: list[TrackPointData],
+        manoeuvre_track_points: list[ManoeuvreTrackPoint],
     ):
         self.track = Track(
-            [point_data["point"].to_tuple() for point_data in track_points_data]
+            [point_data["point"].to_tuple() for point_data in manoeuvre_track_points]
         )
         self.max_safe_velocities = [
-            point_data["max_safe_velocity"] for point_data in track_points_data
+            point_data["max_safe_velocity"] for point_data in manoeuvre_track_points
         ]
         self.turn_signals = [
-            point_data["turn_signal"] for point_data in track_points_data
+            point_data["turn_signal"] for point_data in manoeuvre_track_points
         ]
 
     def get_car_control_instructions(

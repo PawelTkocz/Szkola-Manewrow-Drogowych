@@ -7,10 +7,7 @@ from car.model import CarModel
 from car.schemas import CarColoristics
 from geometry import Direction, Point
 from schemas import HorizontalDirection
-from smart_city.road_control_center.intersection.intersection_manoeuvre.schemas import (
-    IntersectionManoeuvreDescription,
-)
-from smart_city.schemas import LiveCarData
+from smart_city.schemas import IntersectionManoeuvreDescription, LiveCarData
 from smart_city.traffic_control_center import TrafficControlCenter
 
 

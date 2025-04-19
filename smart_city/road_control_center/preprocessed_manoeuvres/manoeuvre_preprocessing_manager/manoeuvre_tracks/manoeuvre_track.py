@@ -1,12 +1,13 @@
 from typing import TypedDict
 
-from smart_city.road_control_center.manoeuvres.track import Track
-from smart_city.road_control_center.track_preprocessor.manoeuvre_track_segment import (
+from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
 )
-from smart_city.road_control_center.track_preprocessor.schemas import (
+from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.schemas import (
     ManoeuvreStartCarState,
 )
+from smart_city.road_control_center.preprocessed_manoeuvres.schemas import TurnSignal
+from smart_city.road_control_center.track import Track
 
 
 class ManoeuvreTrackSegmentData(TypedDict):
@@ -17,6 +18,7 @@ class ManoeuvreTrackSegmentData(TypedDict):
 class IncomingSegmentsData(TypedDict):
     current_track_segment: ManoeuvreTrackSegment
     current_track_segment_distance_left: float
+    current_track_segment_distance_covered: float
     next_track_segment: ManoeuvreTrackSegment | None
 
 
@@ -82,4 +84,13 @@ class ManoeuvreTrack(Track):
                 current_track_index
             ]["cumulative_track_length"]
             - track_point_index,
+            "current_track_segment_distance_covered": track_point_index
+            - (
+                self.segments_data[current_track_index - 1]["cumulative_track_length"]
+                if current_track_index >= 1
+                else 0
+            ),
         }
+
+    def get_turn_signal(self, track_point_index: int) -> TurnSignal:
+        return TurnSignal.NO_SIGNAL
