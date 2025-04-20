@@ -64,12 +64,11 @@ class PlaybackAnimation(AnimationStrategy):
             if self.frame_number < car["start_frame_number"]:
                 continue
             control_instructions_index = self.frame_number - car["start_frame_number"]
-            if control_instructions_index >= len(car["control_instructions"]):
-                continue
-            control_instructions = car["control_instructions"][
-                control_instructions_index
-            ]
-            car["car"].apply_control_instructions(control_instructions)
+            if control_instructions_index < len(car["control_instructions"]):
+                control_instructions = car["control_instructions"][
+                    control_instructions_index
+                ]
+                car["car"].apply_control_instructions(control_instructions)
             car["car"].tick()
         self.frame_number += 1
         return [car["car"] for car in self.cars]
