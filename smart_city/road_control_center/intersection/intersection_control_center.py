@@ -23,9 +23,9 @@ from smart_city.schemas import LiveCarData
 
 class IntersectionControlCenter(RoadControlCenter):
     def __init__(
-        self, intersection: Intersection, intersection_rules: IntersectionRules
+        self, intersection: Intersection, intersection_rules: IntersectionRules, id: str
     ):
-        super().__init__(intersection.area)
+        super().__init__(intersection.area, id)
         self.software = IntersectionControlCenterSoftware(
             intersection, intersection_rules
         )

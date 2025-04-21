@@ -1,7 +1,6 @@
 import pygame
 from drafter.utils import draw_axis_aligned_rectangle, draw_rectangle
 from geometry import Point, Rectangle
-from road_segments.constants import LINE_WIDTH
 from road_segments.intersection.schemas import (
     IntersectionColoristics,
     IntersectionParts,
@@ -17,12 +16,15 @@ class IntersectionDrafter:
     def __init__(
         self,
         intersection_parts: IntersectionParts,
+        turn_curve: int,
+        lines: list[Rectangle],
         coloristics: IntersectionColoristics,
     ):
         self.intersection_parts = intersection_parts
+        self.lines = lines
         self.coloristics = coloristics
         self.road_width = self.intersection_parts["intersection_area"].width
-        self.turn_curve = 90
+        self.turn_curve = turn_curve
 
     def draw_pavements(
         self,
@@ -82,17 +84,11 @@ class IntersectionDrafter:
         scale_factor: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
-        outcoming_lanes = self.intersection_parts["outcoming_lanes"]
-        for side in CardinalDirection:
+        for line in self.lines:
             draw_rectangle(
                 screen,
                 self.coloristics["lines"],
-                Rectangle(
-                    outcoming_lanes[side].front_left,
-                    LINE_WIDTH,
-                    outcoming_lanes[side].length,
-                    outcoming_lanes[side].direction,
-                ),
+                line,
                 scale_factor=scale_factor,
                 screen_y_offset=screen_y_offset,
             )

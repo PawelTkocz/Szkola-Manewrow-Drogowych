@@ -3,7 +3,7 @@ from animations.animations_generators.intersection_manoeuvre_animation import (
 )
 from animations.animations_generators.schemas import IntersectionAnimationCarDescription
 from application_screen import ApplicationScreen
-from road_segments.intersection.intersection_I0 import IntersectionI0
+from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_A0 import (
     IntersectionI0ControlCenter,
 )
@@ -19,7 +19,7 @@ class IntersectionI0Animation(IntersectionManoeuvreAnimation):
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
         super().__init__(
-            IntersectionI0(),
+            Intersection(),
             cars_descriptions,
             manoeuvre_control_instructions_dir_name,
             TrafficControlCenter(IntersectionI0ControlCenter()),
