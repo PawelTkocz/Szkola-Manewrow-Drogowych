@@ -29,7 +29,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         self.intersection = intersection
         control_instructions_dir_path = os.path.join(
             CONTROL_INSTRUCTIONS_DIR,
-            intersection.id,
+            traffic_control_center._road_control_center.id,
             manoeuvre_control_instructions_dir_name,
         )
         animation_cars_descriptions: list[AnimationCarDescription] = [

@@ -8,7 +8,8 @@ from smart_city.schemas import LiveCarData
 
 
 class RoadControlCenter(RoadCarController):
-    def __init__(self, area: Rectangle) -> None:
+    def __init__(self, area: Rectangle, id: str) -> None:
+        self.id = id
         self.time = 0
         self.live_cars_data: dict[str, LiveCarData] = {}
         self._predicted_live_cars_data: dict[str, LiveCarData] = {}
