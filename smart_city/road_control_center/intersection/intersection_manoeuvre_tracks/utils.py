@@ -1,7 +1,7 @@
 from geometry import Direction, Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.schemas import (
+from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     ManoeuvreStartCarState,
 )
 from utils import clockwise_direction_shift

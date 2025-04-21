@@ -1,9 +1,9 @@
 from car.instruction_controlled_car import SpeedInstruction
 from car.model import CarModel
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     TrackSegmentType,
 )
 from smart_city.road_control_center.utils import (
@@ -12,7 +12,7 @@ from smart_city.road_control_center.utils import (
 from smart_city.road_control_center.car_simulation import CarSimulation
 
 
-class TrackVelocitiesCalculator:
+class TrackVelocitiesPreprocessor:
     def get_start_max_safe_velocity(
         self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
     ) -> float:

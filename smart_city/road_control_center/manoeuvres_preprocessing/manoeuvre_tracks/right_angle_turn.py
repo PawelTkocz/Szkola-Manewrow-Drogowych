@@ -3,11 +3,11 @@ import math
 import numpy as np
 from geometry import Point, Vector
 from schemas import HorizontalDirection
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
     TrackSegmentType,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.schemas import TrackPath
+from smart_city.road_control_center.manoeuvres_preprocessing.schemas import TrackPath
 
 TURN_SHARPNESS = 0.7
 

@@ -5,17 +5,17 @@ from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
     IntersectionControlCenterSoftware,
 )
+from smart_city.road_control_center.intersection.intersection_manoeuvre import (
+    IntersectionManoeuvre,
+)
+from smart_city.road_control_center.intersection.intersection_manoeuvres_manager import (
+    IntersectionManoeuvresManager,
+)
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
 )
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
-)
-from smart_city.road_control_center.preprocessed_manoeuvres.intersection_manoeuvre import (
-    IntersectionManoeuvre,
-)
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.intersection_manoeuvres_manager import (
-    IntersectionManoeuvresManager,
 )
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData

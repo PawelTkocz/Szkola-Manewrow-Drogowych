@@ -1,10 +1,10 @@
 import numpy as np
 from geometry import Point
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
     TrackSegmentType,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.schemas import TrackPath
+from smart_city.road_control_center.manoeuvres_preprocessing.schemas import TrackPath
 
 
 class StraightPath(ManoeuvreTrackSegment):

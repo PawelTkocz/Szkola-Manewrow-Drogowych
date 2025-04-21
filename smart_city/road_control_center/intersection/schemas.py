@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from smart_city.road_control_center.preprocessed_manoeuvres.intersection_manoeuvre import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from smart_city.schemas import IntersectionManoeuvreDescription
