@@ -7,6 +7,9 @@ from car.instruction_controlled_car import (
 )
 
 from road_segments.intersection.intersection import Intersection
+from smart_city.road_control_center.intersection.intersection_manoeuvre import (
+    IntersectionManoeuvre,
+)
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
 )
@@ -14,9 +17,6 @@ from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
 
-from smart_city.road_control_center.preprocessed_manoeuvres.intersection_manoeuvre import (
-    IntersectionManoeuvre,
-)
 from smart_city.road_control_center.utils import (
     get_turn_instruction,
 )

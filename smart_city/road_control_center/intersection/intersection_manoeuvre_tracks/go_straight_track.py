@@ -1,17 +1,17 @@
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.intersection_manoeuvre_tracks.utils import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.utils import (
     get_starting_position,
     get_track_end_point,
     get_track_start_point,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.manoeuvre_track_segment import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track_segments.straight_path import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.straight_path import (
     StraightPath,
 )
 from utils import clockwise_direction_shift

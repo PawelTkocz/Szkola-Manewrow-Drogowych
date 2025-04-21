@@ -7,24 +7,24 @@ from car.model import CarModel
 from geometry import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.intersection_manoeuvre_tracks.go_straight_track import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.go_straight_track import (
     IntersectionGoStraightManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.intersection_manoeuvre_tracks.turn_left_track import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.turn_left_track import (
     IntersectionTurnLeftManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.intersection_manoeuvre_tracks.turn_right_track import (
+from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.turn_right_track import (
     IntersectionTurnRightManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.manoeuvre_tracks.manoeuvre_track import (
+from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track import (
     ManoeuvreTrack,
 )
-from smart_city.road_control_center.preprocessed_manoeuvres.manoeuvre_preprocessing_manager.track_velocities_calculator import (
-    TrackVelocitiesCalculator,
-)
-from smart_city.road_control_center.preprocessed_manoeuvres.schemas import (
+from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     ManoeuvreTrackPoint,
     TurnSignal,
+)
+from smart_city.road_control_center.manoeuvres_preprocessing.track_velocities_preprocessor import (
+    TrackVelocitiesPreprocessor,
 )
 from smart_city.schemas import IntersectionManoeuvreDescription
 from utils import clockwise_direction_shift
@@ -55,7 +55,9 @@ INTERSECTION_SIDES_TO_VARIANTS: dict[CardinalDirection, IntersectionTrackVariant
 
 class IntersectionManoeuvresManager:
     def __init__(self, intersection: Intersection) -> None:
-        self.dir_with_tracks_data = "smart_city/road_control_center/preprocessed_manoeuvres/preprocessed_manoeuvres_data"
+        self.dir_with_tracks_data = (
+            "smart_city/road_control_center/preprocessed_manoeuvres_data"
+        )
         self.tracks: list[tuple[IntersectionTrackType, ManoeuvreTrack]] = [
             (
                 IntersectionTrackType.GO_STRAIGHT,
@@ -126,7 +128,7 @@ class IntersectionManoeuvresManager:
 
     def register_track_velocities(self, car_model: CarModel) -> None:
         for track_type, manoeuvre_track in self.tracks:
-            max_safe_velocities = TrackVelocitiesCalculator().get_max_safe_velocities(
+            max_safe_velocities = TrackVelocitiesPreprocessor().get_max_safe_velocities(
                 manoeuvre_track, car_model
             )
             dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)

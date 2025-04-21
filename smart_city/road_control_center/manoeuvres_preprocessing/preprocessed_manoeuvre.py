@@ -4,7 +4,7 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 from geometry import Rectangle
-from smart_city.road_control_center.preprocessed_manoeuvres.schemas import (
+from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     EnteringZoneStatus,
     ManoeuvreTrackPoint,
     TurnSignal,
