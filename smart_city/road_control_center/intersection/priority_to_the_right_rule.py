@@ -1,4 +1,3 @@
-from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
 )
@@ -15,29 +14,7 @@ class PriorityToTheRightRule(IntersectionRules):
         # there are no stop signs, no traffic lights
         return True
 
-    def has_priority(
-        self,
-        car1_info: IntersectionPriorityCarInfo,
-        car2_info: IntersectionPriorityCarInfo,
-        time: int,
+    def is_on_road_with_priority(
+        self, car_info: IntersectionPriorityCarInfo, time: int
     ) -> bool:
-        if car1_info["high_priority"] and not car2_info["high_priority"]:
-            return True
-        if not car1_info["high_priority"] and car2_info["high_priority"]:
-            return False
-        sides = [
-            CardinalDirection.DOWN,
-            CardinalDirection.RIGHT,
-            CardinalDirection.UP,
-            CardinalDirection.LEFT,
-        ]
-        car1_starting_side = car1_info["manoeuvre_description"]["starting_side"]
-        car1_ending_side = car1_info["manoeuvre_description"]["ending_side"]
-        car2_starting_side = car2_info["manoeuvre_description"]["starting_side"]
-        car1_starting_side_index = sides.index(car1_starting_side)
-        side_index = (car1_starting_side_index + 1) % 4
-        while sides[side_index] != car1_ending_side:
-            if sides[side_index] == car2_starting_side:
-                return False
-            side_index = (side_index + 1) % 4
-        return True
+        return False
