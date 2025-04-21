@@ -2,7 +2,8 @@ from pygame import Surface
 from car.model import CarModel
 from car.schemas import CarColoristics, CarPartPosition, CarPointPosition
 from drafter.utils import draw_polygon
-from geometry import Point, Rectangle
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 from schemas import HorizontalDirection
 
 

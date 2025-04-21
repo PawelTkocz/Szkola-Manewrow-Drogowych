@@ -1,4 +1,5 @@
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (

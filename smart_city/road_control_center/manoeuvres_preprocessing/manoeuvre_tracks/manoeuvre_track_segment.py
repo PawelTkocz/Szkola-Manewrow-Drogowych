@@ -1,5 +1,5 @@
 from enum import Enum
-from geometry import Point
+from geometry.vector import Point
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import TrackPath
 
 

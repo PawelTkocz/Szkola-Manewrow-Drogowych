@@ -4,7 +4,9 @@ from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from drafter.utils import blit_surface
-from geometry import Direction, Point, Rectangle
+from geometry.direction import Direction
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 
 
 class PreviousScreenButton:

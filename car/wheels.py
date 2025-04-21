@@ -1,4 +1,5 @@
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from schemas import HorizontalDirection
 
 

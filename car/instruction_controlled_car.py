@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import TypedDict
 from car.car import Car
-from geometry import Directions
+from car.schemas import AccelerationDirection
 from schemas import HorizontalDirection
 
 
@@ -51,13 +51,13 @@ class InstructionControlledCar(Car):
 
     def _apply_speed_instruction(self, speed_instruction: SpeedInstruction) -> None:
         if speed_instruction == SpeedInstruction.ACCELERATE_FRONT:
-            self.accelerate(Directions.FRONT)
+            self.accelerate(AccelerationDirection.FORWARD)
         elif speed_instruction == SpeedInstruction.NO_CHANGE:
             pass
         elif speed_instruction == SpeedInstruction.BRAKE:
             self.brake()
         elif speed_instruction == SpeedInstruction.ACCELERATE_REVERSE:
-            self.accelerate(Directions.BACK)
+            self.accelerate(AccelerationDirection.REVERSE)
 
     def _apply_turn_instruction(self, turn_instruction: TurnInstruction) -> None:
         if turn_instruction == TurnInstruction.TURN_LEFT:

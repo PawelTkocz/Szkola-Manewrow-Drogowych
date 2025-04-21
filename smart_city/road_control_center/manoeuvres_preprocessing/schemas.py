@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import TypeAlias, TypedDict
 
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from smart_city.schemas import LiveCarData
 
 TrackPath: TypeAlias = list[tuple[float, float]]

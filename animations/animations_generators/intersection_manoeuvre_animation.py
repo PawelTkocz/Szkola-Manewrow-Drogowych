@@ -7,7 +7,8 @@ from animations.animations_generators.schemas import (
     IntersectionAnimationCarDescription,
 )
 from application_screen import ApplicationScreen
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from animations.animations_generators.constants import (
     CONTROL_INSTRUCTIONS_DIR as CONTROL_INSTRUCTIONS_DIR,

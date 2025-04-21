@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import pygame
 
 from application_screen import ApplicationScreen
-from geometry import Point
+from geometry.vector import Point
 
 
 class MenuOptionsPanel(ABC):

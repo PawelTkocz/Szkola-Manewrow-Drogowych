@@ -2,7 +2,9 @@ from car.instruction_controlled_car import (
     CarMovementInstructions,
 )
 from car.model import CarModel
-from geometry import Direction, Point, Rectangle
+from geometry.direction import Direction
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 from smart_city.schemas import LiveCarData
 import smart_city.smart_city_car as smart_city_car
 

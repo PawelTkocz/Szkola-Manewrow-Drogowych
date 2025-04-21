@@ -1,7 +1,8 @@
 from typing import TypedDict
 
 from car.model import CarModel
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from smart_city.schemas import IntersectionManoeuvreDescription
 
 

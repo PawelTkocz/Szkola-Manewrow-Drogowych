@@ -20,7 +20,9 @@ from animations.animations_menus.options_panel.schemas import ListOptionDescript
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from drafter.utils import blit_surface, draw_axis_aligned_rectangle
-from geometry import Direction, Point, Rectangle, Vector
+from geometry.direction import Direction
+from geometry.vector import Point, Vector
+from geometry.rectangle import Rectangle
 
 
 class ListOption:

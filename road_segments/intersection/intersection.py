@@ -1,6 +1,8 @@
 from pygame import Surface
 from drafter.intersection import IntersectionDrafter
-from geometry import Direction, Point, Rectangle
+from geometry.direction import Direction
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 from road_segments.constants import LANE_WIDTH, LINE_WIDTH, ROAD_SEGMENT_SIDE
 from road_segments.intersection.schemas import (
     IntersectionColoristics,
