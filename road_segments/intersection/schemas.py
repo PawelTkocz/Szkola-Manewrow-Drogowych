@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from geometry import Rectangle
+from geometry.rectangle import Rectangle
 from schemas import CardinalDirection
 
 

@@ -16,7 +16,7 @@ from animations.animations_generators.schemas import (
 from animations.components.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from geometry import Point
+from geometry.vector import Point
 from road_segments.constants import ROAD_SEGMENT_SIDE
 from road_segments.road_segment import RoadSegment
 from smart_city.traffic_control_center import TrafficControlCenter

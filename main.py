@@ -3,7 +3,7 @@ import pygame
 from animations.animations_menus.interesction_manoeuvres_menus.main_menu import MainMenu
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from geometry import Point
+from geometry.vector import Point
 from utils import get_pygame_point
 
 pygame.init()

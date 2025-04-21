@@ -1,6 +1,7 @@
 import pygame
 from drafter.utils import draw_axis_aligned_rectangle, draw_rectangle
-from geometry import Point, Rectangle
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 from road_segments.intersection.schemas import (
     IntersectionColoristics,
     IntersectionParts,

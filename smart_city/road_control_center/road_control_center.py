@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from geometry import Rectangle
+from geometry.rectangle import Rectangle
 from smart_city.road_control_center.road_car_controller import RoadCarController
 from smart_city.road_control_center.utils import (
     get_predicted_live_car_data,

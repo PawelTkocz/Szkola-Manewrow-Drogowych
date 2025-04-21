@@ -4,7 +4,7 @@ import math
 import os
 from typing import Any
 from car.model import CarModel
-from geometry import Point
+from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.go_straight_track import (

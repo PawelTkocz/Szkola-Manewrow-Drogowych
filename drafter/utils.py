@@ -1,5 +1,6 @@
 import pygame
-from geometry import Point, Rectangle, Vector
+from geometry.vector import Point, Vector
+from geometry.rectangle import Rectangle
 from utils import get_pygame_point
 
 

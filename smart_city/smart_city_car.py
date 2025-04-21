@@ -5,7 +5,8 @@ from car.instruction_controlled_car import (
 )
 from car.model import CarModel
 from car.schemas import CarColoristics
-from geometry import Direction, Point
+from geometry.direction import Direction
+from geometry.vector import Point
 from schemas import HorizontalDirection
 from smart_city.schemas import IntersectionManoeuvreDescription, LiveCarData
 from smart_city.traffic_control_center import TrafficControlCenter

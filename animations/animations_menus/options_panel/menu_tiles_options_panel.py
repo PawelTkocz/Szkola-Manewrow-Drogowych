@@ -19,7 +19,9 @@ from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.utils import blit_surface, draw_axis_aligned_rectangle
-from geometry import Direction, Point, Rectangle
+from geometry.direction import Direction
+from geometry.vector import Point
+from geometry.rectangle import Rectangle
 
 
 class OptionTile:

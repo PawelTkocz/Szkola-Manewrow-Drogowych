@@ -1,10 +1,12 @@
 from pygame import Surface
-from car.schemas import CarColoristics
+from car.schemas import AccelerationDirection, CarColoristics
 from car.turn_signals import TurnSignals
-from geometry import Direction, Directions, Point, Rectangle, Vector
 from car.model import CarModel
 from car.wheels import Wheels
 from drafter.car import CarDrafter
+from geometry.direction import Direction
+from geometry.vector import Point, Vector
+from geometry.rectangle import Rectangle
 from schemas import HorizontalDirection
 
 DEFAULT_CAR_COLORISTICS: CarColoristics = {
@@ -99,12 +101,12 @@ class Car(CarBody):
     def turn_right(self) -> None:
         self.wheels.turn(self.wheels_turn_speed, HorizontalDirection.RIGHT)
 
-    def accelerate(self, direction: Directions) -> None:
-        if direction == Directions.FRONT:
+    def accelerate(self, direction: AccelerationDirection) -> None:
+        if direction == AccelerationDirection.FORWARD:
             self.velocity = min(
                 self.velocity + self.max_acceleration, self.max_velocity
             )
-        elif direction == Directions.BACK:
+        elif direction == AccelerationDirection.REVERSE:
             self.velocity = max(
                 self.velocity - self.max_acceleration, -1 * self.max_velocity
             )

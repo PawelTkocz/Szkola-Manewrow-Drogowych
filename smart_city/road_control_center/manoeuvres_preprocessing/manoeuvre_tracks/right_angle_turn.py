@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from geometry import Point, Vector
+from geometry.vector import Point, Vector
 from schemas import HorizontalDirection
 from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,

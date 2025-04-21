@@ -1,5 +1,5 @@
 from constants import SCREEN_HEIGHT
-from geometry import Point
+from geometry.vector import Point
 from schemas import CardinalDirection
 
 

@@ -3,7 +3,7 @@ from car.instruction_controlled_car import (
     SpeedInstruction,
     TurnSignalsInstruction,
 )
-from geometry import Rectangle
+from geometry.rectangle import Rectangle
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     EnteringZoneStatus,
     ManoeuvreTrackPoint,

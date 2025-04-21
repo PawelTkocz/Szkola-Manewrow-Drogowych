@@ -1,5 +1,5 @@
 import numpy as np
-from geometry import Point
+from geometry.vector import Point
 from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
     TrackSegmentType,

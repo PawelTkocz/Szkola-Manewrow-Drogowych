@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from pygame import Surface
 
-from geometry import Point
+from geometry.vector import Point
 
 
 class ApplicationScreen(ABC):

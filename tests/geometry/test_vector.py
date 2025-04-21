@@ -1,6 +1,6 @@
 import math
 import pytest
-from geometry import Directions, Point, Vector
+from geometry.vector import Point, Vector
 from schemas import HorizontalDirection
 
 

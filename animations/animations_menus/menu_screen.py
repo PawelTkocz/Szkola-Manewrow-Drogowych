@@ -18,7 +18,7 @@ from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from drafter.utils import blit_surface, draw_axis_aligned_rectangle
-from geometry import Point
+from geometry.vector import Point
 
 
 class MenuScreen(ApplicationScreen):

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import TypeAlias, TypedDict
 
 
@@ -25,3 +26,8 @@ class CarColoristics(TypedDict):
     turn_signals: str
     bumpers: str
     shell: str
+
+
+class AccelerationDirection(Enum):
+    FORWARD = "FORWARD"
+    REVERSE = "REVERSE"
