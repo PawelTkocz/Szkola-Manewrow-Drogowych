@@ -186,7 +186,7 @@ class IntersectionControlCenterSoftware:
             _registry_number
             for _registry_number, car_manoeuvre_info in cars_manoeuvre_info.items()
             if _registry_number != registry_number
-            and not self.intersection_rules.has_priority(
+            and self.intersection_rules.must_yield_the_right_of_way(
                 {
                     "high_priority": live_cars_data[registry_number]["live_state"][
                         "high_priority"
