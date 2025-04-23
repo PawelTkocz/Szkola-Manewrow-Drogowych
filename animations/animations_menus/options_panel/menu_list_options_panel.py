@@ -19,17 +19,16 @@ from animations.animations_menus.options_panel.menu_options_panel import (
 from animations.animations_menus.options_panel.schemas import ListOptionDescription
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
-from drafter.utils import blit_surface, draw_axis_aligned_rectangle
-from geometry.direction import Direction
+from drafter.utils import blit_surface
+from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point, Vector
-from geometry.rectangle import Rectangle
 
 
 class ListOption:
     def __init__(
         self,
         list_option_description: ListOptionDescription,
-        rectangle: Rectangle,
+        rectangle: AxisAlignedRectangle,
     ):
         self.rectangle = rectangle
         self.on_click_app_screen_generator = list_option_description[
@@ -46,17 +45,7 @@ class ListOption:
         )
 
     def render(self, screen: pygame.Surface) -> None:
-        draw_axis_aligned_rectangle(
-            screen,
-            LIST_OPTION_BACKGROUND_COLOR,
-            self.rectangle.front_left,
-            self.rectangle.width,
-            self.rectangle.length,
-            border_front_right_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
-            border_rear_left_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
-            border_rear_right_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
-            transparency=LIST_OPTION_BACKGROUND_TRANSPARENCY,
-        )
+        self.rectangle.draw(screen)
         blit_surface(
             screen,
             self.text_surface,
@@ -85,7 +74,7 @@ class MenuListOptionsPanel(MenuOptionsPanel):
         self.list_options_width = self._get_list_options_width(
             list_options_descriptions, font
         )
-        self.options_panel = Rectangle(
+        self.options_panel = AxisAlignedRectangle(
             Point(
                 LIST_OPTION_LEFT_OFFSET + self.list_options_width / 2,
                 SCREEN_HEIGHT
@@ -94,7 +83,6 @@ class MenuListOptionsPanel(MenuOptionsPanel):
             ),
             self.list_options_width,
             options_panel_height,
-            Direction(Point(0, 1)),
         )
         self.list_options = [
             ListOption(
@@ -118,16 +106,22 @@ class MenuListOptionsPanel(MenuOptionsPanel):
         )
         return max(max_width, LIST_OPTION_MIN_WIDTH)
 
-    def _calculate_list_option_rectangle(self, list_option_index: int) -> Rectangle:
+    def _calculate_list_option_rectangle(
+        self, list_option_index: int
+    ) -> AxisAlignedRectangle:
         front_middle_x = self.options_panel.front_left.x + self.list_options_width / 2
         front_middle_y = self.options_panel.front_middle.y - list_option_index * (
             LIST_OPTION_HEIGHT + LIST_OPTION_Y_SPACING
         )
-        return Rectangle(
+        return AxisAlignedRectangle(
             Point(front_middle_x, front_middle_y),
             self.list_options_width,
             LIST_OPTION_HEIGHT,
-            Direction(Point(0, 1)),
+            LIST_OPTION_BACKGROUND_COLOR,
+            border_front_right_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
+            border_rear_left_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
+            border_rear_right_radius=LIST_OPTION_BACKGROUND_BORDER_RADIUS,
+            transparency=LIST_OPTION_BACKGROUND_TRANSPARENCY,
         )
 
     def render(self, screen: pygame.Surface) -> None:

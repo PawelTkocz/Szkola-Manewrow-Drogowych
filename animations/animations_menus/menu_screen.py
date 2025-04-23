@@ -17,7 +17,8 @@ from animations.components.previous_screen_button import PreviousScreenButton
 from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from drafter.utils import blit_surface, draw_axis_aligned_rectangle
+from drafter.utils import blit_surface
+from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
 
 
@@ -54,18 +55,18 @@ class MenuScreen(ApplicationScreen):
             TITLE_TOP_OFFSET + self.title_surface.get_height() + TITLE_BACKGROUND_MARGIN
         )
         self.options_panel = options_panel
-
-    def render_title(self, screen: pygame.Surface) -> None:
-        draw_axis_aligned_rectangle(
-            screen,
-            TITLE_BACKGROUND_COLOR,
-            self.title_background_top_left,
+        self.title_background = AxisAlignedRectangle(
+            Point(SCREEN_WIDTH // 2, SCREEN_HEIGHT),
             self.title_background_width,
             self.title_background_height,
+            TITLE_BACKGROUND_COLOR,
             border_rear_left_radius=TITLE_BACKGROUND_BORDER_RADIUS,
             border_rear_right_radius=TITLE_BACKGROUND_BORDER_RADIUS,
             transparency=TITLE_BACKGROUND_TRANSPARENCY,
         )
+
+    def render_title(self, screen: pygame.Surface) -> None:
+        self.title_background.draw(screen)
         blit_surface(screen, self.title_surface, self.title_top_left)
 
     def render_frame(self, screen: pygame.Surface) -> None:

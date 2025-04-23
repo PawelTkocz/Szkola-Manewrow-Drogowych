@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from geometry.rectangle import Rectangle
+from geometry.shapes.rectangle import AxisAlignedRectangle
 from smart_city.road_control_center.road_car_controller import RoadCarController
 from smart_city.road_control_center.utils import (
     get_predicted_live_car_data,
@@ -8,7 +8,7 @@ from smart_city.schemas import LiveCarData
 
 
 class RoadControlCenter(RoadCarController):
-    def __init__(self, area: Rectangle, id: str) -> None:
+    def __init__(self, area: AxisAlignedRectangle, id: str) -> None:
         self.id = id
         self.time = 0
         self.live_cars_data: dict[str, LiveCarData] = {}

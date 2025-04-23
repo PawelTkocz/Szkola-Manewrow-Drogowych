@@ -61,11 +61,11 @@ class InstructionControlledCar(Car):
 
     def _apply_turn_instruction(self, turn_instruction: TurnInstruction) -> None:
         if turn_instruction == TurnInstruction.TURN_LEFT:
-            self.turn_left()
+            self.turn(HorizontalDirection.LEFT)
         elif turn_instruction == TurnInstruction.NO_CHANGE:
             pass
         elif turn_instruction == TurnInstruction.TURN_RIGHT:
-            self.turn_right()
+            self.turn(HorizontalDirection.RIGHT)
 
     def _apply_turn_signal_instruction(
         self, turn_signal_instruction: TurnSignalsInstruction

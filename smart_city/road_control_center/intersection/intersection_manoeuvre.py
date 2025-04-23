@@ -1,4 +1,4 @@
-from car.model import CarModel
+from car.model import CarModelSpecification
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_manoeuvres_manager import (
     IntersectionManoeuvresManager,
@@ -12,7 +12,7 @@ from smart_city.schemas import IntersectionManoeuvreDescription
 class IntersectionManoeuvre(PreprocessedManoeuvre):
     def __init__(
         self,
-        model: CarModel,
+        car_model_specification: CarModelSpecification,
         intersection: Intersection,
         manoeuvre_description: IntersectionManoeuvreDescription,
     ):
@@ -20,6 +20,6 @@ class IntersectionManoeuvre(PreprocessedManoeuvre):
         self.manoeuvre_description = manoeuvre_description
         super().__init__(
             IntersectionManoeuvresManager(intersection).load_manoeuvre_track_points(
-                manoeuvre_description, model.name
+                manoeuvre_description, car_model_specification["name"]
             )
         )

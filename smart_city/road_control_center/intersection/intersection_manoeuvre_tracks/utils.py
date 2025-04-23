@@ -81,5 +81,5 @@ def get_starting_position(
     return {
         "direction": incoming_lane.direction,
         "front_middle": incoming_lane.rear_middle,
-        "wheels_direction": Direction(Point(1, 0)),
+        "wheels_angle": 0,
     }

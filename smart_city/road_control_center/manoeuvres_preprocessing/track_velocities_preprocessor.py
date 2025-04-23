@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import SpeedInstruction
-from car.model import CarModel
+from car.model import CarModelSpecification
 from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track import (
     ManoeuvreTrack,
 )
@@ -14,29 +14,31 @@ from smart_city.road_control_center.car_simulation import CarSimulation
 
 class TrackVelocitiesPreprocessor:
     def get_start_max_safe_velocity(
-        self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
+        self,
+        manoeuvre_track: ManoeuvreTrack,
+        car_model_specification: CarModelSpecification,
     ) -> float:
         start_car_state = manoeuvre_track.start_car_state
-        max_velocity = car_model.max_velocity
+        max_velocity = car_model_specification["motion"]["max_velocity"]
         car_simulation = CarSimulation(
             start_car_state["front_middle"],
             start_car_state["direction"],
-            start_car_state["wheels_direction"],
+            start_car_state["wheels_angle"],
             max_velocity,
-            car_model,
+            car_model_specification,
         )
         if not self.will_go_off_track(car_simulation, manoeuvre_track):
             return max_velocity
 
-        min_velocity = car_model.max_acceleration
+        min_velocity = car_model_specification["motion"]["acceleration"]
         while max_velocity - min_velocity > 0.5:
             v = (max_velocity - min_velocity) / 2
             car_simulation = CarSimulation(
                 start_car_state["front_middle"],
                 start_car_state["direction"],
-                start_car_state["wheels_direction"],
+                start_car_state["wheels_angle"],
                 v,
-                car_model,
+                car_model_specification,
             )
             if not self.will_go_off_track(car_simulation, manoeuvre_track):
                 min_velocity = v
@@ -98,7 +100,9 @@ class TrackVelocitiesPreprocessor:
         return False
 
     def get_max_safe_velocities(
-        self, manoeuvre_track: ManoeuvreTrack, car_model: CarModel
+        self,
+        manoeuvre_track: ManoeuvreTrack,
+        car_model_specification: CarModelSpecification,
     ) -> list[float]:
         max_safe_velocities: list[float] = [8]
         # start_max_safe_velocity = self.get_start_max_safe_velocity(

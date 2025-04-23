@@ -3,7 +3,7 @@ from car.instruction_controlled_car import (
     SpeedInstruction,
     TurnSignalsInstruction,
 )
-from geometry.rectangle import Rectangle
+from geometry.shapes.rectangle import Rectangle
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     EnteringZoneStatus,
     ManoeuvreTrackPoint,
@@ -66,7 +66,8 @@ class PreprocessedManoeuvre:
         if current_velocity > max_safe_velocity:
             speed_instruction = SpeedInstruction.BRAKE
         elif (
-            current_velocity + live_car_data["specification"]["model"].max_acceleration
+            current_velocity
+            + live_car_data["specification"]["model"]["motion"]["acceleration"]
             < max_safe_velocity
         ):
             speed_instruction = SpeedInstruction.ACCELERATE_FRONT

@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from car.model import CarModel
+from car.model import CarModelSpecification
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
@@ -76,8 +76,12 @@ class IntersectionControlCenter(RoadControlCenter):
             "manoeuvre_status": {"can_safely_cross_intersection": False},
         }
 
-    def register_car_model(self, car_model: CarModel) -> bool:
-        self.intersection_manoeuvres_manager.register_track_velocities(car_model)
+    def register_car_model(
+        self, car_model_specification: CarModelSpecification
+    ) -> bool:
+        self.intersection_manoeuvres_manager.register_track_velocities(
+            car_model_specification
+        )
         return True
 
     def register_tracks(self) -> bool:

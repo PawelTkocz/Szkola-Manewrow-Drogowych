@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from car.model import CarModel
+from car.model import CarModelSpecification
 from geometry.direction import Direction
 from geometry.vector import Point
 from schemas import CardinalDirection
@@ -13,14 +13,14 @@ class IntersectionManoeuvreDescription(TypedDict):
 
 class CarSpecification(TypedDict):
     registry_number: str
-    model: CarModel
+    model: CarModelSpecification
 
 
 class LiveCarState(TypedDict):
     velocity: float
     front_middle: Point
     direction: Direction
-    wheels_direction: Direction
+    wheels_angle: float
     high_priority: bool
 
 

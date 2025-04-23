@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from car.model import CarModel
+from car.model import CarModelSpecification
 from geometry.direction import Direction
 from geometry.vector import Point
 from smart_city.schemas import IntersectionManoeuvreDescription
@@ -9,12 +9,12 @@ from smart_city.schemas import IntersectionManoeuvreDescription
 class CarStartingPosition(TypedDict):
     front_middle: Point
     direction: Direction
-    wheels_direction: Direction
+    wheels_angle: float
 
 
 class IntersectionAnimationCarDescription(TypedDict):
     registry_number: str
-    model: CarModel
+    model: CarModelSpecification
     color: str
     velocity: float
     start_frame_number: int
@@ -23,7 +23,7 @@ class IntersectionAnimationCarDescription(TypedDict):
 
 class PlaybackAnimationCarDescription(TypedDict):
     registry_number: str
-    model: CarModel
+    model: CarModelSpecification
     color: str
     starting_position: CarStartingPosition
     velocity: float

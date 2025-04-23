@@ -16,3 +16,8 @@ class CardinalDirection(Enum):
     RIGHT = "RIGHT"
     DOWN = "DOWN"
     LEFT = "LEFT"
+
+
+class VehicleMovementDirection(Enum):
+    FRONT = "FRONT"
+    REVERSE = "REVERSE"

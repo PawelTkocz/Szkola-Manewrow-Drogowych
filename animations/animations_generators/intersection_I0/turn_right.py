@@ -3,7 +3,7 @@ from animations.animations_generators.intersection_I0.intersection_I0_animations
 )
 from animations.animations_generators.schemas import IntersectionAnimationCarDescription
 from application_screen import ApplicationScreen
-from car.toyota_yaris import ToyotaYaris
+from car.toyota_yaris import TOYOTA_YARIS_SPECIFICATION
 from schemas import CardinalDirection
 
 MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME = "turn_right"
@@ -15,7 +15,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "starting_side": CardinalDirection.LEFT,
             "ending_side": CardinalDirection.DOWN,
         },
-        "model": ToyotaYaris(),
+        "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
         "velocity": 0,
     },
@@ -26,7 +26,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "starting_side": CardinalDirection.RIGHT,
             "ending_side": CardinalDirection.UP,
         },
-        "model": ToyotaYaris(),
+        "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
         "velocity": 0,
     },
@@ -37,7 +37,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "starting_side": CardinalDirection.UP,
             "ending_side": CardinalDirection.DOWN,
         },
-        "model": ToyotaYaris(),
+        "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
         "velocity": 0,
     },
@@ -48,7 +48,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "starting_side": CardinalDirection.DOWN,
             "ending_side": CardinalDirection.LEFT,
         },
-        "model": ToyotaYaris(),
+        "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
         "velocity": 0,
     },

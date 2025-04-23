@@ -24,13 +24,9 @@ class TurnSignal:
 
 
 class TurnSignals:
-    def __init__(
-        self, tick_interval: int, activated_turn_signal: HorizontalDirection | None
-    ) -> None:
+    def __init__(self, tick_interval: int) -> None:
         self.turn_signals = {
-            horizontal_direction: TurnSignal(
-                tick_interval, activated_turn_signal == horizontal_direction
-            )
+            horizontal_direction: TurnSignal(tick_interval)
             for horizontal_direction in HorizontalDirection
         }
 
@@ -45,10 +41,5 @@ class TurnSignals:
         for turn_signal in self.turn_signals.values():
             turn_signal.tick()
 
-    def are_turn_signals_lights_on(self) -> dict[HorizontalDirection, bool]:
-        return {
-            horizontal_direction: self.turn_signals[
-                horizontal_direction
-            ].is_turn_signal_light_on()
-            for horizontal_direction in HorizontalDirection
-        }
+    def is_turn_signal_light_on(self, side: HorizontalDirection) -> bool:
+        return self.turn_signals[side].is_turn_signal_light_on()

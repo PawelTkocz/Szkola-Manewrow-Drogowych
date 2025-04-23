@@ -3,7 +3,7 @@ import json
 import math
 import os
 from typing import Any
-from car.model import CarModel
+from car.model import CarModelSpecification
 from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
@@ -126,15 +126,17 @@ class IntersectionManoeuvresManager:
     def processed_car_model_name(self, car_model_name: str) -> str:
         return car_model_name.lower().replace(" ", "_")
 
-    def register_track_velocities(self, car_model: CarModel) -> None:
+    def register_track_velocities(
+        self, car_model_specification: CarModelSpecification
+    ) -> None:
         for track_type, manoeuvre_track in self.tracks:
             max_safe_velocities = TrackVelocitiesPreprocessor().get_max_safe_velocities(
-                manoeuvre_track, car_model
+                manoeuvre_track, car_model_specification
             )
             dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
             self.dump_json(
                 dir_path,
-                f"{self.processed_car_model_name(car_model.name)}_velocities",
+                f"{self.processed_car_model_name(car_model_specification['name'])}_velocities",
                 max_safe_velocities,
             )
 
