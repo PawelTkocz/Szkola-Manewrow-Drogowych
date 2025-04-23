@@ -15,19 +15,20 @@ from road_segments.intersection.schemas import (
 )
 from road_segments.road_segment import RoadSegment
 from schemas import CardinalDirection, HorizontalDirection
+from traffic_control_elements.traffic_signs.traffic_sign import TrafficSign
 
 DEFAULT_COLORISTICS: IntersectionColoristics = {
     "lines": "#c3dedd",
     "pavement": "#6e6362",
     "street": "#383838",
 }
-
 DEFAULT_TURN_CUVRE = 45
 
 
 class Intersection(RoadSegment):
     def __init__(
         self,
+        control_elements: dict[CardinalDirection, list[TrafficSign]] = {},
         colorisitcs: IntersectionColoristics = DEFAULT_COLORISTICS,
         turn_curve: int = DEFAULT_TURN_CUVRE,
     ):
@@ -78,6 +79,9 @@ class Intersection(RoadSegment):
             self._calculate_default_lines(colorisitcs),
             colorisitcs,
             self.pavements,
+        )
+        self.control_elements = self._set_positions_of_control_elements(
+            control_elements
         )
 
     def _calculate_default_lines(
@@ -169,47 +173,40 @@ class Intersection(RoadSegment):
         self.drafter.draw(
             screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
         )
-
-    def draw_road_control_element(
-        self, side: CardinalDirection, surface: Surface
-    ) -> None:
-        pass
-
-    def _get_control_elements_positions(
-        self, control_elements: dict[CardinalDirection, list[Surface]]
-    ) -> dict[CardinalDirection, list[Point]]:
-        def _rect_top_left(side: CardinalDirection, rect: Rectangle) -> Point:
-            if side == CardinalDirection.DOWN:
-                return rect.front_left
-            if side == CardinalDirection.RIGHT:
-                return rect.front_right
-            if side == CardinalDirection.LEFT:
-                return rect.rear_left
-            return rect.rear_right
-
-        result: dict[CardinalDirection, list[Point]] = {}
-        for side, control_elements_list in control_elements.items():
-            lane = self.intersection_parts["incoming_lanes"][side]
-            lane_direction = lane.direction
-            length_vector = lane_direction.get_negative_of_a_vector()
-            width_vector = lane_direction.get_orthogonal_vector(
-                HorizontalDirection.RIGHT
+        for control_element in self.control_elements:
+            control_element.draw(
+                screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
             )
-            elem_front_left = lane.front_right.add_vector(
-                length_vector.copy().scale_to_len(self.turn_curve)
-            ).add_vector(width_vector.copy().scale_to_len(CONTROL_ELEMENTS_MARGIN))
-            result[side] = []
+
+    def _set_positions_of_control_elements(
+        self, control_elements: dict[CardinalDirection, list[TrafficSign]]
+    ) -> list[TrafficSign]:
+        result = []
+        for side, control_elements_list in control_elements.items():
+            control_elements_rectangle = self._get_control_elements_rectangle(
+                side, control_elements_list
+            )
+            front_middle = control_elements_rectangle.front_middle
             for control_element in control_elements_list:
-                rect = Rectangle(
-                    elem_front_left.add_vector(
-                        width_vector.copy().scale_to_len(
-                            control_element.get_width() / 2
-                        )
-                    ),
-                    control_element.get_width(),
-                    control_element.get_height(),
-                    lane_direction,
+                control_element.update_position(
+                    front_middle, control_elements_rectangle.direction
                 )
-                result[side].append(_rect_top_left(side, rect))
-                elem_front_left = rect.rear_left
+                result.append(control_element)
+                front_middle = control_element.rear_middle
         return result
+
+    def _get_control_elements_rectangle(
+        self, side: CardinalDirection, control_elements_list: list[TrafficSign]
+    ) -> Rectangle:
+        length = sum(sign.length for sign in control_elements_list)
+        width = max(sign.width for sign in control_elements_list)
+        lane = self.intersection_parts["incoming_lanes"][side]
+        lane_direction = lane.direction
+        rect_front_middle = lane.front_right.add_vector(
+            lane_direction.get_negative_of_a_vector().scale_to_len(self.turn_curve)
+        ).add_vector(
+            lane_direction.get_orthogonal_vector(
+                HorizontalDirection.RIGHT
+            ).scale_to_len(CONTROL_ELEMENTS_MARGIN + width / 2)
+        )
+        return Rectangle(rect_front_middle, width, length, lane_direction)
