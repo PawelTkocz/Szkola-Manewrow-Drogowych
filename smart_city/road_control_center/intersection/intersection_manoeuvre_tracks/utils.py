@@ -1,4 +1,3 @@
-from geometry.direction import Direction
 from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection
@@ -40,7 +39,7 @@ def _get_turn_offset(
     intersection: Intersection, turn_direction: HorizontalDirection
 ) -> int:
     return (
-        0.5 * intersection.lane_width
+        int(0.5 * intersection.lane_width)
         if turn_direction == HorizontalDirection.RIGHT
         else 0
     )

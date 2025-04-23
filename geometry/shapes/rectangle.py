@@ -163,17 +163,15 @@ class AxisAlignedRectangle(Rectangle):
         scale_factor: float = 1,
         screen_y_offset: int = 0,
     ) -> None:
-        scaled_width = self.width * scale_factor
-        scaled_height = self.length * scale_factor
-        surface = pygame.Surface((scaled_width, scaled_height), pygame.SRCALPHA)
+        surface = pygame.Surface((self.width, self.length), pygame.SRCALPHA)
         pygame.draw.rect(
             surface,
             self.pygame_color,
             pygame.Rect(
                 0,
                 0,
-                scaled_width,
-                scaled_height,
+                self.width,
+                self.length,
             ),
             border_top_right_radius=self.border_front_right_radius,
             border_top_left_radius=self.border_front_left_radius,

@@ -23,8 +23,15 @@ def blit_surface(
     scale_factor: float = 1,
     screen_y_offset: int = 0,
 ) -> None:
-    screen.blit(
+    scaled_surface = pygame.transform.scale(
         surface,
+        (
+            int(surface.get_width() * scale_factor),
+            int(surface.get_height() * scale_factor),
+        ),
+    )
+    screen.blit(
+        scaled_surface,
         get_pygame_coordinates(
             top_left, scale_factor=scale_factor, screen_y_offset=screen_y_offset
         ),

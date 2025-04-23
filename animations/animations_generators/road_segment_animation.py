@@ -67,12 +67,6 @@ class RoadSegmentAnimation(ApplicationScreen):
         self.road_segment.draw(
             screen, scale_factor=self.scale_factor, screen_y_offset=self.screen_y_offset
         )
-        self.traffic_control_center._road_control_center.draw_road_control_elements(
-            screen,
-            self.traffic_control_center._road_control_center.control_elements,
-            scale_factor=self.scale_factor,
-            screen_y_offset=self.screen_y_offset,
-        )
         for car in cars:
             car.draw(
                 screen,
