@@ -1,8 +1,8 @@
 from pygame import Surface
 from drafter.intersection import IntersectionDrafter
 from geometry.direction import Direction
+from geometry.shapes.rectangle import AxisAlignedRectangle, Rectangle
 from geometry.vector import Point
-from geometry.rectangle import Rectangle
 from road_segments.constants import LANE_WIDTH, LINE_WIDTH, ROAD_SEGMENT_SIDE
 from road_segments.intersection.schemas import (
     IntersectionColoristics,
@@ -27,22 +27,56 @@ class Intersection(RoadSegment):
         turn_curve: int = DEFAULT_TURN_CUVRE,
     ):
         self.lane_width = LANE_WIDTH
-        self.area = Rectangle(
+        self.area = AxisAlignedRectangle(
             Point(ROAD_SEGMENT_SIDE / 2, ROAD_SEGMENT_SIDE),
             ROAD_SEGMENT_SIDE,
             ROAD_SEGMENT_SIDE,
-            Direction(Point(0, 1)),
         )
+        lanes_length = (self.area.length - 2 * self.lane_width) / 2
         self.intersection_parts = self._calculate_intersection_parts()
+        pavement_color = colorisitcs["pavement"]
         self.turn_curve = turn_curve
+        self.pavements = [
+            AxisAlignedRectangle(
+                Point(lanes_length / 2, self.area.length),
+                lanes_length,
+                lanes_length,
+                pavement_color,
+                border_rear_right_radius=self.turn_curve,
+            ),
+            AxisAlignedRectangle(
+                Point(self.area.width - lanes_length / 2, self.area.length),
+                lanes_length,
+                lanes_length,
+                pavement_color,
+                border_rear_left_radius=self.turn_curve,
+            ),
+            AxisAlignedRectangle(
+                Point(lanes_length / 2, lanes_length),
+                lanes_length,
+                lanes_length,
+                pavement_color,
+                border_front_right_radius=self.turn_curve,
+            ),
+            AxisAlignedRectangle(
+                Point(self.area.width - lanes_length / 2, lanes_length),
+                lanes_length,
+                lanes_length,
+                pavement_color,
+                border_front_left_radius=self.turn_curve,
+            ),
+        ]
         self.drafter = IntersectionDrafter(
             self.intersection_parts,
             turn_curve,
-            self._calculate_default_lines(),
+            self._calculate_default_lines(colorisitcs),
             colorisitcs,
+            self.pavements,
         )
 
-    def _calculate_default_lines(self) -> list[Rectangle]:
+    def _calculate_default_lines(
+        self, coloristics: IntersectionColoristics
+    ) -> list[Rectangle]:
         lines = []
         for side in CardinalDirection:
             outcoming_lane = self.intersection_parts["outcoming_lanes"][side]
@@ -52,6 +86,7 @@ class Intersection(RoadSegment):
                     LINE_WIDTH,
                     outcoming_lane.length,
                     outcoming_lane.direction,
+                    coloristics["lines"],
                 )
             )
         return lines
@@ -63,11 +98,10 @@ class Intersection(RoadSegment):
         lanes_length = (area.length - street_width) / 2
         area_center = area.center
         return {
-            "intersection_area": Rectangle(
+            "intersection_area": AxisAlignedRectangle(
                 Point(area_center.x, area_center.y + lane_width),
                 street_width,
                 street_width,
-                Direction(Point(0, 1)),
             ),
             "incoming_lanes": {
                 CardinalDirection.UP: Rectangle(

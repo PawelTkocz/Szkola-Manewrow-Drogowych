@@ -68,5 +68,5 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         return {
             "front_middle": front_middle_position,
             "direction": direction,
-            "wheels_direction": Direction(Point(1, 0)),
+            "wheels_angle": 0,
         }

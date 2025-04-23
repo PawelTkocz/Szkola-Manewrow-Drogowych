@@ -55,7 +55,7 @@ class PlaybackAnimation(AnimationStrategy):
             car_description["starting_position"]["front_middle"],
             car_description["starting_position"]["direction"],
             car_description["velocity"],
-            car_description["starting_position"]["wheels_direction"],
+            car_description["starting_position"]["wheels_angle"],
             color=car_description["color"],
         )
 

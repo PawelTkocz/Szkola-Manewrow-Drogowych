@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from car.model import CarModel
+from car.model import CarModelSpecification
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.schemas import LiveCarData
 
@@ -22,8 +22,10 @@ class TrafficControlCenter:
             else None
         )
 
-    def _is_car_model_registered(self, car_model: CarModel) -> bool:
-        return car_model.name in self.registered_car_models
+    def _is_car_model_registered(
+        self, car_model_specification: CarModelSpecification
+    ) -> bool:
+        return car_model_specification["name"] in self.registered_car_models
 
     def _get_current_road_control_center(
         self, live_car_data: LiveCarData
@@ -35,9 +37,11 @@ class TrafficControlCenter:
             else None
         )
 
-    def register_car_model(self, car_model: CarModel) -> None:
-        if self._road_control_center.register_car_model(car_model):
-            self.registered_car_models.add(car_model.name)
+    def register_car_model(
+        self, car_model_specification: CarModelSpecification
+    ) -> None:
+        if self._road_control_center.register_car_model(car_model_specification):
+            self.registered_car_models.add(car_model_specification["name"])
 
     def tick(self) -> None:
         self._time += 1

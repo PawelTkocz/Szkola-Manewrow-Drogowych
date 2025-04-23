@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from car.instruction_controlled_car import CarControlInstructions
-from car.model import CarModel
+from car.model import CarModelSpecification
 from smart_city.schemas import LiveCarData
 
 
@@ -21,7 +21,9 @@ class RoadCarController(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def register_car_model(self, car_model: CarModel) -> bool:
+    def register_car_model(
+        self, car_model_specification: CarModelSpecification
+    ) -> bool:
         raise NotImplementedError
 
     @abstractmethod

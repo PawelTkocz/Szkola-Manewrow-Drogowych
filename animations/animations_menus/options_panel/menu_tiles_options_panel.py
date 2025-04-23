@@ -18,17 +18,16 @@ from animations.animations_menus.options_panel.schemas import (
 from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from drafter.utils import blit_surface, draw_axis_aligned_rectangle
-from geometry.direction import Direction
+from drafter.utils import blit_surface
+from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
-from geometry.rectangle import Rectangle
 
 
 class OptionTile:
     def __init__(
         self,
         tile_description: OptionTileDescription,
-        rectangle: Rectangle,
+        rectangle: AxisAlignedRectangle,
     ):
         self.image = pygame.transform.scale(
             pygame.image.load(
@@ -42,18 +41,7 @@ class OptionTile:
         ]
 
     def render(self, screen: pygame.Surface) -> None:
-        draw_axis_aligned_rectangle(
-            screen,
-            OPTION_TILE_BACKGROUND_COLOR,
-            self.rectangle.front_left,
-            self.rectangle.width,
-            self.rectangle.length,
-            border_front_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
-            border_front_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
-            border_rear_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
-            border_rear_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
-            transparency=OPTION_TILE_BACKGROUND_TRANSPARENCY,
-        )
+        self.rectangle.draw(screen)
         blit_surface(screen, self.image, self.rectangle.front_left)
 
     def is_clicked(self, mouse_click_point: Point) -> bool:
@@ -73,7 +61,7 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
         options_panel_height = (
             rows_number * OPTION_TILE_SIDE + (rows_number - 1) * OPTION_TILE_Y_SPACING
         )
-        self.options_panel = Rectangle(
+        self.options_panel = AxisAlignedRectangle(
             Point(
                 SCREEN_WIDTH // 2,
                 SCREEN_HEIGHT
@@ -83,7 +71,6 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
             columns_number * OPTION_TILE_SIDE
             + (columns_number - 1) * OPTION_TILE_X_SPACING,
             options_panel_height,
-            Direction(Point(0, 1)),
         )
         self.columns_number = columns_number
         self.option_tiles = [
@@ -91,7 +78,7 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
             for tile_index, tile_description in enumerate(option_tiles_description)
         ]
 
-    def _calculate_tile_rectangle(self, option_tile_index: int) -> Rectangle:
+    def _calculate_tile_rectangle(self, option_tile_index: int) -> AxisAlignedRectangle:
         column = option_tile_index % self.columns_number
         row = option_tile_index // self.columns_number
         front_middle_x = (
@@ -102,11 +89,16 @@ class MenuTilesOptionsPanel(MenuOptionsPanel):
         front_middle_y = self.options_panel.front_middle.y - row * (
             OPTION_TILE_SIDE + OPTION_TILE_Y_SPACING
         )
-        return Rectangle(
+        return AxisAlignedRectangle(
             Point(front_middle_x, front_middle_y),
             OPTION_TILE_SIDE,
             OPTION_TILE_SIDE,
-            Direction(Point(0, 1)),
+            OPTION_TILE_BACKGROUND_COLOR,
+            border_front_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_front_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_rear_left_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            border_rear_right_radius=OPTION_TILE_BACKGROUND_BORDER_RADIUS,
+            transparency=OPTION_TILE_BACKGROUND_TRANSPARENCY,
         )
 
     def render(self, screen: pygame.Surface) -> None:

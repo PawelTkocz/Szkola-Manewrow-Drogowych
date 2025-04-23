@@ -1,44 +1,22 @@
 from pygame import Surface
+from car.car_body import CarBody
+from car.car_lights import CarLights
+from car.chassis.chassis import Chassis
 from car.schemas import AccelerationDirection, CarColoristics
-from car.turn_signals import TurnSignals
-from car.model import CarModel
-from car.wheels import Wheels
-from drafter.car import CarDrafter
+from car.model import CarModelSpecification
 from geometry.direction import Direction
-from geometry.vector import Point, Vector
-from geometry.rectangle import Rectangle
+from geometry.vector import Point
 from schemas import HorizontalDirection
 
+
 DEFAULT_CAR_COLORISTICS: CarColoristics = {
-    "bumpers": "#000000",
-    "shell": "#ff0000",
-    "wheels": "#262626",
-    "lights": "#ffc100",
-    "turn_signals": "#ff6500",
-    "side_mirrors": "#000000",
-    "windows": "#000000",
+    "body": {"shell": "#ff0000", "side_mirrors": "#000000", "windows": "#000000"},
+    "chassis": {"chassis": "#000000", "wheels": "#262626"},
+    "lights": {"default": "#ffc100", "turn_singal": "#ff6500"},
 }
 
 
-class CarBody(Rectangle):
-    def __init__(
-        self, front_middle: Point, width: float, length: float, direction: Direction
-    ):
-        super().__init__(front_middle, width, length, direction)
-
-    def _force_move(self, front_vector: Vector) -> None:
-        new_front_middle = self.front_middle.add_vector(front_vector)
-        length_vector = Vector(new_front_middle, self.rear_middle).scale_to_len(
-            self.length
-        )
-        new_rear_middle = new_front_middle.copy().add_vector(
-            length_vector.get_negative_of_a_vector()
-        )
-        new_direction = Direction(new_front_middle, new_rear_middle)
-        self.update_position(new_front_middle, new_direction)
-
-
-class Car(CarBody):
+class Car:
     """
     Class representing a car in Cartesian coordinate system.
     """
@@ -46,12 +24,11 @@ class Car(CarBody):
     def __init__(
         self,
         registry_number: str,
-        model: CarModel,
+        model_specification: CarModelSpecification,
         front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
-        wheels_direction: Direction = Direction(Point(1, 0)),
-        turn_signal: HorizontalDirection | None = None,
+        wheels_angle: float = 0,
         coloristics: CarColoristics = DEFAULT_CAR_COLORISTICS,
         *,
         color: str | None = None,
@@ -59,57 +36,46 @@ class Car(CarBody):
         """
         Initialize car
         """
-        super().__init__(front_middle_position, model.width, model.length, direction)
+        self.chassis = Chassis(
+            model_specification["chassis"],
+            coloristics["chassis"],
+            model_specification["steering_system"],
+            model_specification["wheels"],
+            wheels_angle,
+            front_middle_position,
+            direction,
+        )
+        self.specification = model_specification
         self.registry_number = registry_number
-        self.model = model
-        self.color = color
         self.velocity = velocity
-        self.wheels = Wheels(model.max_wheels_turn, wheels_direction)
-        self.turn_signals = TurnSignals(model.turn_signals_tick_interval, turn_signal)
+        self.lights = CarLights(
+            model_specification["lights"],
+            coloristics["lights"],
+            front_middle_position,
+            direction,
+        )
         self.coloristics = coloristics
         if color:
-            self.coloristics["shell"] = color
-        self._car_drafter = CarDrafter(model, self.coloristics)
+            self.coloristics["body"]["shell"] = color
 
-    @property
-    def wheels_angle(self) -> float:
-        return self.wheels.angle
+        self.body = CarBody(
+            [self.lights.left_light, self.lights.right_light],
+            model_specification["body"],
+            coloristics["body"],
+            front_middle_position,
+            direction,
+        )
 
-    @property
-    def max_acceleration(self) -> float:
-        return self.model.max_acceleration
-
-    @property
-    def max_velocity(self) -> float:
-        return self.model.max_velocity
-
-    @property
-    def max_brake(self) -> float:
-        return self.model.max_brake
-
-    @property
-    def wheels_turn_speed(self) -> float:
-        return self.model.wheels_turn_speed
-
-    @property
-    def wheels_direction(self) -> Direction:
-        return self.wheels.direction
-
-    def turn_left(self) -> None:
-        self.wheels.turn(self.wheels_turn_speed, HorizontalDirection.LEFT)
-
-    def turn_right(self) -> None:
-        self.wheels.turn(self.wheels_turn_speed, HorizontalDirection.RIGHT)
+    def turn(self, direction: HorizontalDirection) -> None:
+        self.chassis.turn(direction)
 
     def accelerate(self, direction: AccelerationDirection) -> None:
+        max_velocity = self.specification["motion"]["max_velocity"]
+        acceleration = self.specification["motion"]["acceleration"]
         if direction == AccelerationDirection.FORWARD:
-            self.velocity = min(
-                self.velocity + self.max_acceleration, self.max_velocity
-            )
+            self.velocity = min(self.velocity + acceleration, max_velocity)
         elif direction == AccelerationDirection.REVERSE:
-            self.velocity = max(
-                self.velocity - self.max_acceleration, -1 * self.max_velocity
-            )
+            self.velocity = max(self.velocity - acceleration, -1 * max_velocity)
 
     def _slow_down(self, value: float) -> None:
         self.velocity = (
@@ -119,36 +85,31 @@ class Car(CarBody):
         )
 
     def brake(self) -> None:
-        self._slow_down(self.max_brake)
+        self._slow_down(self.specification["motion"]["brake"])
 
     def acitvate_turn_signal(self, side: HorizontalDirection) -> None:
-        self.turn_signals.activate(side)
+        self.lights.activate_turn_signal(side)
 
     def deactivate_turn_signal(self) -> None:
-        self.turn_signals.deactivate()
+        self.lights.deactivate_turn_signal()
 
     def move(self) -> None:
         if self.velocity == 0:
             return
-
-        front_movement_vector = self.direction.turn(self.wheels_angle).scale_to_len(
-            self.velocity
-        )
-        self._force_move(front_movement_vector)
-        self._slow_down(self.model.resistance)
+        self.chassis.move(self.velocity)
+        self._slow_down(self.specification["motion"]["resistance"])
+        self.body.update_position(self.chassis.front_middle, self.chassis.direction)
 
     def draw(
         self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
     ) -> None:
-        self._car_drafter.draw(
-            self,
-            self.wheels_angle,
-            self.turn_signals.are_turn_signals_lights_on(),
-            screen,
-            scale_factor=scale_factor,
-            screen_y_offset=screen_y_offset,
+        self.chassis.draw(
+            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
+        )
+        self.body.draw(
+            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
         )
 
     def tick(self) -> None:
         self.move()
-        self.turn_signals.tick()
+        self.lights.tick()

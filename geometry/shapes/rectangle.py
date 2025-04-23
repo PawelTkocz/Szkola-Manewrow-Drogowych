@@ -1,18 +1,21 @@
 import numpy as np
+from pygame import Surface
+import pygame
+from drafter.utils import blit_surface
 from geometry.direction import Direction
+from geometry.shapes.polygon import Polygon
 from geometry.vector import Point, Vector
 from schemas import HorizontalDirection
 
 
-class Rectangle:
-    """
-    Class representing 'directed' rectangle in Cartesian coordinate system
-
-    'Directed' rectangle has its front, left and right side, and rear
-    """
-
+class Rectangle(Polygon):
     def __init__(
-        self, front_middle: Point, width: float, length: float, direction: Direction
+        self,
+        front_middle: Point,
+        width: float,
+        length: float,
+        direction: Direction,
+        color: str = "black",
     ):
         """
         Initialize directed rectangle
@@ -25,7 +28,8 @@ class Rectangle:
         """
         self._width = width
         self._length = length
-        self.update_position(front_middle, direction)
+        self._calculate_corners_positions(front_middle, direction)
+        super().__init__(self.corners_list, color)
 
     @property
     def width(self) -> float:
@@ -66,7 +70,9 @@ class Rectangle:
     def rear_right(self) -> Point:
         return self._rear_right.copy()
 
-    def update_position(self, front_middle: Point, direction: Direction) -> None:
+    def _calculate_corners_positions(
+        self, front_middle: Point, direction: Direction
+    ) -> None:
         self._direction = direction.copy()
         self._front_middle = front_middle.copy()
         width_vec = direction.get_orthogonal_vector(
@@ -118,6 +124,82 @@ class Rectangle:
             rec.is_point_inside(p) for p in self.corners_list
         )
 
+    def copy(self) -> "Rectangle":
+        """
+        Get copy of a rectangle
+        """
+        return Rectangle(
+            self.front_middle, self.width, self.length, self.direction, self.color
+        )
+
+
+class AxisAlignedRectangle(Rectangle):
+    def __init__(
+        self,
+        front_middle: Point,
+        width: float,
+        length: float,
+        color: str = "black",
+        border_front_left_radius: int = -1,
+        border_front_right_radius: int = -1,
+        border_rear_left_radius: int = -1,
+        border_rear_right_radius: int = -1,
+        transparency: int = 255,
+    ) -> None:
+        super().__init__(front_middle, width, length, Direction(Point(0, 1)), color)
+        self.border_front_left_radius = border_front_left_radius
+        self.border_front_right_radius = border_front_right_radius
+        self.border_rear_left_radius = border_rear_left_radius
+        self.border_rear_right_radius = border_rear_right_radius
+        self.transparency = max(0, min(transparency, 255))
+        pygame_color = pygame.Color(color)
+        pygame_color.a = transparency
+        self.pygame_color = pygame_color
+
+    def draw(
+        self,
+        screen: Surface,
+        *,
+        scale_factor: float = 1,
+        screen_y_offset: int = 0,
+    ) -> None:
+        scaled_width = self.width * scale_factor
+        scaled_height = self.length * scale_factor
+        surface = pygame.Surface((scaled_width, scaled_height), pygame.SRCALPHA)
+        pygame.draw.rect(
+            surface,
+            self.pygame_color,
+            pygame.Rect(
+                0,
+                0,
+                scaled_width,
+                scaled_height,
+            ),
+            border_top_right_radius=self.border_front_right_radius,
+            border_top_left_radius=self.border_front_left_radius,
+            border_bottom_left_radius=self.border_rear_left_radius,
+            border_bottom_right_radius=self.border_rear_right_radius,
+        )
+        blit_surface(
+            screen,
+            surface,
+            self.front_left,
+            scale_factor=scale_factor,
+            screen_y_offset=screen_y_offset,
+        )
+
+
+class DynamicRectangle(Rectangle):
+    """
+    Class representing 'directed' rectangle in Cartesian coordinate system
+
+    'Directed' rectangle has its front, left and right side, and rear
+    """
+
+    def update_position(self, front_middle: Point, direction: Direction) -> None:
+        self._calculate_corners_positions(front_middle, direction)
+        self._corners = self.corners_list
+
     def enlarge_rectangle(self, v: float) -> "Rectangle":
         # move somewhere different
         return Rectangle(
@@ -126,9 +208,3 @@ class Rectangle:
             self.length * v,
             self.direction,
         )
-
-    def copy(self) -> "Rectangle":
-        """
-        Get copy of a rectangle
-        """
-        return Rectangle(self.front_middle, self.width, self.length, self.direction)

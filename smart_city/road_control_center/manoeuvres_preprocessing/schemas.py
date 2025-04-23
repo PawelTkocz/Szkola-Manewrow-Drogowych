@@ -28,4 +28,4 @@ class EnteringZoneStatus(TypedDict):
 class ManoeuvreStartCarState(TypedDict):
     front_middle: Point
     direction: Direction
-    wheels_direction: Direction
+    wheels_angle: float

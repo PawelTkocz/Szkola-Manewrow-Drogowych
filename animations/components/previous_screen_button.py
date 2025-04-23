@@ -4,17 +4,16 @@ from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from drafter.utils import blit_surface
-from geometry.direction import Direction
+from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
-from geometry.rectangle import Rectangle
 
 
 class PreviousScreenButton:
     def __init__(
         self,
         previous_app_screen: ApplicationScreen,
-        rectangle: Rectangle = Rectangle(
-            Point(50, SCREEN_HEIGHT), 100, 100, Direction(Point(0, 1))
+        rectangle: AxisAlignedRectangle = AxisAlignedRectangle(
+            Point(50, SCREEN_HEIGHT), 100, 100
         ),
     ) -> None:
         self.image = pygame.transform.scale(

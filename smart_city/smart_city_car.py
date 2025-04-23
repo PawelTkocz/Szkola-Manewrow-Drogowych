@@ -3,11 +3,10 @@ from car.instruction_controlled_car import (
     CarControlInstructions,
     InstructionControlledCar,
 )
-from car.model import CarModel
+from car.model import CarModelSpecification
 from car.schemas import CarColoristics
 from geometry.direction import Direction
 from geometry.vector import Point
-from schemas import HorizontalDirection
 from smart_city.schemas import IntersectionManoeuvreDescription, LiveCarData
 from smart_city.traffic_control_center import TrafficControlCenter
 
@@ -16,12 +15,11 @@ class SmartCityCar(InstructionControlledCar):
     def __init__(
         self,
         registry_number: str,
-        model: CarModel,
+        model_specification: CarModelSpecification,
         front_middle_position: Point,
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
-        wheels_direction: Direction = Direction(Point(1, 0)),
-        turn_signal: HorizontalDirection | None = None,
+        wheels_angle: float = 0,
         coloristics: CarColoristics = DEFAULT_CAR_COLORISTICS,
         *,
         color: str | None = None,
@@ -29,12 +27,11 @@ class SmartCityCar(InstructionControlledCar):
     ):
         super().__init__(
             registry_number,
-            model,
+            model_specification,
             front_middle_position,
             direction,
             velocity,
-            wheels_direction,
-            turn_signal,
+            wheels_angle,
             coloristics,
             color=color,
         )
@@ -74,14 +71,14 @@ class SmartCityCar(InstructionControlledCar):
         return {
             "specification": {
                 "registry_number": self.registry_number,
-                "model": self.model,
+                "model": self.specification,
             },
             "live_state": {
-                "direction": self.direction,
-                "front_middle": self.front_middle,
+                "direction": self.chassis.direction,
+                "front_middle": self.chassis.front_middle,
                 "velocity": self.velocity,
-                "wheels_direction": self.wheels_direction,
                 "high_priority": self.high_priority,
+                "wheels_angle": self.chassis.wheels_angle,
             },
             "manoeuvre_description": self.manoeuvre_description,
         }
