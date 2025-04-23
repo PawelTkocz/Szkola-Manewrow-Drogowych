@@ -39,7 +39,11 @@ def get_track_start_point(
 def _get_turn_offset(
     intersection: Intersection, turn_direction: HorizontalDirection
 ) -> int:
-    return intersection.turn_curve if turn_direction == HorizontalDirection.RIGHT else 0
+    return (
+        0.5 * intersection.lane_width
+        if turn_direction == HorizontalDirection.RIGHT
+        else 0
+    )
 
 
 def get_turn_start_point(

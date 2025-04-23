@@ -17,7 +17,7 @@ DEFAULT_COLORISTICS: IntersectionColoristics = {
     "street": "#383838",
 }
 
-DEFAULT_TURN_CUVRE = 90
+DEFAULT_TURN_CUVRE = 45
 
 
 class Intersection(RoadSegment):
@@ -84,7 +84,7 @@ class Intersection(RoadSegment):
                 Rectangle(
                     outcoming_lane.front_left,
                     LINE_WIDTH,
-                    outcoming_lane.length,
+                    outcoming_lane.length - self.turn_curve,
                     outcoming_lane.direction,
                     coloristics["lines"],
                 )
