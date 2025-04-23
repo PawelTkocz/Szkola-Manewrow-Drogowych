@@ -3,13 +3,18 @@ from drafter.intersection import IntersectionDrafter
 from geometry.direction import Direction
 from geometry.shapes.rectangle import AxisAlignedRectangle, Rectangle
 from geometry.vector import Point
-from road_segments.constants import LANE_WIDTH, LINE_WIDTH, ROAD_SEGMENT_SIDE
+from road_segments.constants import (
+    CONTROL_ELEMENTS_MARGIN,
+    LANE_WIDTH,
+    LINE_WIDTH,
+    ROAD_SEGMENT_SIDE,
+)
 from road_segments.intersection.schemas import (
     IntersectionColoristics,
     IntersectionParts,
 )
 from road_segments.road_segment import RoadSegment
-from schemas import CardinalDirection
+from schemas import CardinalDirection, HorizontalDirection
 
 DEFAULT_COLORISTICS: IntersectionColoristics = {
     "lines": "#c3dedd",
@@ -32,10 +37,11 @@ class Intersection(RoadSegment):
             ROAD_SEGMENT_SIDE,
             ROAD_SEGMENT_SIDE,
         )
+        self.turn_curve = turn_curve
         lanes_length = (self.area.length - 2 * self.lane_width) / 2
         self.intersection_parts = self._calculate_intersection_parts()
         pavement_color = colorisitcs["pavement"]
-        self.turn_curve = turn_curve
+
         self.pavements = [
             AxisAlignedRectangle(
                 Point(lanes_length / 2, self.area.length),
@@ -84,7 +90,7 @@ class Intersection(RoadSegment):
                 Rectangle(
                     outcoming_lane.front_left,
                     LINE_WIDTH,
-                    outcoming_lane.length - self.turn_curve,
+                    outcoming_lane.length,
                     outcoming_lane.direction,
                     coloristics["lines"],
                 )
@@ -168,3 +174,42 @@ class Intersection(RoadSegment):
         self, side: CardinalDirection, surface: Surface
     ) -> None:
         pass
+
+    def _get_control_elements_positions(
+        self, control_elements: dict[CardinalDirection, list[Surface]]
+    ) -> dict[CardinalDirection, list[Point]]:
+        def _rect_top_left(side: CardinalDirection, rect: Rectangle) -> Point:
+            if side == CardinalDirection.DOWN:
+                return rect.front_left
+            if side == CardinalDirection.RIGHT:
+                return rect.front_right
+            if side == CardinalDirection.LEFT:
+                return rect.rear_left
+            return rect.rear_right
+
+        result: dict[CardinalDirection, list[Point]] = {}
+        for side, control_elements_list in control_elements.items():
+            lane = self.intersection_parts["incoming_lanes"][side]
+            lane_direction = lane.direction
+            length_vector = lane_direction.get_negative_of_a_vector()
+            width_vector = lane_direction.get_orthogonal_vector(
+                HorizontalDirection.RIGHT
+            )
+            elem_front_left = lane.front_right.add_vector(
+                length_vector.copy().scale_to_len(self.turn_curve)
+            ).add_vector(width_vector.copy().scale_to_len(CONTROL_ELEMENTS_MARGIN))
+            result[side] = []
+            for control_element in control_elements_list:
+                rect = Rectangle(
+                    elem_front_left.add_vector(
+                        width_vector.copy().scale_to_len(
+                            control_element.get_width() / 2
+                        )
+                    ),
+                    control_element.get_width(),
+                    control_element.get_height(),
+                    lane_direction,
+                )
+                result[side].append(_rect_top_left(side, rect))
+                elem_front_left = rect.rear_left
+        return result

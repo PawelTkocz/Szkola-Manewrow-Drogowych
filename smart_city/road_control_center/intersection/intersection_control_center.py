@@ -1,5 +1,7 @@
+from pygame import Surface
 from car.instruction_controlled_car import CarControlInstructions
 from car.model import CarModelSpecification
+from drafter.utils import blit_surface
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
@@ -23,7 +25,11 @@ from smart_city.schemas import LiveCarData
 
 class IntersectionControlCenter(RoadControlCenter):
     def __init__(
-        self, intersection: Intersection, intersection_rules: IntersectionRules, id: str
+        self,
+        intersection: Intersection,
+        intersection_rules: IntersectionRules,
+        control_elements: dict[CardinalDirection, list[Surface]],
+        id: str,
     ):
         super().__init__(intersection.area, id)
         self.software = IntersectionControlCenterSoftware(
@@ -33,6 +39,9 @@ class IntersectionControlCenter(RoadControlCenter):
         self.cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo] = {}
         self.intersection_manoeuvres_manager = IntersectionManoeuvresManager(
             intersection
+        )
+        self.control_elements_positions = intersection._get_control_elements_positions(
+            control_elements
         )
 
     def calculate_control_instructions(
@@ -87,3 +96,21 @@ class IntersectionControlCenter(RoadControlCenter):
     def register_tracks(self) -> bool:
         self.intersection_manoeuvres_manager.register_tracks()
         return True
+
+    def draw_road_control_elements(
+        self,
+        screen: Surface,
+        control_elements: dict[CardinalDirection, list[Surface]],
+        *,
+        scale_factor: float = 1,
+        screen_y_offset: int = 0,
+    ) -> None:
+        for side, control_elements_list in control_elements.items():
+            for index, control_element in enumerate(control_elements_list):
+                blit_surface(
+                    screen,
+                    control_element,
+                    self.control_elements_positions[side][index],
+                    scale_factor=scale_factor,
+                    screen_y_offset=screen_y_offset,
+                )
