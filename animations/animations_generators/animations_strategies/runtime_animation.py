@@ -59,7 +59,6 @@ class RuntimeAnimation(AnimationStrategy):
     def move_cars(self) -> list[Car]:
         for car in self._get_cars_that_start_movement():
             car["car"].connect_to_traffic_control_center(self.traffic_control_center)
-        self.traffic_control_center.tick()
         for car in self.cars:
             if self.frame_number < car["start_frame_number"]:
                 continue

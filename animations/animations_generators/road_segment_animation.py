@@ -19,6 +19,7 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.vector import Point
 from road_segments.constants import ROAD_SEGMENT_SIDE
 from road_segments.road_segment import RoadSegment
+from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.traffic_control_center import TrafficControlCenter
 
 
@@ -28,7 +29,7 @@ class RoadSegmentAnimation(ApplicationScreen):
         road_segment: RoadSegment,
         cars_descriptions: list[AnimationCarDescription],
         control_instructions_dir_path: str,
-        traffic_control_center: TrafficControlCenter,
+        road_control_center: RoadControlCenter,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
@@ -36,14 +37,16 @@ class RoadSegmentAnimation(ApplicationScreen):
         self.previous_screen_button = (
             PreviousScreenButton(previous_app_screen) if previous_app_screen else None
         )
+        self.traffic_control_center = TrafficControlCenter(road_control_center)
         self.animation_strategy: AnimationStrategy = (
             PlaybackAnimation(cars_descriptions, control_instructions_dir_path)
             if PLAYBACK_ANIMATIONS
             else RuntimeAnimation(
-                cars_descriptions, control_instructions_dir_path, traffic_control_center
+                cars_descriptions,
+                control_instructions_dir_path,
+                self.traffic_control_center,
             )
         )
-        # can pass here road_control_center and create traffic_control_center
         car_models = {
             car_description["model"]["name"] for car_description in cars_descriptions
         }
@@ -51,7 +54,7 @@ class RoadSegmentAnimation(ApplicationScreen):
             car_description["model"] for car_description in cars_descriptions
         ]:
             if car_model["name"] in car_models:
-                traffic_control_center.register_car_model(car_model)
+                self.traffic_control_center.register_car_model(car_model)
                 car_models.remove(car_model["name"])
         self.scale_factor = SCREEN_WIDTH / ROAD_SEGMENT_SIDE
         self.screen_y_offset = int(
@@ -59,9 +62,16 @@ class RoadSegmentAnimation(ApplicationScreen):
         )
 
     def render_frame(self, screen: Surface) -> None:
+        self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
         self.road_segment.draw(
             screen, scale_factor=self.scale_factor, screen_y_offset=self.screen_y_offset
+        )
+        self.traffic_control_center._road_control_center.draw_road_control_elements(
+            screen,
+            self.traffic_control_center._road_control_center.control_elements,
+            scale_factor=self.scale_factor,
+            screen_y_offset=self.screen_y_offset,
         )
         for car in cars:
             car.draw(
