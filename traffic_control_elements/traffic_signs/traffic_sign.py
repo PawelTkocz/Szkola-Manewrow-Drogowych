@@ -13,8 +13,10 @@ class TrafficSignName(Enum):
     D1 = "D1"
     A7 = "A7"
     B20 = "B20"
-    T6a = "T6a"
-    T6c = "T6c"
+    T6a_LEFT = "T6a_LEFT"
+    T6a_RIGHT = "T6a_RIGHT"
+    T6c_LEFT = "T6c_LEFT"
+    T6c_RIGHT = "T6c_RIGHT"
 
 
 SIGN_WIDTH = 50
