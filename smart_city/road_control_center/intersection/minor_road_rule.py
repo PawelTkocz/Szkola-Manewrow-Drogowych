@@ -37,6 +37,7 @@ class MinorRoadRule(IntersectionRules):
         if (
             starting_side in self.minor_roads
             and self.minor_roads[starting_side] == TrafficSignName.B20
+            and car_info["velocity"] != 0
         ):
             return False
         return True

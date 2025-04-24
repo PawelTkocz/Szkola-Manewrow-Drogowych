@@ -17,4 +17,5 @@ class IntersectionCarManoeuvreInfo(TypedDict):
 
 class IntersectionPriorityCarInfo(TypedDict):
     high_priority: bool
+    velocity: float
     manoeuvre_description: IntersectionManoeuvreDescription
