@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import TypedDict
 from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_rules import (
@@ -7,16 +6,12 @@ from smart_city.road_control_center.intersection.intersection_rules import (
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionPriorityCarInfo,
 )
-
-
-class MinorRoadSign(Enum):
-    A7 = "A7"
-    B20 = "B20"
+from traffic_control_elements.traffic_signs.traffic_sign import TrafficSignName
 
 
 class MinorRoadDescription(TypedDict):
     side: CardinalDirection
-    sign: MinorRoadSign
+    sign: TrafficSignName
 
 
 class MinorRoadRule(IntersectionRules):
@@ -41,7 +36,7 @@ class MinorRoadRule(IntersectionRules):
         starting_side = car_info["manoeuvre_description"]["starting_side"]
         if (
             starting_side in self.minor_roads
-            and self.minor_roads[starting_side] == MinorRoadSign.B20
+            and self.minor_roads[starting_side] == TrafficSignName.B20
         ):
             return False
         return True

@@ -4,10 +4,9 @@ from animations.animations_generators.intersection_I0.go_straight import (
 from animations.animations_generators.intersection_I0.turn_left import (
     IntersectionI0TurnLeftAnimation,
 )
-from animations.animations_generators.intersection_I0.turn_right import (
-    IntersectionI0TurnRightAnimation,
+from animations.animations_menus.interesction_manoeuvres_menus.intersection_I1_manoeuvres_menu import (
+    IntersectionI1ManoeuvresMenu,
 )
-
 from animations.animations_menus.interesction_manoeuvres_menus.sign_A5_manoeuvres_menu import (
     IntersectionI0ManoeuvresMenu,
 )
@@ -32,7 +31,7 @@ class MainMenu(MenuScreen):
             },
             {
                 "image_file_name": "sign_D1_and_A7.png",
-                "on_click_app_screen_generator": lambda: IntersectionI0TurnRightAnimation(
+                "on_click_app_screen_generator": lambda: IntersectionI1ManoeuvresMenu(
                     previous_app_screen=self
                 ),
             },
