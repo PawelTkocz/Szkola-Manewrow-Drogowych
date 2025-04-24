@@ -156,6 +156,9 @@ class IntersectionControlCenterSoftware:
                 "high_priority": entering_intersection_live_car_data["live_state"][
                     "high_priority"
                 ],
+                "velocity": entering_intersection_live_car_data["live_state"][
+                    "velocity"
+                ],
             },
             entering_intersection_time,
         ):
@@ -194,6 +197,9 @@ class IntersectionControlCenterSoftware:
                     "manoeuvre_description": cars_manoeuvre_info[registry_number][
                         "manoeuvre"
                     ].manoeuvre_description,
+                    "velocity": live_cars_data[registry_number]["live_state"][
+                        "velocity"
+                    ],
                 },
                 {
                     "high_priority": live_cars_data[_registry_number]["live_state"][
@@ -202,6 +208,9 @@ class IntersectionControlCenterSoftware:
                     "manoeuvre_description": car_manoeuvre_info[
                         "manoeuvre"
                     ].manoeuvre_description,
+                    "velocity": live_cars_data[_registry_number]["live_state"][
+                        "velocity"
+                    ],
                 },
                 time,
             )
