@@ -7,6 +7,12 @@ from animations.animations_generators.intersection_I0.turn_left import (
 from animations.animations_menus.interesction_manoeuvres_menus.intersection_I1_manoeuvres_menu import (
     IntersectionI1ManoeuvresMenu,
 )
+from animations.animations_menus.interesction_manoeuvres_menus.intersection_I2_manoeuvres_menu import (
+    IntersectionI2ManoeuvresMenu,
+)
+from animations.animations_menus.interesction_manoeuvres_menus.intersection_I3_manoeuvres_menu import (
+    IntersectionI3ManoeuvresMenu,
+)
 from animations.animations_menus.interesction_manoeuvres_menus.sign_A5_manoeuvres_menu import (
     IntersectionI0ManoeuvresMenu,
 )
@@ -37,13 +43,13 @@ class MainMenu(MenuScreen):
             },
             {
                 "image_file_name": "sign_B20.png",
-                "on_click_app_screen_generator": lambda: IntersectionI0GoStraightAnimation(
+                "on_click_app_screen_generator": lambda: IntersectionI2ManoeuvresMenu(
                     previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "sign_T6a.png",
-                "on_click_app_screen_generator": lambda: IntersectionI0TurnLeftAnimation(
+                "on_click_app_screen_generator": lambda: IntersectionI3ManoeuvresMenu(
                     previous_app_screen=self
                 ),
             },
