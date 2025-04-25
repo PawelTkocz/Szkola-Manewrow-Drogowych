@@ -33,25 +33,19 @@ class SignT6aLeft(TrafficSign):
 class SignT6aRight(TrafficSign):
     def __init__(self) -> None:
         super().__init__(TrafficSignName.T6a_RIGHT, "sign_T6a.png")
-        self.original_state_images = [
-            pygame.transform.rotate(self.original_state_images[0], 90)
-        ]
-        self.rotated_state_images = self.original_state_images
+        self.image = pygame.transform.rotate(self.image, 90)
+        self.rotated_image = self.image
 
 
 class SignT6cLeft(TrafficSign):
     def __init__(self) -> None:
         super().__init__(TrafficSignName.T6c_LEFT, "sign_T6a.png")
-        self.original_state_images = [
-            pygame.transform.rotate(self.original_state_images[0], 180)
-        ]
-        self.rotated_state_images = self.original_state_images
+        self.image = pygame.transform.rotate(self.image, 180)
+        self.rotated_image = self.image
 
 
 class SignT6cRight(TrafficSign):
     def __init__(self) -> None:
         super().__init__(TrafficSignName.T6c_RIGHT, "sign_T6a.png")
-        self.original_state_images = [
-            pygame.transform.rotate(self.original_state_images[0], 270)
-        ]
-        self.rotated_state_images = self.original_state_images
+        self.image = pygame.transform.rotate(self.image, 270)
+        self.rotated_image = self.image

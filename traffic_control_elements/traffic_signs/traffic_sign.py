@@ -1,4 +1,10 @@
 from enum import Enum
+
+import pygame
+from animations.constants import IMAGES_DIR_PATH
+from drafter.utils import blit_surface
+from geometry.direction import Direction
+from geometry.vector import Point
 from traffic_control_elements.traffic_control_element import TrafficControlElement
 
 
@@ -22,8 +28,31 @@ class TrafficSign(TrafficControlElement):
         name: TrafficSignName,
         image_file_name: str,
     ) -> None:
-        super().__init__([image_file_name], SIGN_WIDTH)
+        super().__init__(SIGN_WIDTH, SIGN_WIDTH)
+        self.image = pygame.transform.scale(
+            pygame.image.load(f"{IMAGES_DIR_PATH}/{image_file_name}"),
+            (SIGN_WIDTH, SIGN_WIDTH),
+        )
+        self.rotated_image = self.image
         self.name = name
+
+    def update_position(self, front_middle: Point, direction: Direction) -> None:
+        super().update_position(front_middle, direction)
+        self.rotated_image = pygame.transform.rotate(self.image, self.rotation_angle)
+
+    def tick(self) -> None:
+        return
+
+    def draw(
+        self, screen: pygame.Surface, *, scale_factor=1, screen_y_offset=0
+    ) -> None:
+        blit_surface(
+            screen,
+            self.rotated_image,
+            self._image_top_left,
+            scale_factor=scale_factor,
+            screen_y_offset=screen_y_offset,
+        )
 
 
 # move scale factor and y offset to some global variables
