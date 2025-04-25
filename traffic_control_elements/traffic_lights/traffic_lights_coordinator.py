@@ -11,5 +11,5 @@ class TrafficLightsState(Enum):
 
 class TrafficLightsCoordinator(ABC):
     @abstractmethod
-    def get_state(self, time: int) -> TrafficLightsState:
+    def get_state(self, tick: int) -> TrafficLightsState:
         raise NotImplementedError
