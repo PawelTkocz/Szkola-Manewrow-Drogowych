@@ -8,12 +8,12 @@ from traffic_control_elements.traffic_signs.signs import (
     SignT6cLeft,
     SignT6cRight,
 )
-from traffic_control_elements.traffic_signs.traffic_sign import TrafficSign
+from traffic_control_elements.traffic_signs.traffic_sign import TrafficControlElement
 
 
 class IntersectionI3(Intersection):
     def __init__(self) -> None:
-        control_elements: dict[CardinalDirection, list[TrafficSign]] = {
+        control_elements: dict[CardinalDirection, list[TrafficControlElement]] = {
             CardinalDirection.DOWN: [SignA7(), SignT6cRight()],
             CardinalDirection.LEFT: [SignD1(), SignT6aLeft()],
             CardinalDirection.RIGHT: [SignA7(), SignT6cLeft()],

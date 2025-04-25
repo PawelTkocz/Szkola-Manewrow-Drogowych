@@ -1,6 +1,3 @@
-from animations.animations_generators.intersection_I0.go_straight import (
-    IntersectionI0GoStraightAnimation,
-)
 from animations.animations_generators.intersection_I0.turn_left import (
     IntersectionI0TurnLeftAnimation,
 )

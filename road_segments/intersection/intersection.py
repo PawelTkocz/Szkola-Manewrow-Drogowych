@@ -15,7 +15,7 @@ from road_segments.intersection.schemas import (
 )
 from road_segments.road_segment import RoadSegment
 from schemas import CardinalDirection, HorizontalDirection
-from traffic_control_elements.traffic_signs.traffic_sign import TrafficSign
+from traffic_control_elements.traffic_control_element import TrafficControlElement
 
 DEFAULT_COLORISTICS: IntersectionColoristics = {
     "lines": "#c3dedd",
@@ -28,7 +28,7 @@ DEFAULT_TURN_CUVRE = 45
 class Intersection(RoadSegment):
     def __init__(
         self,
-        control_elements: dict[CardinalDirection, list[TrafficSign]] = {},
+        control_elements: dict[CardinalDirection, list[TrafficControlElement]] = {},
         colorisitcs: IntersectionColoristics = DEFAULT_COLORISTICS,
         turn_curve: int = DEFAULT_TURN_CUVRE,
     ):
@@ -179,8 +179,8 @@ class Intersection(RoadSegment):
             )
 
     def _set_positions_of_control_elements(
-        self, control_elements: dict[CardinalDirection, list[TrafficSign]]
-    ) -> list[TrafficSign]:
+        self, control_elements: dict[CardinalDirection, list[TrafficControlElement]]
+    ) -> list[TrafficControlElement]:
         result = []
         for side, control_elements_list in control_elements.items():
             control_elements_rectangle = self._get_control_elements_rectangle(
@@ -196,7 +196,9 @@ class Intersection(RoadSegment):
         return result
 
     def _get_control_elements_rectangle(
-        self, side: CardinalDirection, control_elements_list: list[TrafficSign]
+        self,
+        side: CardinalDirection,
+        control_elements_list: list[TrafficControlElement],
     ) -> Rectangle:
         length = sum(sign.length for sign in control_elements_list)
         width = max(sign.width for sign in control_elements_list)
