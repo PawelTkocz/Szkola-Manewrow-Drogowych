@@ -1,5 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
-from geometry.shapes.rectangle import AxisAlignedRectangle
+from road_segments.road_segment import RoadSegment
 from smart_city.road_control_center.road_car_controller import RoadCarController
 from smart_city.road_control_center.utils import (
     get_predicted_live_car_data,
@@ -8,21 +8,24 @@ from smart_city.schemas import LiveCarData
 
 
 class RoadControlCenter(RoadCarController):
-    def __init__(self, area: AxisAlignedRectangle, id: str) -> None:
+    def __init__(self, road_segment: RoadSegment, id: str) -> None:
         self.id = id
         self.time = 0
         self.live_cars_data: dict[str, LiveCarData] = {}
         self._predicted_live_cars_data: dict[str, LiveCarData] = {}
-        self.area = area
+        self.road_segment = road_segment
 
     def is_car_inside_control_area(self, live_car_data: LiveCarData) -> bool:
-        return self.area.is_point_inside(live_car_data["live_state"]["front_middle"])
+        return self.road_segment.area.is_point_inside(
+            live_car_data["live_state"]["front_middle"]
+        )
 
     def tick(self, current_time: int) -> None:
         self._time = current_time
         self.live_cars_data = self._predicted_live_cars_data
         self._predicted_live_cars_data = {}
         self.update_active_cars_on_road(list(self.live_cars_data))
+        self.road_segment.tick()
 
     def send_control_instructions(
         self, live_car_data: LiveCarData

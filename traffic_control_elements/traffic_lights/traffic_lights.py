@@ -57,3 +57,6 @@ class TrafficLights(TrafficControlElement):
             scale_factor=scale_factor,
             screen_y_offset=screen_y_offset,
         )
+
+    def get_state(self) -> TrafficLightsState:
+        return self.current_state

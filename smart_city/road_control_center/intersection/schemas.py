@@ -1,9 +1,13 @@
 from typing import TypedDict
 
+from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from smart_city.schemas import IntersectionManoeuvreDescription
+from traffic_control_elements.traffic_lights.traffic_lights_coordinator import (
+    TrafficLightsState,
+)
 
 
 class IntersectionManoeuvreStatus(TypedDict):
@@ -19,3 +23,4 @@ class IntersectionPriorityCarInfo(TypedDict):
     high_priority: bool
     velocity: float
     manoeuvre_description: IntersectionManoeuvreDescription
+    traffic_lights_state: dict[CardinalDirection, TrafficLightsState]
