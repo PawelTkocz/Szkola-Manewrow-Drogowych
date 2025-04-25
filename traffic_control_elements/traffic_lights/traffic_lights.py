@@ -9,7 +9,8 @@ from traffic_control_elements.traffic_lights.traffic_lights_coordinator import (
     TrafficLightsState,
 )
 
-TRAFFIC_LIGHTS_WIDTH = 50
+TRAFFIC_LIGHTS_WIDTH = 25
+TRAFFIC_LIGHTS_HEIGHT = 68
 
 
 class TrafficLights(TrafficControlElement):
@@ -19,13 +20,13 @@ class TrafficLights(TrafficControlElement):
         start_tick: int,
         traffic_lights_coordinator: TrafficLightsCoordinator,
     ) -> None:
-        super().__init__(TRAFFIC_LIGHTS_WIDTH, TRAFFIC_LIGHTS_WIDTH)
+        super().__init__(TRAFFIC_LIGHTS_WIDTH, TRAFFIC_LIGHTS_HEIGHT)
         self.states_images = {
             state: pygame.transform.scale(
                 pygame.image.load(
                     f"{IMAGES_DIR_PATH}/{states_images_file_names[state]}"
                 ),
-                (TRAFFIC_LIGHTS_WIDTH, TRAFFIC_LIGHTS_WIDTH),
+                (TRAFFIC_LIGHTS_WIDTH, TRAFFIC_LIGHTS_HEIGHT),
             )
             for state in TrafficLightsState
         }
