@@ -62,6 +62,7 @@ class RoadSegmentAnimation(ApplicationScreen):
         )
 
     def render_frame(self, screen: Surface) -> None:
+        self.road_segment.tick()
         self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
         self.road_segment.draw(

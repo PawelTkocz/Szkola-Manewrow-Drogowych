@@ -10,6 +10,9 @@ from animations.animations_menus.interesction_manoeuvres_menus.intersection_I2_m
 from animations.animations_menus.interesction_manoeuvres_menus.intersection_I3_manoeuvres_menu import (
     IntersectionI3ManoeuvresMenu,
 )
+from animations.animations_menus.interesction_manoeuvres_menus.intersection_I4_manoeuvres_menu import (
+    IntersectionI4ManoeuvresMenu,
+)
 from animations.animations_menus.interesction_manoeuvres_menus.sign_A5_manoeuvres_menu import (
     IntersectionI0ManoeuvresMenu,
 )
@@ -52,7 +55,7 @@ class MainMenu(MenuScreen):
             },
             {
                 "image_file_name": "traffic_lights.png",
-                "on_click_app_screen_generator": lambda: IntersectionI0TurnLeftAnimation(
+                "on_click_app_screen_generator": lambda: IntersectionI4ManoeuvresMenu(
                     previous_app_screen=self
                 ),
             },

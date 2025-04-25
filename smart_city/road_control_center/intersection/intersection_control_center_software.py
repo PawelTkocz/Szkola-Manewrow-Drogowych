@@ -7,6 +7,7 @@ from car.instruction_controlled_car import (
 )
 
 from road_segments.intersection.intersection import Intersection
+from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
@@ -159,6 +160,9 @@ class IntersectionControlCenterSoftware:
                 "velocity": entering_intersection_live_car_data["live_state"][
                     "velocity"
                 ],
+                "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
+                if self.intersection.traffic_lights
+                else {},
             },
             entering_intersection_time,
         ):
@@ -200,6 +204,9 @@ class IntersectionControlCenterSoftware:
                     "velocity": live_cars_data[registry_number]["live_state"][
                         "velocity"
                     ],
+                    "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
+                    if self.intersection.traffic_lights
+                    else {},
                 },
                 {
                     "high_priority": live_cars_data[_registry_number]["live_state"][
@@ -211,6 +218,9 @@ class IntersectionControlCenterSoftware:
                     "velocity": live_cars_data[_registry_number]["live_state"][
                         "velocity"
                     ],
+                    "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
+                    if self.intersection.traffic_lights
+                    else {},
                 },
                 time,
             )

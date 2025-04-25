@@ -16,6 +16,11 @@ from road_segments.intersection.schemas import (
 from road_segments.road_segment import RoadSegment
 from schemas import CardinalDirection, HorizontalDirection
 from traffic_control_elements.traffic_control_element import TrafficControlElement
+from traffic_control_elements.traffic_lights.intersection_traffic_lights import (
+    IntersectionTrafficLights,
+)
+from traffic_control_elements.traffic_lights.traffic_lights import TrafficLights
+from traffic_control_elements.traffic_signs.traffic_sign import TrafficSign
 
 DEFAULT_COLORISTICS: IntersectionColoristics = {
     "lines": "#c3dedd",
@@ -28,31 +33,33 @@ DEFAULT_TURN_CUVRE = 45
 class Intersection(RoadSegment):
     def __init__(
         self,
-        control_elements: dict[CardinalDirection, list[TrafficControlElement]] = {},
+        *,
+        traffic_lights: IntersectionTrafficLights | None = None,
+        traffic_signs: dict[CardinalDirection, list[TrafficSign]] | None = None,
         colorisitcs: IntersectionColoristics = DEFAULT_COLORISTICS,
         turn_curve: int = DEFAULT_TURN_CUVRE,
     ):
         self.lane_width = LANE_WIDTH
-        self.area = AxisAlignedRectangle(
+        self._area = AxisAlignedRectangle(
             Point(ROAD_SEGMENT_SIDE / 2, ROAD_SEGMENT_SIDE),
             ROAD_SEGMENT_SIDE,
             ROAD_SEGMENT_SIDE,
         )
         self.turn_curve = turn_curve
-        lanes_length = (self.area.length - 2 * self.lane_width) / 2
+        lanes_length = (self._area.length - 2 * self.lane_width) / 2
         self.intersection_parts = self._calculate_intersection_parts()
         pavement_color = colorisitcs["pavement"]
 
         self.pavements = [
             AxisAlignedRectangle(
-                Point(lanes_length / 2, self.area.length),
+                Point(lanes_length / 2, self._area.length),
                 lanes_length,
                 lanes_length,
                 pavement_color,
                 border_rear_right_radius=self.turn_curve,
             ),
             AxisAlignedRectangle(
-                Point(self.area.width - lanes_length / 2, self.area.length),
+                Point(self._area.width - lanes_length / 2, self._area.length),
                 lanes_length,
                 lanes_length,
                 pavement_color,
@@ -66,7 +73,7 @@ class Intersection(RoadSegment):
                 border_front_right_radius=self.turn_curve,
             ),
             AxisAlignedRectangle(
-                Point(self.area.width - lanes_length / 2, lanes_length),
+                Point(self._area.width - lanes_length / 2, lanes_length),
                 lanes_length,
                 lanes_length,
                 pavement_color,
@@ -80,9 +87,14 @@ class Intersection(RoadSegment):
             colorisitcs,
             self.pavements,
         )
+        self.traffic_lights = traffic_lights
         self.control_elements = self._set_positions_of_control_elements(
-            control_elements
+            traffic_lights.get_ligths() if traffic_lights else {}, traffic_signs or {}
         )
+
+    @property
+    def area(self) -> AxisAlignedRectangle:
+        return self._area
 
     def _calculate_default_lines(
         self, coloristics: IntersectionColoristics
@@ -103,7 +115,7 @@ class Intersection(RoadSegment):
 
     def _calculate_intersection_parts(self) -> IntersectionParts:
         lane_width = self.lane_width
-        area = self.area
+        area = self._area
         street_width = 2 * lane_width
         lanes_length = (area.length - street_width) / 2
         area_center = area.center
@@ -179,10 +191,17 @@ class Intersection(RoadSegment):
             )
 
     def _set_positions_of_control_elements(
-        self, control_elements: dict[CardinalDirection, list[TrafficControlElement]]
+        self,
+        traffic_lights: dict[CardinalDirection, TrafficLights],
+        traffic_signs: dict[CardinalDirection, list[TrafficSign]],
     ) -> list[TrafficControlElement]:
         result = []
-        for side, control_elements_list in control_elements.items():
+        for side in CardinalDirection:
+            control_elements_list: list[TrafficControlElement] = []
+            if side in traffic_lights:
+                control_elements_list.append(traffic_lights[side])
+            if side in traffic_signs:
+                control_elements_list.extend(traffic_signs[side])
             control_elements_rectangle = self._get_control_elements_rectangle(
                 side, control_elements_list
             )
@@ -212,3 +231,7 @@ class Intersection(RoadSegment):
             ).scale_to_len(CONTROL_ELEMENTS_MARGIN + width / 2)
         )
         return Rectangle(rect_front_middle, width, length, lane_direction)
+
+    def tick(self) -> None:
+        for control_element in self.control_elements:
+            control_element.tick()

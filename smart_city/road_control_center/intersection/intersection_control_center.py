@@ -28,7 +28,7 @@ class IntersectionControlCenter(RoadControlCenter):
         intersection_rules: IntersectionRules,
         id: str,
     ):
-        super().__init__(intersection.area, id)
+        super().__init__(intersection, id)
         self.software = IntersectionControlCenterSoftware(
             intersection, intersection_rules
         )
