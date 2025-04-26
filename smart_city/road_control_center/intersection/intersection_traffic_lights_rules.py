@@ -16,9 +16,12 @@ class IntersectionTrafficLightsRules(IntersectionRules):
         lights_state = car_info["traffic_lights_state"][starting_side]
         if lights_state in [TrafficLightsState.GREEN, TrafficLightsState.YELLOW]:
             return True
-        else:
-            return False
-        # add rule for conditional arrow
+        if (
+            lights_state == TrafficLightsState.RED_WITH_ARROW
+            and car_info["velocity"] == 0
+        ):
+            return True
+        return False
 
     def is_on_road_with_priority(
         self, car_info: IntersectionPriorityCarInfo, time: int
