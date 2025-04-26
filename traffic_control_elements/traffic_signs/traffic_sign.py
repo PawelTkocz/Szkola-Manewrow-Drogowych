@@ -40,9 +40,6 @@ class TrafficSign(TrafficControlElement):
         super().update_position(front_middle, direction)
         self.rotated_image = pygame.transform.rotate(self.image, self.rotation_angle)
 
-    def tick(self) -> None:
-        return
-
     def draw(
         self, screen: pygame.Surface, *, scale_factor=1, screen_y_offset=0
     ) -> None:

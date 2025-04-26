@@ -47,6 +47,3 @@ class TrafficControlElement(DynamicRectangle):
         screen_y_offset: int = 0,
     ) -> None:
         raise NotImplementedError
-
-    def tick(self) -> None:
-        raise NotImplementedError

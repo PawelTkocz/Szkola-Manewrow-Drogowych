@@ -4,9 +4,7 @@ from smart_city.road_control_center.intersection.intersection_rules import (
 from smart_city.road_control_center.intersection.schemas import (
     IntersectionPriorityCarInfo,
 )
-from traffic_control_elements.traffic_lights.traffic_lights_coordinator import (
-    TrafficLightsState,
-)
+from traffic_control_elements.traffic_lights.schemas import TrafficLightsState
 
 
 class IntersectionTrafficLightsRules(IntersectionRules):
@@ -20,6 +18,7 @@ class IntersectionTrafficLightsRules(IntersectionRules):
             return True
         else:
             return False
+        # add rule for conditional arrow
 
     def is_on_road_with_priority(
         self, car_info: IntersectionPriorityCarInfo, time: int
