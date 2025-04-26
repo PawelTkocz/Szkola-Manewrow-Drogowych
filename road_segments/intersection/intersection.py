@@ -16,7 +16,7 @@ from road_segments.intersection.schemas import (
 from road_segments.road_segment import RoadSegment
 from schemas import CardinalDirection, HorizontalDirection
 from traffic_control_elements.traffic_control_element import TrafficControlElement
-from traffic_control_elements.traffic_lights.intersection_traffic_lights import (
+from traffic_control_elements.traffic_lights.intersection.intersection_traffic_lights import (
     IntersectionTrafficLights,
 )
 from traffic_control_elements.traffic_lights.traffic_lights import TrafficLights
@@ -233,5 +233,5 @@ class Intersection(RoadSegment):
         return Rectangle(rect_front_middle, width, length, lane_direction)
 
     def tick(self) -> None:
-        for control_element in self.control_elements:
-            control_element.tick()
+        if self.traffic_lights:
+            self.traffic_lights.tick()
