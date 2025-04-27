@@ -197,12 +197,3 @@ class DynamicRectangle(Rectangle):
     def update_position(self, front_middle: Point, direction: Direction) -> None:
         self._calculate_corners_positions(front_middle, direction)
         self._corners = self.corners_list
-
-    def enlarge_rectangle(self, v: float) -> "Rectangle":
-        # move somewhere different
-        return Rectangle(
-            self.center.add_vector(self.direction.scale_to_len(self.length / 2 * v)),
-            self.width * v,
-            self.length * v,
-            self.direction,
-        )
