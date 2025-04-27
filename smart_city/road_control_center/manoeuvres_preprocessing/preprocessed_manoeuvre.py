@@ -36,6 +36,37 @@ class PreprocessedManoeuvre:
             point_data["turn_signal"] for point_data in manoeuvre_track_points
         ]
 
+    def get_all_car_control_instructions(
+        self, live_car_data: LiveCarData
+    ) -> list[CarControlInstructions]:
+        track_point_index = self.track.find_index_of_closest_point(
+            live_car_data["live_state"]["front_middle"]
+        )
+        turn_signal_instruction = self._get_turn_singal_instruction(track_point_index)
+        speed_instruction = self._get_speed_instruction(
+            track_point_index, live_car_data
+        )
+        speed_instructions = [
+            SpeedInstruction.ACCELERATE_FRONT,
+            SpeedInstruction.NO_CHANGE,
+            SpeedInstruction.BRAKE,
+        ]
+        speed_instruction_index = speed_instructions.index(speed_instruction)
+        safe_car_control_instructions: list[CarControlInstructions] = []
+        for speed_instruction in speed_instructions[speed_instruction_index:]:
+            safe_car_control_instructions.append(
+                {
+                    "movement_instructions": {
+                        "speed_instruction": speed_instruction,
+                        "turn_instruction": get_turn_instruction(
+                            self.track, live_car_data, speed_instruction
+                        ),
+                    },
+                    "turn_signals_instruction": turn_signal_instruction,
+                }
+            )
+        return safe_car_control_instructions
+
     def get_car_control_instructions(
         self, live_car_data: LiveCarData
     ) -> CarControlInstructions:

@@ -7,7 +7,6 @@ from car.instruction_controlled_car import (
 )
 
 from road_segments.intersection.intersection import Intersection
-from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
@@ -18,9 +17,6 @@ from smart_city.road_control_center.intersection.schemas import (
     IntersectionCarManoeuvreInfo,
 )
 
-from smart_city.road_control_center.utils import (
-    get_turn_instruction,
-)
 from smart_city.road_control_center.car_simulation import CarSimulation
 from smart_city.schemas import LiveCarData
 
@@ -60,26 +56,10 @@ class IntersectionControlCenterSoftware:
     ) -> CarControlInstructions:
         live_car_data = live_cars_data[registry_number]
         manoeuvre = cars_manoeuvre_info[registry_number]["manoeuvre"]
-        car_control_instructions = manoeuvre.get_car_control_instructions(live_car_data)
-        safe_speed_instruction = car_control_instructions["movement_instructions"][
-            "speed_instruction"
-        ]
-        speed_instructions = [
-            SpeedInstruction.ACCELERATE_FRONT,
-            SpeedInstruction.NO_CHANGE,
-            SpeedInstruction.BRAKE,
-        ]
-        speed_instruction_index = speed_instructions.index(safe_speed_instruction)
-        for speed_instruction in speed_instructions[speed_instruction_index:-1]:
-            car_control_instructions = {
-                "movement_instructions": {
-                    "speed_instruction": speed_instruction,
-                    "turn_instruction": get_turn_instruction(
-                        manoeuvre.track, live_car_data, speed_instruction
-                    ),
-                },
-                "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
-            }
+        all_car_control_instructions = manoeuvre.get_all_car_control_instructions(
+            live_car_data
+        )
+        for car_control_instructions in all_car_control_instructions[:-1]:
             if self.is_approaching_instruction_safe(
                 registry_number,
                 live_cars_data,
@@ -88,15 +68,7 @@ class IntersectionControlCenterSoftware:
                 time,
             ):
                 return car_control_instructions
-        return {
-            "movement_instructions": {
-                "speed_instruction": SpeedInstruction.BRAKE,
-                "turn_instruction": get_turn_instruction(
-                    manoeuvre.track, live_car_data, SpeedInstruction.BRAKE
-                ),
-            },
-            "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
-        }
+        return all_car_control_instructions[-1]
 
     def is_approaching_instruction_safe(
         self,
