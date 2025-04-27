@@ -16,7 +16,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "ending_side": CardinalDirection.RIGHT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 0,
+        "start_frame_number": 10,
         "velocity": 0,
     },
     {
@@ -27,7 +27,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
             "ending_side": CardinalDirection.RIGHT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 0,
+        "start_frame_number": 10,
         "velocity": 0,
     },
     {
