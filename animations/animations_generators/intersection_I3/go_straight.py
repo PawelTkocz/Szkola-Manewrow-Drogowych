@@ -8,17 +8,17 @@ from schemas import CardinalDirection
 
 MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME = "go_straight"
 CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
-    {
-        "registry_number": "DW001",
-        "color": "red",
-        "manoeuvre_description": {
-            "starting_side": CardinalDirection.DOWN,
-            "ending_side": CardinalDirection.RIGHT,
-        },
-        "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 0,
-        "velocity": 0,
-    },
+    # {
+    #     "registry_number": "DW001",
+    #     "color": "red",
+    #     "manoeuvre_description": {
+    #         "starting_side": CardinalDirection.DOWN,
+    #         "ending_side": CardinalDirection.RIGHT,
+    #     },
+    #     "model": TOYOTA_YARIS_SPECIFICATION,
+    #     "start_frame_number": 0,
+    #     "velocity": 0,
+    # },
     {
         "registry_number": "DW002",
         "color": "pink",
@@ -35,7 +35,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
         "color": "purple",
         "manoeuvre_description": {
             "starting_side": CardinalDirection.RIGHT,
-            "ending_side": CardinalDirection.DOWN,
+            "ending_side": CardinalDirection.LEFT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
