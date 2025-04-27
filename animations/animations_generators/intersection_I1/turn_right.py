@@ -24,7 +24,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
         "color": "pink",
         "manoeuvre_description": {
             "starting_side": CardinalDirection.RIGHT,
-            "ending_side": CardinalDirection.UP,
+            "ending_side": CardinalDirection.LEFT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
