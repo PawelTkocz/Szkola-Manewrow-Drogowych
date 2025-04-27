@@ -1,6 +1,7 @@
 import math
 from car.model import CarModelSpecification
 
+##
 TOYOTA_YARIS_SPECIFICATION: CarModelSpecification = {
     "name": "Toyota Yaris",
     "motion": {
