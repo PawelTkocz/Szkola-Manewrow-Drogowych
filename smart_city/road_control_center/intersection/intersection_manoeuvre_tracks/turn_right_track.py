@@ -25,8 +25,8 @@ from utils import clockwise_direction_shift
 
 
 EXPECTED_MIN_TURN_VELOCITY = 2
-END_TURN_SIGNAL_DISTANCE = 30
-START_TURN_SIGNAL_DISTANCE = 150
+END_TURN_SIGNAL_DISTANCE = 85
+START_TURN_SIGNAL_DISTANCE = 285
 
 
 class IntersectionTurnRightManoeuvreTrack(ManoeuvreTrack):

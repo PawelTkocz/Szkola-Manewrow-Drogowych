@@ -24,8 +24,8 @@ from smart_city.road_control_center.manoeuvres_preprocessing.schemas import Turn
 from utils import clockwise_direction_shift
 
 EXPECTED_MIN_TURN_VELOCITY = 3
-END_TURN_SIGNAL_DISTANCE = 120
-START_TURN_SIGNAL_DISTANCE = 240
+END_TURN_SIGNAL_DISTANCE = 150
+START_TURN_SIGNAL_DISTANCE = 350
 
 
 class IntersectionTurnLeftManoeuvreTrack(ManoeuvreTrack):
