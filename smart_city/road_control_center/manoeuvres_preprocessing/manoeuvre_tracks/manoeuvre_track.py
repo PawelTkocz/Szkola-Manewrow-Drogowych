@@ -1,11 +1,11 @@
 from typing import TypedDict
 
+from car.turn_signals import TurnSignalType
 from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track_segment import (
     ManoeuvreTrackSegment,
 )
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     ManoeuvreStartCarState,
-    TurnSignal,
 )
 from smart_city.road_control_center.track import Track
 
@@ -92,5 +92,5 @@ class ManoeuvreTrack(Track):
             ),
         }
 
-    def get_turn_signal(self, track_point_index: int) -> TurnSignal:
-        return TurnSignal.NO_SIGNAL
+    def get_turn_signal(self, track_point_index: int) -> TurnSignalType:
+        return TurnSignalType.NO_SIGNAL

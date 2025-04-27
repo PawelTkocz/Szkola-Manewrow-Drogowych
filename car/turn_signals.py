@@ -1,4 +1,11 @@
+from enum import Enum
 from schemas import HorizontalDirection
+
+
+class TurnSignalType(Enum):
+    RIGHT_SIGNAL = "right_signal"
+    NO_SIGNAL = "no_signal"
+    LEFT_SIGNAL = "left_signal"
 
 
 class TurnSignal:
@@ -43,3 +50,11 @@ class TurnSignals:
 
     def is_turn_signal_light_on(self, side: HorizontalDirection) -> bool:
         return self.turn_signals[side].is_turn_signal_light_on()
+
+    @property
+    def turn_signal(self) -> TurnSignalType:
+        if self.turn_signals[HorizontalDirection.LEFT].activated:
+            return TurnSignalType.LEFT_SIGNAL
+        if self.turn_signals[HorizontalDirection.RIGHT].activated:
+            return TurnSignalType.RIGHT_SIGNAL
+        return TurnSignalType.NO_SIGNAL

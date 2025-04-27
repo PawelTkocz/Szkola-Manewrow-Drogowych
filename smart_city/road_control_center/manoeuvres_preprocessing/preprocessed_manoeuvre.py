@@ -3,11 +3,11 @@ from car.instruction_controlled_car import (
     SpeedInstruction,
     TurnSignalsInstruction,
 )
+from car.turn_signals import TurnSignalType
 from geometry.shapes.rectangle import Rectangle
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     EnteringZoneStatus,
     ManoeuvreTrackPoint,
-    TurnSignal,
 )
 from smart_city.road_control_center.track import Track
 from smart_city.road_control_center.utils import (
@@ -109,9 +109,9 @@ class PreprocessedManoeuvre:
     ) -> TurnSignalsInstruction:
         turn_signal = self.turn_signals[track_point_index]
         turn_signal_instruction = TurnSignalsInstruction.NO_SIGNALS_ON
-        if turn_signal == TurnSignal.LEFT_SIGNAL:
+        if turn_signal == TurnSignalType.LEFT_SIGNAL:
             turn_signal_instruction = TurnSignalsInstruction.LEFT_SIGNAL_ON
-        elif turn_signal == TurnSignal.RIGHT_SIGNAL:
+        elif turn_signal == TurnSignalType.RIGHT_SIGNAL:
             turn_signal_instruction = TurnSignalsInstruction.RIGHT_SIGNAL_ON
         return turn_signal_instruction
 

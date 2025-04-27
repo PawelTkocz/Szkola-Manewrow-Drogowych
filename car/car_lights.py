@@ -1,7 +1,7 @@
 from car.car_part import CarPart
 from car.model import LightsSpecification
 from car.schemas import CarPartPosition, LightsColoristics
-from car.turn_signals import TurnSignals
+from car.turn_signals import TurnSignalType, TurnSignals
 from geometry.direction import Direction
 from geometry.vector import Point
 from schemas import HorizontalDirection
@@ -50,6 +50,10 @@ class CarLights:
 
     def deactivate_turn_signal(self) -> None:
         self.turn_signals.deactivate()
+
+    @property
+    def turn_signal(self) -> TurnSignalType:
+        return self.turn_signals.turn_signal
 
     def tick(self) -> None:
         self.turn_signals.tick()
