@@ -28,11 +28,11 @@ class TrafficSign(TrafficControlElement):
         name: TrafficSignName,
         image_file_name: str,
     ) -> None:
-        super().__init__(SIGN_WIDTH, SIGN_WIDTH)
-        self.image = pygame.transform.scale(
-            pygame.image.load(f"{IMAGES_DIR_PATH}/{image_file_name}"),
-            (SIGN_WIDTH, SIGN_WIDTH),
-        )
+        image = pygame.image.load(f"{IMAGES_DIR_PATH}/{image_file_name}")
+        sign_height = image.get_height() * SIGN_WIDTH / image.get_width()
+        scaled_image = pygame.transform.scale(image, (SIGN_WIDTH, sign_height))
+        super().__init__(SIGN_WIDTH, sign_height)
+        self.image = scaled_image
         self.rotated_image = self.image
         self.name = name
 
