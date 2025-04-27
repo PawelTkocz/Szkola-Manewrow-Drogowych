@@ -7,9 +7,9 @@ from traffic_control_elements.traffic_signs.traffic_sign import TrafficSign
 class IntersectionI2(Intersection):
     def __init__(self) -> None:
         signs: dict[CardinalDirection, list[TrafficSign]] = {
-            CardinalDirection.DOWN: [SignB20()],
-            CardinalDirection.LEFT: [SignD1()],
-            CardinalDirection.RIGHT: [SignD1()],
-            CardinalDirection.UP: [SignB20()],
+            CardinalDirection.DOWN: [SignD1()],
+            CardinalDirection.LEFT: [SignB20()],
+            CardinalDirection.RIGHT: [SignB20()],
+            CardinalDirection.UP: [SignD1()],
         }
         super().__init__(traffic_signs=signs)

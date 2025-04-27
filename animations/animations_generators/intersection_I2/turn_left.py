@@ -12,8 +12,8 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
         "registry_number": "DW001",
         "color": "red",
         "manoeuvre_description": {
-            "starting_side": CardinalDirection.RIGHT,
-            "ending_side": CardinalDirection.UP,
+            "starting_side": CardinalDirection.UP,
+            "ending_side": CardinalDirection.DOWN,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
