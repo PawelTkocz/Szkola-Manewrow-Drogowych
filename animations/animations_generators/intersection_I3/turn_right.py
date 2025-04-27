@@ -20,17 +20,6 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
         "velocity": 0,
     },
     {
-        "registry_number": "DW002",
-        "color": "pink",
-        "manoeuvre_description": {
-            "starting_side": CardinalDirection.RIGHT,
-            "ending_side": CardinalDirection.UP,
-        },
-        "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 0,
-        "velocity": 0,
-    },
-    {
         "registry_number": "DW003",
         "color": "purple",
         "manoeuvre_description": {
@@ -46,7 +35,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
         "color": "purple",
         "manoeuvre_description": {
             "starting_side": CardinalDirection.DOWN,
-            "ending_side": CardinalDirection.LEFT,
+            "ending_side": CardinalDirection.UP,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
