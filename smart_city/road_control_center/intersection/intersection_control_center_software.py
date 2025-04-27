@@ -6,7 +6,10 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 
+from car.turn_signals import TurnSignalType
+from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
+from schemas import CardinalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
@@ -18,7 +21,8 @@ from smart_city.road_control_center.intersection.schemas import (
 )
 
 from smart_city.road_control_center.car_simulation import CarSimulation
-from smart_city.schemas import LiveCarData
+from smart_city.road_control_center.track import Track
+from smart_city.schemas import IntersectionManoeuvreDescription, LiveCarData
 
 
 class CarOnIntersectionSimulation(TypedDict):
@@ -28,10 +32,16 @@ class CarOnIntersectionSimulation(TypedDict):
 
 class IntersectionControlCenterSoftware:
     def __init__(
-        self, intersection: Intersection, intersection_rules: IntersectionRules
+        self,
+        intersection: Intersection,
+        intersection_rules: IntersectionRules,
+        manoeuvres_base: dict[
+            str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
+        ],
     ):
         self.intersection = intersection
         self.intersection_rules = intersection_rules
+        self.tracks = manoeuvres_base
 
     def get_default_movement_instruction(self) -> CarControlInstructions:
         return {
@@ -163,40 +173,91 @@ class IntersectionControlCenterSoftware:
     ) -> list[str]:
         return [
             _registry_number
-            for _registry_number, car_manoeuvre_info in cars_manoeuvre_info.items()
-            if _registry_number != registry_number
-            and self.intersection_rules.must_yield_the_right_of_way(
-                {
-                    "high_priority": live_cars_data[registry_number]["live_state"][
-                        "high_priority"
-                    ],
-                    "manoeuvre_description": cars_manoeuvre_info[registry_number][
-                        "manoeuvre"
-                    ].manoeuvre_description,
-                    "velocity": live_cars_data[registry_number]["live_state"][
-                        "velocity"
-                    ],
-                    "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
-                    if self.intersection.traffic_lights
-                    else {},
-                },
-                {
-                    "high_priority": live_cars_data[_registry_number]["live_state"][
-                        "high_priority"
-                    ],
-                    "manoeuvre_description": car_manoeuvre_info[
-                        "manoeuvre"
-                    ].manoeuvre_description,
-                    "velocity": live_cars_data[_registry_number]["live_state"][
-                        "velocity"
-                    ],
-                    "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
-                    if self.intersection.traffic_lights
-                    else {},
-                },
+            for _registry_number in cars_manoeuvre_info
+            if self.must_yield_the_right_of_way(
+                registry_number,
+                _registry_number,
                 time,
+                live_cars_data,
+                cars_manoeuvre_info,
             )
         ]
+
+    def must_yield_the_right_of_way(
+        self,
+        registry_number1: str,
+        registry_number2: str,
+        time: int,
+        live_cars_data: dict[str, LiveCarData],
+        cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
+    ) -> bool:
+        if registry_number1 == registry_number2:
+            return False
+        car2_possible_manoeuvres = self.get_all_possible_manoeuvres(
+            live_cars_data[registry_number2],
+            cars_manoeuvre_info[registry_number2]["manoeuvre"].manoeuvre_description,
+        )
+        return any(
+            [
+                self.intersection_rules.must_yield_the_right_of_way(
+                    {
+                        "high_priority": live_cars_data[registry_number1]["live_state"][
+                            "high_priority"
+                        ],
+                        "manoeuvre_description": cars_manoeuvre_info[registry_number1][
+                            "manoeuvre"
+                        ].manoeuvre_description,
+                        "velocity": live_cars_data[registry_number1]["live_state"][
+                            "velocity"
+                        ],
+                        "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
+                        if self.intersection.traffic_lights
+                        else {},
+                    },
+                    {
+                        "high_priority": live_cars_data[registry_number2]["live_state"][
+                            "high_priority"
+                        ],
+                        "manoeuvre_description": car2_possible_manoeuvre,
+                        "velocity": live_cars_data[registry_number2]["live_state"][
+                            "velocity"
+                        ],
+                        "traffic_lights_state": self.intersection.traffic_lights.get_lights_states()
+                        if self.intersection.traffic_lights
+                        else {},
+                    },
+                    time,
+                )
+                for car2_possible_manoeuvre in car2_possible_manoeuvres
+            ]
+        )
+
+    def get_all_possible_manoeuvres(
+        self,
+        live_car_data: LiveCarData,
+        manoeuvre_description: IntersectionManoeuvreDescription,
+    ) -> list[IntersectionManoeuvreDescription]:
+        max_distance_to_track = 30
+        starting_side = manoeuvre_description["starting_side"]
+        if live_car_data["live_state"]["turn_signal"] != TurnSignalType.NO_SIGNAL:
+            return [manoeuvre_description]
+        result: list[IntersectionManoeuvreDescription] = []
+        for ending_side in CardinalDirection:
+            if ending_side == starting_side:
+                continue
+            manoeuvre = self.tracks[live_car_data["specification"]["model"]["name"]][
+                starting_side
+            ][ending_side]
+            if (
+                manoeuvre.track.get_distance_to_point(
+                    live_car_data["live_state"]["front_middle"]
+                )
+                < max_distance_to_track
+            ):
+                result.append(
+                    {"starting_side": starting_side, "ending_side": ending_side}
+                )
+        return result
 
     def can_cross_intersection_without_priority_violation(
         self,
@@ -208,23 +269,35 @@ class IntersectionControlCenterSoftware:
     ) -> bool:
         if not cars_with_priority:
             return True
-        priority_cars: list[CarOnIntersectionSimulation] = [
-            {
-                "car_simulation": CarSimulation.from_live_car_data(
-                    live_cars_data[_registry_number]
-                ),
-                "car_manoeuvre_info": cars_manoeuvre_info[_registry_number],
-            }
-            for _registry_number in cars_with_priority
-        ]
-        priority_cars_crossing_intersection = [
-            car for car in priority_cars if self.is_car_crossing_intersection(car)
-        ]
-        priority_cars_closing_to_intersection = [
-            car
-            for car in priority_cars
-            if car not in priority_cars_crossing_intersection
-        ]
+        priority_cars: list[CarOnIntersectionSimulation] = []
+        for _registry_number in cars_with_priority:
+            priority_cars.extend(
+                [
+                    {
+                        "car_simulation": CarSimulation.from_live_car_data(
+                            live_cars_data[_registry_number]
+                        ),
+                        "car_manoeuvre_info": {
+                            "manoeuvre_status": cars_manoeuvre_info[_registry_number][
+                                "manoeuvre_status"
+                            ],
+                            "manoeuvre": self.tracks[
+                                live_cars_data[_registry_number]["specification"][
+                                    "model"
+                                ]["name"]
+                            ][manoeuvre_description["starting_side"]][
+                                manoeuvre_description["ending_side"]
+                            ],
+                        },
+                    }
+                    for manoeuvre_description in self.get_all_possible_manoeuvres(
+                        live_cars_data[_registry_number],
+                        cars_manoeuvre_info[_registry_number][
+                            "manoeuvre"
+                        ].manoeuvre_description,
+                    )
+                ]
+            )
         car_simulation: CarOnIntersectionSimulation = {
             "car_simulation": CarSimulation.from_live_car_data(
                 live_cars_data[registry_number]
@@ -239,29 +312,12 @@ class IntersectionControlCenterSoftware:
         while not self.has_car_crossed_intersection(car_simulation):
             if self._priority_violation(
                 car_simulation,
-                priority_cars_crossing_intersection,
-                priority_cars_closing_to_intersection,
+                priority_cars,
             ):
                 return False
             for car in priority_cars + [car_simulation]:
                 self._move_car_simulation(car)
         return True
-
-    def is_car_crossing_intersection(
-        self,
-        intersection_car_simulation: CarOnIntersectionSimulation,
-    ) -> bool:
-        car_simulation = intersection_car_simulation["car_simulation"]
-        manoeuvre_description = intersection_car_simulation["car_manoeuvre_info"][
-            "manoeuvre"
-        ].manoeuvre_description
-        intersection_area = self.intersection.intersection_parts["intersection_area"]
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
-            manoeuvre_description["ending_side"]
-        ]
-        return car_simulation.collides(intersection_area) or car_simulation.collides(
-            outcoming_lane
-        )
 
     def has_car_crossed_intersection(
         self,
@@ -293,14 +349,9 @@ class IntersectionControlCenterSoftware:
     def _priority_violation(
         self,
         car: CarOnIntersectionSimulation,
-        priority_cars_crossing_intersection: list[CarOnIntersectionSimulation],
-        priority_cars_closing_to_intersection: list[CarOnIntersectionSimulation],
+        priority_cars: list[CarOnIntersectionSimulation],
     ) -> bool:
-        intersection_area = self.intersection.intersection_parts["intersection_area"]
         return any(
-            car["car_simulation"].collides(car["car_simulation"].body_safe_zone)
-            for car in priority_cars_closing_to_intersection
-        ) or any(
             car_["car_simulation"].collides(car["car_simulation"].body_safe_zone)
-            for car_ in priority_cars_crossing_intersection
+            for car_ in priority_cars
         )

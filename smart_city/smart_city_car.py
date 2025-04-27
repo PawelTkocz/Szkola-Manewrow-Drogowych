@@ -79,6 +79,7 @@ class SmartCityCar(InstructionControlledCar):
                 "velocity": self.velocity,
                 "high_priority": self.high_priority,
                 "wheels_angle": self.chassis.wheels_angle,
+                "turn_signal": self.turn_signal,
             },
             "manoeuvre_description": self.manoeuvre_description,
         }
