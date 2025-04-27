@@ -275,7 +275,7 @@ class IntersectionControlCenterSoftware:
         outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
             manoeuvre_description["ending_side"]
         ]
-        return not car_simulation.collides(
+        return not car_simulation.body_safe_zone.collides(
             intersection_area
         ) and car_simulation.collides(outcoming_lane)
 
@@ -297,23 +297,10 @@ class IntersectionControlCenterSoftware:
         priority_cars_closing_to_intersection: list[CarOnIntersectionSimulation],
     ) -> bool:
         intersection_area = self.intersection.intersection_parts["intersection_area"]
-        return (
-            any(
-                car["car_simulation"].collides(intersection_area)
-                for car in priority_cars_closing_to_intersection
-            )
-            or any(
-                car_["car_simulation"].collides(car["car_simulation"].body)
-                for car_ in priority_cars_crossing_intersection
-            )
-            or any(
-                car["car_simulation"].collides(
-                    self.intersection.intersection_parts["incoming_lanes"][
-                        car["car_manoeuvre_info"]["manoeuvre"].manoeuvre_description[
-                            "starting_side"
-                        ]
-                    ]
-                )
-                for car in priority_cars_crossing_intersection
-            )
+        return any(
+            car["car_simulation"].collides(car["car_simulation"].body_safe_zone)
+            for car in priority_cars_closing_to_intersection
+        ) or any(
+            car_["car_simulation"].collides(car["car_simulation"].body_safe_zone)
+            for car_ in priority_cars_crossing_intersection
         )

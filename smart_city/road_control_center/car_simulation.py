@@ -5,6 +5,7 @@ from car.model import CarModelSpecification
 from geometry.direction import Direction
 from geometry.shapes.rectangle import Rectangle
 from geometry.vector import Point
+from road_segments.constants import LANE_WIDTH
 from smart_city.schemas import LiveCarData
 import smart_city.smart_city_car as smart_city_car
 
@@ -83,3 +84,14 @@ class CarSimulation:
     @property
     def body(self) -> Rectangle:
         return self._car.chassis
+
+    @property
+    def body_safe_zone(self) -> Rectangle:
+        return Rectangle(
+            self._car.chassis.front_middle.add_vector(
+                self._car.chassis.direction.scale_to_len(1.5 * self._car.chassis.length)
+            ),
+            self._car.chassis.width * 1.5,
+            self._car.chassis.length * 4,
+            self._car.chassis.direction,
+        )
