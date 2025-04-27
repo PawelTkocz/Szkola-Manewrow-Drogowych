@@ -4,6 +4,7 @@ import math
 import os
 from typing import Any
 from car.model import CarModelSpecification
+from car.turn_signals import TurnSignalType
 from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
@@ -21,7 +22,6 @@ from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.ma
 )
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import (
     ManoeuvreTrackPoint,
-    TurnSignal,
 )
 from smart_city.road_control_center.manoeuvres_preprocessing.track_velocities_preprocessor import (
     TrackVelocitiesPreprocessor,
@@ -203,7 +203,9 @@ class IntersectionManoeuvresManager:
             track_points: list[tuple[float, float]] = json.load(file)
             return [Point(*point) for point in track_points]
 
-    def load_turn_signals(self, track_type: IntersectionTrackType) -> list[TurnSignal]:
+    def load_turn_signals(
+        self, track_type: IntersectionTrackType
+    ) -> list[TurnSignalType]:
         file_path = os.path.join(
             self.dir_with_tracks_data,
             track_type.value,
@@ -211,4 +213,4 @@ class IntersectionManoeuvresManager:
         )
         with open(file_path, "r") as file:
             turn_signals: list[str] = json.load(file)
-            return [TurnSignal(turn_signal) for turn_signal in turn_signals]
+            return [TurnSignalType(turn_signal) for turn_signal in turn_signals]

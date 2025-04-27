@@ -1,3 +1,4 @@
+from car.turn_signals import TurnSignalType
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection
 from smart_city.road_control_center.intersection.intersection_manoeuvre_tracks.utils import (
@@ -20,7 +21,6 @@ from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.ri
 from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.straight_path import (
     StraightPath,
 )
-from smart_city.road_control_center.manoeuvres_preprocessing.schemas import TurnSignal
 from utils import clockwise_direction_shift
 
 EXPECTED_MIN_TURN_VELOCITY = 3
@@ -58,25 +58,25 @@ class IntersectionTurnLeftManoeuvreTrack(ManoeuvreTrack):
             StraightPath(end_turn_point, end_point),
         ]
 
-    def get_turn_signal(self, track_point_index: int) -> TurnSignal:
+    def get_turn_signal(self, track_point_index: int) -> TurnSignalType:
         incoming_segments_data = self.get_incoming_segments_data(track_point_index)
         if (
             incoming_segments_data["current_track_segment"].type
             == TrackSegmentType.TURN_LEFT
         ):
-            return TurnSignal.LEFT_SIGNAL
+            return TurnSignalType.LEFT_SIGNAL
 
         if (
             incoming_segments_data["next_track_segment"] is None
             and incoming_segments_data["current_track_segment_distance_covered"]
             < END_TURN_SIGNAL_DISTANCE
         ):
-            return TurnSignal.LEFT_SIGNAL
+            return TurnSignalType.LEFT_SIGNAL
 
         if (
             incoming_segments_data["next_track_segment"]
             and incoming_segments_data["current_track_segment_distance_left"]
             < START_TURN_SIGNAL_DISTANCE
         ):
-            return TurnSignal.LEFT_SIGNAL
-        return TurnSignal.NO_SIGNAL
+            return TurnSignalType.LEFT_SIGNAL
+        return TurnSignalType.NO_SIGNAL

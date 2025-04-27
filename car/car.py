@@ -4,6 +4,7 @@ from car.car_lights import CarLights
 from car.chassis.chassis import Chassis
 from car.schemas import AccelerationDirection, CarColoristics
 from car.model import CarModelSpecification
+from car.turn_signals import TurnSignalType
 from geometry.direction import Direction
 from geometry.vector import Point
 from schemas import HorizontalDirection
@@ -92,6 +93,10 @@ class Car:
 
     def deactivate_turn_signal(self) -> None:
         self.lights.deactivate_turn_signal()
+
+    @property
+    def turn_signal(self) -> TurnSignalType:
+        return self.lights.turn_signal
 
     def move(self) -> None:
         if self.velocity == 0:

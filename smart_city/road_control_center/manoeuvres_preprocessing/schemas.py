@@ -1,6 +1,6 @@
-from enum import Enum
 from typing import TypeAlias, TypedDict
 
+from car.turn_signals import TurnSignalType
 from geometry.direction import Direction
 from geometry.vector import Point
 from smart_city.schemas import LiveCarData
@@ -8,16 +8,10 @@ from smart_city.schemas import LiveCarData
 TrackPath: TypeAlias = list[tuple[float, float]]
 
 
-class TurnSignal(Enum):
-    RIGHT_SIGNAL = "right_signal"
-    NO_SIGNAL = "no_signal"
-    LEFT_SIGNAL = "left_signal"
-
-
 class ManoeuvreTrackPoint(TypedDict):
     point: Point
     max_safe_velocity: float
-    turn_signal: TurnSignal
+    turn_signal: TurnSignalType
 
 
 class EnteringZoneStatus(TypedDict):
