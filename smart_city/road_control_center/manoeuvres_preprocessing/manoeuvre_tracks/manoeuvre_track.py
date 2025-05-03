@@ -12,13 +12,13 @@ from smart_city.road_control_center.track import Track
 
 class ManoeuvreTrackSegmentData(TypedDict):
     track_segment: ManoeuvreTrackSegment
-    cumulative_track_length: float
+    cumulative_track_length: int
 
 
 class IncomingSegmentsData(TypedDict):
     current_track_segment: ManoeuvreTrackSegment
-    current_track_segment_distance_left: float
-    current_track_segment_distance_covered: float
+    current_track_segment_distance_left: int
+    current_track_segment_distance_covered: int
     next_track_segment: ManoeuvreTrackSegment | None
 
 

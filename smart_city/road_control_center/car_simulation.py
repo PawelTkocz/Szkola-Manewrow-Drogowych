@@ -86,6 +86,18 @@ class CarSimulation:
         return self._car.chassis
 
     @property
+    def direction(self) -> Direction:
+        return self._car.chassis.direction
+
+    @property
+    def acceleration(self) -> float:
+        return self._car.specification["motion"]["acceleration"]
+
+    @property
+    def wheels_angle(self) -> float:
+        return self._car.chassis.wheels_angle
+
+    @property
     def body_safe_zone(self) -> Rectangle:
         return Rectangle(
             self._car.chassis.front_middle.add_vector(
@@ -95,3 +107,6 @@ class CarSimulation:
             self._car.chassis.length * 4,
             self._car.chassis.direction,
         )
+
+    def set_velocity(self, velocity: float) -> None:
+        self._car.velocity = velocity
