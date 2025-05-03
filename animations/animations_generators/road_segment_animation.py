@@ -62,6 +62,7 @@ class RoadSegmentAnimation(ApplicationScreen):
         self.road_segment.tick()
         self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
+        screen.fill("red")
         self.road_segment.draw(self.road_elements_drafter)
         for car in cars:
             car.draw(self.road_elements_drafter)

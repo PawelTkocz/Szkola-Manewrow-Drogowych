@@ -176,7 +176,7 @@ class AxisAlignedRectangle(Rectangle):
 
     def draw(self, screen: Surface) -> None:
         surface = self.get_surface()
-        blit_surface(screen, surface, self.front_left)
+        blit_surface(surface, self.front_left)
 
 
 class DynamicRectangle(Rectangle):

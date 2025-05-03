@@ -22,7 +22,6 @@ class RoadElementsDrafter:
 
     def _get_pygame_coordinates(self, point: Point) -> tuple[float, float]:
         return get_pygame_screen_point(
-            self.screen,
             self._apply_screen_y_offset(Vector(point).scale(self.scale_factor)),
         ).to_tuple()
 
@@ -35,7 +34,7 @@ class RoadElementsDrafter:
     def blit_surface(
         self,
         surface: pygame.Surface,
-        top_left: Point,
+        center: Point,
     ) -> None:
         scaled_surface = pygame.transform.scale(
             surface,
@@ -46,9 +45,9 @@ class RoadElementsDrafter:
         )
         self.screen.blit(
             scaled_surface,
-            self._get_pygame_coordinates(top_left),
+            scaled_surface.get_rect(center=self._get_pygame_coordinates(center)),
         )
 
     def draw_axis_aligned_rectangle(self, rectangle: AxisAlignedRectangle) -> None:
         surface = rectangle.get_surface()
-        self.blit_surface(surface, rectangle.front_left)
+        self.blit_surface(surface, rectangle.center)

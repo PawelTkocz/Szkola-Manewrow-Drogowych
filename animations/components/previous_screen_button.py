@@ -24,7 +24,7 @@ class PreviousScreenButton:
         self.rectangle = rectangle
 
     def render(self, screen: Surface) -> None:
-        blit_surface(screen, self.image, self.rectangle.front_left)
+        blit_surface(self.image, self.rectangle.front_left)
 
     def handle_click(self, mouse_click_point: Point) -> ApplicationScreen | None:
         if self.rectangle.is_point_inside(mouse_click_point):

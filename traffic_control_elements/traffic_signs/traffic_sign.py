@@ -41,4 +41,4 @@ class TrafficSign(TrafficControlElement):
         self.rotated_image = pygame.transform.rotate(self.image, self.rotation_angle)
 
     def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
-        road_elements_drafter.blit_surface(self.rotated_image, self._image_top_left)
+        road_elements_drafter.blit_surface(self.rotated_image, self._image_center)
