@@ -5,7 +5,7 @@ from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.vector import Point
 from screen_manager import get_screen, init_screen
-from utils import get_pygame_screen_point
+from utils import flip_y_axis
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -23,7 +23,7 @@ class IntersectionManoeuvresApplication:
 
     def handle_click(self, mouse_click_position: tuple[float, float]) -> None:
         self.current_app_screen = self.current_app_screen.handle_click(
-            get_pygame_screen_point(self.screen, Point(*mouse_click_position))
+            flip_y_axis(self.screen, Point(*mouse_click_position))
         )
 
 

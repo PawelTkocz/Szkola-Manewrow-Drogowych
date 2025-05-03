@@ -3,7 +3,7 @@ from geometry.vector import Point
 from schemas import CardinalDirection
 
 
-def get_pygame_screen_point(screen: Surface, point: Point) -> Point:
+def flip_y_axis(screen: Surface, point: Point) -> Point:
     return Point(point.x, screen.get_height() - point.y)
 
 
@@ -14,7 +14,7 @@ def blit_surface(
 ) -> None:
     screen.blit(
         surface,
-        get_pygame_screen_point(screen, top_left).to_tuple(),
+        flip_y_axis(screen, top_left).to_tuple(),
     )
 
 
