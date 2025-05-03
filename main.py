@@ -2,21 +2,20 @@ import pygame
 
 from animations.animations_menus.interesction_manoeuvres_menus.main_menu import MainMenu
 from application_screen import ApplicationScreen
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import CLOCK_TICK, SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.vector import Point
 from screen_manager import get_screen, init_screen
 from utils import flip_y_axis
 
 pygame.init()
 clock = pygame.time.Clock()
+init_screen(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 
 class IntersectionManoeuvresApplication:
-    def __init__(
-        self, start_app_screen: ApplicationScreen, screen: pygame.Surface
-    ) -> None:
-        self.screen = screen
-        self.current_app_screen = start_app_screen
+    def __init__(self) -> None:
+        self.screen = get_screen()
+        self.current_app_screen: ApplicationScreen = MainMenu()
 
     def render_frame(self) -> None:
         self.current_app_screen.render_frame(self.screen)
@@ -27,12 +26,7 @@ class IntersectionManoeuvresApplication:
         )
 
 
-init_screen(SCREEN_WIDTH, SCREEN_HEIGHT)
-screen = get_screen()
-intersection_manoeuvres_application = IntersectionManoeuvresApplication(
-    MainMenu(screen),
-    screen,
-)
+intersection_manoeuvres_application = IntersectionManoeuvresApplication()
 
 while True:
     for event in pygame.event.get():
@@ -43,4 +37,4 @@ while True:
             intersection_manoeuvres_application.handle_click(pygame.mouse.get_pos())
     intersection_manoeuvres_application.render_frame()
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(CLOCK_TICK)

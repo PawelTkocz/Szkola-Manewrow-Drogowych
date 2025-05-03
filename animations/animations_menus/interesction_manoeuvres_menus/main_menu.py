@@ -28,42 +28,42 @@ OPTION_TILES_COLUMNS_NUMBER = 3
 
 
 class MainMenu(MenuScreen):
-    def __init__(self, screen: Surface) -> None:
+    def __init__(self) -> None:
         option_tiles_descriptions: list[OptionTileDescription] = [
             {
                 "image_file_name": "sign_A5.png",
                 "on_click_app_screen_generator": lambda: IntersectionI0ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "sign_D1_and_A7.png",
                 "on_click_app_screen_generator": lambda: IntersectionI1ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "sign_B20.png",
                 "on_click_app_screen_generator": lambda: IntersectionI2ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "sign_T6a.png",
                 "on_click_app_screen_generator": lambda: IntersectionI3ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "traffic_lights.png",
                 "on_click_app_screen_generator": lambda: IntersectionI4ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "image_file_name": "traffic_lights_arrow.png",
                 "on_click_app_screen_generator": lambda: IntersectionI5ManoeuvresMenu(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
         ]

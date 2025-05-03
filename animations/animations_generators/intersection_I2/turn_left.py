@@ -46,12 +46,9 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
 
 
 class IntersectionI2TurnLeftAnimation(IntersectionI2Animation):
-    def __init__(
-        self, screen: Surface, *, previous_app_screen: ApplicationScreen | None = None
-    ):
+    def __init__(self, *, previous_app_screen: ApplicationScreen | None = None):
         super().__init__(
             CARS_DESCRIPTIONS,
             MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME,
-            screen,
             previous_app_screen=previous_app_screen,
         )

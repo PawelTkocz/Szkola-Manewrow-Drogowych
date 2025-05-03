@@ -18,6 +18,7 @@ from application_screen import ApplicationScreen
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
 from road_segments.road_segment import RoadSegment
+from screen_manager import get_screen
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.traffic_control_center import TrafficControlCenter
 
@@ -29,7 +30,6 @@ class RoadSegmentAnimation(ApplicationScreen):
         cars_descriptions: list[AnimationCarDescription],
         control_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
-        screen: Surface,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
@@ -56,7 +56,9 @@ class RoadSegmentAnimation(ApplicationScreen):
             if car_model["name"] in car_models:
                 self.traffic_control_center.register_car_model(car_model)
                 car_models.remove(car_model["name"])
-        self.road_elements_drafter = RoadElementsDrafter(road_segment.area, screen)
+        self.road_elements_drafter = RoadElementsDrafter(
+            road_segment.area, get_screen()
+        )
 
     def render_frame(self, screen: Surface) -> None:
         self.road_segment.tick()

@@ -15,7 +15,6 @@ class IntersectionI4Animation(IntersectionManoeuvreAnimation):
         self,
         cars_descriptions: list[IntersectionAnimationCarDescription],
         manoeuvre_control_instructions_dir_name: str,
-        screen: Surface,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
@@ -24,6 +23,5 @@ class IntersectionI4Animation(IntersectionManoeuvreAnimation):
             cars_descriptions,
             manoeuvre_control_instructions_dir_name,
             IntersectionI4ControlCenter(),
-            screen,
             previous_app_screen=previous_app_screen,
         )

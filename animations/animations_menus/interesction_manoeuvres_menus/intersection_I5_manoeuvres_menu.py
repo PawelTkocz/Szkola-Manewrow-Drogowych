@@ -19,26 +19,24 @@ TITLE = "Wybierz rodzaj manewru"
 
 
 class IntersectionI5ManoeuvresMenu(MenuScreen):
-    def __init__(
-        self, screen: Surface, *, previous_app_screen: ApplicationScreen | None = None
-    ) -> None:
+    def __init__(self, *, previous_app_screen: ApplicationScreen | None = None) -> None:
         list_options_descriptions: list[ListOptionDescription] = [
             {
                 "text": "Skret w prawo",
                 "on_click_app_screen_generator": lambda: IntersectionI5TurnRightAnimation(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "text": "Przejazd na wprost",
                 "on_click_app_screen_generator": lambda: IntersectionI5GoStraightAnimation(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
             {
                 "text": "Skret w lewo",
                 "on_click_app_screen_generator": lambda: IntersectionI5TurnLeftAnimation(
-                    screen, previous_app_screen=self
+                    previous_app_screen=self
                 ),
             },
         ]
