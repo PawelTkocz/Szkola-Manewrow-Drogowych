@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 from geometry.vector import Point, Vector
 
@@ -11,7 +12,7 @@ class Direction(Vector):
         super().__init__(end, start)
         super().normalize()
 
-    def turn(self, angle: float) -> "Direction":
+    def turn(self, angle: float) -> Direction:
         """
         Change the direction
 
@@ -22,7 +23,7 @@ class Direction(Vector):
         super().normalize()
         return self
 
-    def copy(self) -> "Direction":
+    def copy(self) -> Direction:
         """
         Get copy of direction
         """

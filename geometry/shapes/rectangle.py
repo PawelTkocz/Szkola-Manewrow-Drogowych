@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 from pygame import Surface
 import pygame
@@ -124,7 +125,7 @@ class Rectangle(Polygon):
             rec.is_point_inside(p) for p in self.corners_list
         )
 
-    def copy(self) -> "Rectangle":
+    def copy(self) -> Rectangle:
         """
         Get copy of a rectangle
         """

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import math
 
 from schemas import HorizontalDirection
@@ -28,7 +29,7 @@ class Point:
         """
         return self.x == point.x and self.y == point.y
 
-    def add_vector(self, vec: "Vector") -> "Point":
+    def add_vector(self, vec: "Vector") -> Point:
         """
         Add vector to point
 
@@ -48,13 +49,13 @@ class Point:
         """
         return math.sqrt((point.x - self.x) ** 2 + (point.y - self.y) ** 2)
 
-    def copy(self) -> "Point":
+    def copy(self) -> Point:
         """
         Get copy of a point
         """
         return Point(self.x, self.y)
 
-    def rotate_over_point(self, rotate_point: "Point", angle: float) -> "Point":
+    def rotate_over_point(self, rotate_point: "Point", angle: float) -> Point:
         """
         Rotate this point over some other point
 
@@ -105,7 +106,7 @@ class Vector(Point):
         """
         return math.sqrt(self.x**2 + self.y**2)
 
-    def scale(self, k: float) -> "Vector":
+    def scale(self, k: float) -> Vector:
         """
         Multiply the vector by scalar
 
@@ -116,7 +117,7 @@ class Vector(Point):
         self.y *= k
         return self
 
-    def scale_to_len(self, len: float) -> "Vector":
+    def scale_to_len(self, len: float) -> Vector:
         """
         Scale the vector to specified length
 
@@ -130,7 +131,7 @@ class Vector(Point):
 
     def get_orthogonal_vector(
         self, dir: HorizontalDirection, len: float | None = None
-    ) -> "Vector":
+    ) -> Vector:
         """
         Get orthogonal vector
 
@@ -145,16 +146,16 @@ class Vector(Point):
         )
         return v.scale_to_len(len) if len is not None else v
 
-    def get_negative_of_a_vector(self) -> "Vector":
+    def get_negative_of_a_vector(self) -> Vector:
         return self.copy().scale(-1)
 
-    def normalize(self) -> "Vector":
+    def normalize(self) -> Vector:
         """
         Scale the vector to the length of 1
         """
         return self.scale_to_len(1)
 
-    def add_vector(self, vector: "Vector") -> "Vector":
+    def add_vector(self, vector: Vector) -> Vector:
         """
         Add vector to vector
 
@@ -165,7 +166,7 @@ class Vector(Point):
         self.y += vector.y
         return self
 
-    def copy(self) -> "Vector":
+    def copy(self) -> Vector:
         """
         Get copy of vector
         """

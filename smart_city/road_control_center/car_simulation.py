@@ -1,3 +1,4 @@
+from __future__ import annotations
 from car.instruction_controlled_car import (
     CarMovementInstructions,
 )
@@ -5,7 +6,6 @@ from car.model import CarModelSpecification
 from geometry.direction import Direction
 from geometry.shapes.rectangle import Rectangle
 from geometry.vector import Point
-from road_segments.constants import LANE_WIDTH
 from smart_city.schemas import LiveCarData
 import smart_city.smart_city_car as smart_city_car
 
@@ -42,7 +42,7 @@ class CarSimulation:
     @classmethod
     def from_live_car_data(
         cls: type["CarSimulation"], live_car_data: LiveCarData
-    ) -> "CarSimulation":
+    ) -> CarSimulation:
         return cls(
             live_car_data["live_state"]["front_middle"],
             live_car_data["live_state"]["direction"],
