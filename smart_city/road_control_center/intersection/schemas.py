@@ -17,8 +17,13 @@ class IntersectionCarManoeuvreInfo(TypedDict):
     manoeuvre_status: IntersectionManoeuvreStatus
 
 
+class IntersectionTrafficLightsState(TypedDict):
+    current: dict[CardinalDirection, TrafficLightsState]
+    entering_intersection_moment: dict[CardinalDirection, TrafficLightsState]
+
+
 class IntersectionPriorityCarInfo(TypedDict):
     high_priority: bool
     velocity: float
     manoeuvre_description: IntersectionManoeuvreDescription
-    traffic_lights_state: dict[CardinalDirection, TrafficLightsState]
+    traffic_lights_state: IntersectionTrafficLightsState
