@@ -42,7 +42,7 @@ class OptionTile:
 
     def render(self, screen: pygame.Surface) -> None:
         self.rectangle.draw(screen)
-        blit_surface(screen, self.image, self.rectangle.front_left)
+        blit_surface(self.image, self.rectangle.front_left)
 
     def is_clicked(self, mouse_click_point: Point) -> bool:
         return self.rectangle.is_point_inside(mouse_click_point)

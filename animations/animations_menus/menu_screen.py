@@ -67,10 +67,10 @@ class MenuScreen(ApplicationScreen):
 
     def render_title(self, screen: pygame.Surface) -> None:
         self.title_background.draw(screen)
-        blit_surface(screen, self.title_surface, self.title_top_left)
+        blit_surface(self.title_surface, self.title_top_left)
 
     def render_frame(self, screen: pygame.Surface) -> None:
-        blit_surface(screen, self.background_image, Point(0, SCREEN_HEIGHT))
+        blit_surface(self.background_image, Point(0, SCREEN_HEIGHT))
         self.render_title(screen)
         # generate new screen, pass options panel to draw on it, and later blit this screen
         self.options_panel.render(screen)

@@ -12,7 +12,6 @@ class Polygon(Shape):
 
     def draw(self, screen: Surface) -> None:
         pygame_corners = [
-            get_pygame_screen_point(screen, corner).to_tuple()
-            for corner in self._corners
+            get_pygame_screen_point(corner).to_tuple() for corner in self._corners
         ]
         pygame.draw.polygon(screen, self.color, pygame_corners)

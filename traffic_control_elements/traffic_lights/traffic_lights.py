@@ -45,5 +45,5 @@ class TrafficLights(TrafficControlElement):
 
     def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
         road_elements_drafter.blit_surface(
-            self.rotated_states_images[self.current_state], self._image_top_left
+            self.rotated_states_images[self.current_state], self._image_center
         )

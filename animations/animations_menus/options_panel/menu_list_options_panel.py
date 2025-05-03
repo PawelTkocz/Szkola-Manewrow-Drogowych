@@ -47,7 +47,6 @@ class ListOption:
     def render(self, screen: pygame.Surface) -> None:
         self.rectangle.draw(screen)
         blit_surface(
-            screen,
             self.text_surface,
             self.text_surface_top_left,
         )
