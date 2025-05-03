@@ -7,7 +7,7 @@ TOYOTA_YARIS_SPECIFICATION: CarModelSpecification = {
     "motion": {
         "acceleration": 0.07,
         "brake": 0.1,
-        "max_velocity": 6,
+        "max_velocity": 15,
         "resistance": 0.015,
     },
     "chassis": {"length": 90, "width": 50},
