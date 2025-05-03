@@ -3,9 +3,9 @@ import pygame
 from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
-from drafter.utils import blit_surface
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
+from utils import blit_surface
 
 
 class PreviousScreenButton:

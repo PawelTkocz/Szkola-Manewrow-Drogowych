@@ -1,4 +1,3 @@
-from pygame import Surface
 from car.chassis.schemas import (
     WheelsPositions,
 )
@@ -13,6 +12,7 @@ from car.schemas import ChassisColoristics
 from geometry.direction import Direction
 from geometry.shapes.rectangle import DynamicRectangle
 from geometry.vector import Point, Vector
+from road_elements_drafter import RoadElementsDrafter
 from schemas import HorizontalDirection
 
 
@@ -119,17 +119,7 @@ class Chassis(DynamicRectangle):
             self.front_middle, self.direction, self.steering_system.wheels_angle
         )
 
-    def draw(
-        self,
-        screen: Surface,
-        *,
-        scale_factor: float = 1,
-        screen_y_offset: int = 0,
-    ) -> None:
-        self.left_wheel.draw(
-            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-        )
-        self.right_wheel.draw(
-            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-        )
-        super().draw(screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset)
+    def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
+        road_elements_drafter.draw_polygon(self.left_wheel)
+        road_elements_drafter.draw_polygon(self.right_wheel)
+        road_elements_drafter.draw_polygon(self)

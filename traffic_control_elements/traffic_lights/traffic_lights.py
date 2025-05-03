@@ -1,8 +1,8 @@
 import pygame
 from animations.constants import IMAGES_DIR_PATH
-from drafter.utils import blit_surface
 from geometry.direction import Direction
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 from traffic_control_elements.traffic_control_element import TrafficControlElement
 from traffic_control_elements.traffic_lights.schemas import (
     TrafficLightsState,
@@ -43,13 +43,7 @@ class TrafficLights(TrafficControlElement):
     def get_state(self) -> TrafficLightsState:
         return self.current_state
 
-    def draw(
-        self, screen: pygame.Surface, *, scale_factor=1, screen_y_offset=0
-    ) -> None:
-        blit_surface(
-            screen,
-            self.rotated_states_images[self.current_state],
-            self._image_top_left,
-            scale_factor=scale_factor,
-            screen_y_offset=screen_y_offset,
+    def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
+        road_elements_drafter.blit_surface(
+            self.rotated_states_images[self.current_state], self._image_top_left
         )

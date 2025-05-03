@@ -19,9 +19,9 @@ from animations.animations_menus.options_panel.menu_options_panel import (
 from animations.animations_menus.options_panel.schemas import ListOptionDescription
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
-from drafter.utils import blit_surface
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point, Vector
+from utils import blit_surface
 
 
 class ListOption:
