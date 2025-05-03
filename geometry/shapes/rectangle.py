@@ -1,11 +1,11 @@
 import numpy as np
 from pygame import Surface
 import pygame
-from drafter.utils import blit_surface
 from geometry.direction import Direction
 from geometry.shapes.polygon import Polygon
 from geometry.vector import Point, Vector
 from schemas import HorizontalDirection
+from utils import blit_surface
 
 
 class Rectangle(Polygon):
@@ -156,13 +156,7 @@ class AxisAlignedRectangle(Rectangle):
         pygame_color.a = transparency
         self.pygame_color = pygame_color
 
-    def draw(
-        self,
-        screen: Surface,
-        *,
-        scale_factor: float = 1,
-        screen_y_offset: int = 0,
-    ) -> None:
+    def get_surface(self) -> Surface:
         surface = pygame.Surface((self.width, self.length), pygame.SRCALPHA)
         pygame.draw.rect(
             surface,
@@ -178,13 +172,11 @@ class AxisAlignedRectangle(Rectangle):
             border_bottom_left_radius=self.border_rear_left_radius,
             border_bottom_right_radius=self.border_rear_right_radius,
         )
-        blit_surface(
-            screen,
-            surface,
-            self.front_left,
-            scale_factor=scale_factor,
-            screen_y_offset=screen_y_offset,
-        )
+        return surface
+
+    def draw(self, screen: Surface) -> None:
+        surface = self.get_surface()
+        blit_surface(screen, surface, self.front_left)
 
 
 class DynamicRectangle(Rectangle):

@@ -1,3 +1,4 @@
+from pygame import Surface
 from animations.animations_generators.intersection_I4.intersection_I4_animations import (
     IntersectionI4Animation,
 )
@@ -45,9 +46,12 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
 
 
 class IntersectionI4GoStraightAnimation(IntersectionI4Animation):
-    def __init__(self, *, previous_app_screen: ApplicationScreen | None = None):
+    def __init__(
+        self, screen: Surface, *, previous_app_screen: ApplicationScreen | None = None
+    ):
         super().__init__(
             CARS_DESCRIPTIONS,
             MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME,
+            screen,
             previous_app_screen=previous_app_screen,
         )

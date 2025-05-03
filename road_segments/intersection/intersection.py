@@ -1,8 +1,7 @@
-from pygame import Surface
-from drafter.intersection import IntersectionDrafter
 from geometry.direction import Direction
 from geometry.shapes.rectangle import AxisAlignedRectangle, Rectangle
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 from road_segments.constants import (
     CONTROL_ELEMENTS_MARGIN,
     LANE_WIDTH,
@@ -44,6 +43,7 @@ class Intersection(RoadSegment):
             Point(ROAD_SEGMENT_SIDE / 2, ROAD_SEGMENT_SIDE),
             ROAD_SEGMENT_SIDE,
             ROAD_SEGMENT_SIDE,
+            color=colorisitcs["street"],
         )
         self.turn_curve = turn_curve
         lanes_length = (self._area.length - 2 * self.lane_width) / 2
@@ -80,13 +80,8 @@ class Intersection(RoadSegment):
                 border_front_left_radius=self.turn_curve,
             ),
         ]
-        self.drafter = IntersectionDrafter(
-            self.intersection_parts,
-            turn_curve,
-            self._calculate_default_lines(colorisitcs),
-            colorisitcs,
-            self.pavements,
-        )
+        self.lines = self._calculate_default_lines(colorisitcs)
+        self.coloristics = colorisitcs
         self.traffic_lights = traffic_lights
         self.control_elements = self._set_positions_of_control_elements(
             traffic_lights.get_ligths() if traffic_lights else {}, traffic_signs or {}
@@ -179,16 +174,14 @@ class Intersection(RoadSegment):
             },
         }
 
-    def draw(
-        self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
-    ) -> None:
-        self.drafter.draw(
-            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-        )
+    def draw(self, road_elements_drafter: RoadElementsDrafter) -> None:
+        road_elements_drafter.draw_axis_aligned_rectangle(self.area)
+        for pavement in self.pavements:
+            road_elements_drafter.draw_axis_aligned_rectangle(pavement)
+        for line in self.lines:
+            road_elements_drafter.draw_polygon(line)
         for control_element in self.control_elements:
-            control_element.draw(
-                screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-            )
+            control_element.draw_on_road(road_elements_drafter)
 
     def _set_positions_of_control_elements(
         self,

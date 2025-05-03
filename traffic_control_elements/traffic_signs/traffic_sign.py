@@ -2,9 +2,9 @@ from enum import Enum
 
 import pygame
 from animations.constants import IMAGES_DIR_PATH
-from drafter.utils import blit_surface
 from geometry.direction import Direction
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 from traffic_control_elements.traffic_control_element import TrafficControlElement
 
 
@@ -40,16 +40,5 @@ class TrafficSign(TrafficControlElement):
         super().update_position(front_middle, direction)
         self.rotated_image = pygame.transform.rotate(self.image, self.rotation_angle)
 
-    def draw(
-        self, screen: pygame.Surface, *, scale_factor=1, screen_y_offset=0
-    ) -> None:
-        blit_surface(
-            screen,
-            self.rotated_image,
-            self._image_top_left,
-            scale_factor=scale_factor,
-            screen_y_offset=screen_y_offset,
-        )
-
-
-# move scale factor and y offset to some global variables
+    def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
+        road_elements_drafter.blit_surface(self.rotated_image, self._image_top_left)

@@ -1,9 +1,9 @@
-from pygame import Surface
 from car.car_part import CarPart
 from car.model import BodySpecification
 from car.schemas import CarBodyColoristics
 from geometry.direction import Direction
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 
 
 class CarBody:
@@ -48,14 +48,6 @@ class CarBody:
         for part in self.body_parts:
             part.update_position(car_front_middle, car_direction)
 
-    def draw(
-        self,
-        screen: Surface,
-        *,
-        scale_factor: float = 1,
-        screen_y_offset: int = 0,
-    ) -> None:
+    def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
         for part in self.body_parts:
-            part.draw(
-                screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-            )
+            road_elements_drafter.draw_polygon(part)

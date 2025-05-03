@@ -15,9 +15,8 @@ from animations.animations_generators.schemas import (
 )
 from animations.components.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.vector import Point
-from road_segments.constants import ROAD_SEGMENT_SIDE
+from road_elements_drafter import RoadElementsDrafter
 from road_segments.road_segment import RoadSegment
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.traffic_control_center import TrafficControlCenter
@@ -30,6 +29,7 @@ class RoadSegmentAnimation(ApplicationScreen):
         cars_descriptions: list[AnimationCarDescription],
         control_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
+        screen: Surface,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
@@ -56,24 +56,15 @@ class RoadSegmentAnimation(ApplicationScreen):
             if car_model["name"] in car_models:
                 self.traffic_control_center.register_car_model(car_model)
                 car_models.remove(car_model["name"])
-        self.scale_factor = SCREEN_WIDTH / ROAD_SEGMENT_SIDE
-        self.screen_y_offset = int(
-            (SCREEN_HEIGHT - ROAD_SEGMENT_SIDE * self.scale_factor) // 2
-        )
+        self.road_elements_drafter = RoadElementsDrafter(road_segment.area, screen)
 
     def render_frame(self, screen: Surface) -> None:
         self.road_segment.tick()
         self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
-        self.road_segment.draw(
-            screen, scale_factor=self.scale_factor, screen_y_offset=self.screen_y_offset
-        )
+        self.road_segment.draw(self.road_elements_drafter)
         for car in cars:
-            car.draw(
-                screen,
-                scale_factor=self.scale_factor,
-                screen_y_offset=self.screen_y_offset,
-            )
+            car.draw(self.road_elements_drafter)
         if self.previous_screen_button:
             self.previous_screen_button.render(screen)
 

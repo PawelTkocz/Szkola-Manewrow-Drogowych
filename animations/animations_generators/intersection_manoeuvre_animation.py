@@ -1,5 +1,7 @@
 import os
 
+from pygame import Surface
+
 from animations.animations_generators.road_segment_animation import RoadSegmentAnimation
 from animations.animations_generators.schemas import (
     AnimationCarDescription,
@@ -22,6 +24,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         cars_descriptions: list[IntersectionAnimationCarDescription],
         manoeuvre_control_instructions_dir_name: str,
         road_control_center: RoadControlCenter,
+        screen: Surface,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ):
@@ -50,6 +53,7 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
             animation_cars_descriptions,
             control_instructions_dir_path,
             road_control_center,
+            screen,
             previous_app_screen=previous_app_screen,
         )
 

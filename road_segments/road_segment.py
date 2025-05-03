@@ -1,15 +1,12 @@
 from abc import ABC, abstractmethod
 
-from pygame import Surface
-
 from geometry.shapes.rectangle import AxisAlignedRectangle
+from road_elements_drafter import RoadElementsDrafter
 
 
 class RoadSegment(ABC):
     @abstractmethod
-    def draw(
-        self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
-    ) -> None:
+    def draw(self, road_elements_drafter: RoadElementsDrafter) -> None:
         raise NotImplementedError
 
     @abstractmethod

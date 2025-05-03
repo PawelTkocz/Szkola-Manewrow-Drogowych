@@ -5,11 +5,5 @@ from pygame import Surface
 
 class Shape(ABC):
     @abstractmethod
-    def draw(
-        self,
-        screen: Surface,
-        *,
-        scale_factor: float = 1,
-        screen_y_offset: int = 0,
-    ) -> None:
+    def draw(self, screen: Surface) -> None:
         raise NotImplementedError

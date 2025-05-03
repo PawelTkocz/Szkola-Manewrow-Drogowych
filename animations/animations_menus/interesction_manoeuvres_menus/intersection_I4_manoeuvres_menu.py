@@ -1,3 +1,4 @@
+from pygame import Surface
 from animations.animations_generators.intersection_I4.go_straight import (
     IntersectionI4GoStraightAnimation,
 )
@@ -18,24 +19,26 @@ TITLE = "Wybierz rodzaj manewru"
 
 
 class IntersectionI4ManoeuvresMenu(MenuScreen):
-    def __init__(self, *, previous_app_screen: ApplicationScreen | None = None) -> None:
+    def __init__(
+        self, screen: Surface, *, previous_app_screen: ApplicationScreen | None = None
+    ) -> None:
         list_options_descriptions: list[ListOptionDescription] = [
             {
                 "text": "Skret w prawo",
                 "on_click_app_screen_generator": lambda: IntersectionI4TurnRightAnimation(
-                    previous_app_screen=self
+                    screen, previous_app_screen=self
                 ),
             },
             {
                 "text": "Przejazd na wprost",
                 "on_click_app_screen_generator": lambda: IntersectionI4GoStraightAnimation(
-                    previous_app_screen=self
+                    screen, previous_app_screen=self
                 ),
             },
             {
                 "text": "Skret w lewo",
                 "on_click_app_screen_generator": lambda: IntersectionI4TurnLeftAnimation(
-                    previous_app_screen=self
+                    screen, previous_app_screen=self
                 ),
             },
         ]

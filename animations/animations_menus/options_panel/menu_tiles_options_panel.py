@@ -18,9 +18,9 @@ from animations.animations_menus.options_panel.schemas import (
 from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
-from drafter.utils import blit_surface
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
+from utils import blit_surface
 
 
 class OptionTile:

@@ -1,4 +1,3 @@
-from pygame import Surface
 from car.car_body import CarBody
 from car.car_lights import CarLights
 from car.chassis.chassis import Chassis
@@ -7,6 +6,7 @@ from car.model import CarModelSpecification
 from car.turn_signals import TurnSignalType
 from geometry.direction import Direction
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 from schemas import HorizontalDirection
 
 
@@ -105,15 +105,9 @@ class Car:
         self._slow_down(self.specification["motion"]["resistance"])
         self.body.update_position(self.chassis.front_middle, self.chassis.direction)
 
-    def draw(
-        self, screen: Surface, *, scale_factor: float = 1, screen_y_offset: int = 0
-    ) -> None:
-        self.chassis.draw(
-            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-        )
-        self.body.draw(
-            screen, scale_factor=scale_factor, screen_y_offset=screen_y_offset
-        )
+    def draw(self, road_elements_drafter: RoadElementsDrafter) -> None:
+        self.chassis.draw_on_road(road_elements_drafter)
+        self.body.draw_on_road(road_elements_drafter)
 
     def tick(self) -> None:
         self.move()

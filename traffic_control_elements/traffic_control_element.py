@@ -1,7 +1,7 @@
-import pygame
 from geometry.direction import Direction
 from geometry.shapes.rectangle import DynamicRectangle
 from geometry.vector import Point
+from road_elements_drafter import RoadElementsDrafter
 
 
 class TrafficControlElement(DynamicRectangle):
@@ -39,11 +39,5 @@ class TrafficControlElement(DynamicRectangle):
             self._image_top_left = self.front_right
             self.rotation_angle = 90
 
-    def draw(
-        self,
-        screen: pygame.Surface,
-        *,
-        scale_factor: float = 1,
-        screen_y_offset: int = 0,
-    ) -> None:
+    def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
         raise NotImplementedError

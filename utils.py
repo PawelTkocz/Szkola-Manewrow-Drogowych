@@ -1,10 +1,21 @@
-from constants import SCREEN_HEIGHT
+from pygame import Surface
 from geometry.vector import Point
 from schemas import CardinalDirection
 
 
-def get_pygame_point(point: Point) -> Point:
-    return Point(point.x, SCREEN_HEIGHT - point.y)
+def get_screen_point(screen: Surface, point: Point) -> Point:
+    return Point(point.x, screen.get_height() - point.y)
+
+
+def blit_surface(
+    screen: Surface,
+    surface: Surface,
+    top_left: Point,
+) -> None:
+    screen.blit(
+        surface,
+        get_screen_point(screen, top_left).to_tuple(),
+    )
 
 
 def clockwise_direction_shift(
