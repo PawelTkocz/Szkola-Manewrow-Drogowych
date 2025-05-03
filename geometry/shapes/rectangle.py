@@ -176,7 +176,7 @@ class AxisAlignedRectangle(Rectangle):
 
     def draw(self, screen: Surface) -> None:
         surface = self.get_surface()
-        blit_surface(surface, self.front_left)
+        blit_surface(screen, surface, self.front_left)
 
 
 class DynamicRectangle(Rectangle):
@@ -188,4 +188,4 @@ class DynamicRectangle(Rectangle):
 
     def update_position(self, front_middle: Point, direction: Direction) -> None:
         self._calculate_corners_positions(front_middle, direction)
-        self._corners = self.corners_list
+        self.corners = self.corners_list
