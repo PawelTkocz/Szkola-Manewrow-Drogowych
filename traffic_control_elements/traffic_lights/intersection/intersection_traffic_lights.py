@@ -27,6 +27,11 @@ class IntersectionTrafficLights:
             for side in self._traffic_lights
         }
 
+    def get_future_lights_states(
+        self, ticks: int
+    ) -> dict[CardinalDirection, TrafficLightsState]:
+        return self._traffic_lights_coordinator.get_states(self._current_tick + ticks)
+
     def tick(self) -> None:
         self._current_tick += 1
         lights_states = self._traffic_lights_coordinator.get_states(self._current_tick)
