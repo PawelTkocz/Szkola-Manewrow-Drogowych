@@ -175,9 +175,9 @@ class Intersection(RoadSegment):
         }
 
     def draw(self, road_elements_drafter: RoadElementsDrafter) -> None:
-        road_elements_drafter.draw_axis_aligned_rectangle(self.area)
+        road_elements_drafter.draw_rectangle(self.area)
         for pavement in self.pavements:
-            road_elements_drafter.draw_axis_aligned_rectangle(pavement)
+            road_elements_drafter.draw_rectangle(pavement)
         for line in self.lines:
             road_elements_drafter.draw_polygon(line)
         for control_element in self.control_elements:
