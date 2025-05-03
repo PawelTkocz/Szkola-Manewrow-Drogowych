@@ -46,6 +46,6 @@ class RoadElementsDrafter:
             scaled_surface.get_rect(center=self._get_pygame_coordinates(center)),
         )
 
-    def draw_axis_aligned_rectangle(self, rectangle: AxisAlignedRectangle) -> None:
+    def draw_rectangle(self, rectangle: AxisAlignedRectangle) -> None:
         surface = rectangle.get_surface()
         self.blit_surface(surface, rectangle.center)
