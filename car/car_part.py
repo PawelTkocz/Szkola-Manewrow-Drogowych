@@ -53,6 +53,6 @@ class CarPart(Polygon):
     def update_position(
         self, car_front_middle: Point, car_direction: Direction
     ) -> None:
-        self._corners = self._calculate_corners_positions(
+        self.corners = self._calculate_corners_positions(
             car_front_middle, car_direction
         )

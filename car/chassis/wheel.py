@@ -25,6 +25,6 @@ class Wheel(CarPart):
         )
         rotated_corners: list[Point] = [
             corner.rotate_over_point(wheel_middle, wheels_angle)
-            for corner in self._corners
+            for corner in self.corners
         ]
-        self._corners = rotated_corners
+        self.corners = rotated_corners

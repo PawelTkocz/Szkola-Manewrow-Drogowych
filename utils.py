@@ -1,20 +1,20 @@
 from pygame import Surface
 from geometry.vector import Point
 from schemas import CardinalDirection
-from screen_manager import get_screen
 
 
-def get_pygame_screen_point(point: Point) -> Point:
-    return Point(point.x, get_screen().get_height() - point.y)
+def get_pygame_screen_point(screen: Surface, point: Point) -> Point:
+    return Point(point.x, screen.get_height() - point.y)
 
 
 def blit_surface(
+    screen: Surface,
     surface: Surface,
     top_left: Point,
 ) -> None:
-    get_screen().blit(
+    screen.blit(
         surface,
-        get_pygame_screen_point(top_left).to_tuple(),
+        get_pygame_screen_point(screen, top_left).to_tuple(),
     )
 
 

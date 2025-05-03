@@ -23,7 +23,7 @@ class IntersectionManoeuvresApplication:
 
     def handle_click(self, mouse_click_position: tuple[float, float]) -> None:
         self.current_app_screen = self.current_app_screen.handle_click(
-            get_pygame_screen_point(Point(*mouse_click_position))
+            get_pygame_screen_point(self.screen, Point(*mouse_click_position))
         )
 
 
