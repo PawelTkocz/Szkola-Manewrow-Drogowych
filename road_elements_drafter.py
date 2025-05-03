@@ -3,7 +3,7 @@ import pygame
 from geometry.shapes.polygon import Polygon
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point, Vector
-from utils import get_pygame_screen_point
+from utils import flip_y_axis
 
 
 class RoadElementsDrafter:
@@ -18,7 +18,7 @@ class RoadElementsDrafter:
         return point.add_vector(Vector(Point(0, self.screen_y_offset)))
 
     def _get_pygame_coordinates(self, point: Point) -> tuple[float, float]:
-        return get_pygame_screen_point(
+        return flip_y_axis(
             self.screen,
             self._apply_screen_y_offset(Vector(point).scale(self.scale_factor)),
         ).to_tuple()

@@ -2,7 +2,7 @@ from pygame import Surface
 import pygame
 from geometry.shapes.shape import Shape
 from geometry.vector import Point
-from utils import get_pygame_screen_point
+from utils import flip_y_axis
 
 
 class Polygon(Shape):
@@ -12,7 +12,6 @@ class Polygon(Shape):
 
     def draw(self, screen: Surface) -> None:
         pygame_corners = [
-            get_pygame_screen_point(screen, corner).to_tuple()
-            for corner in self.corners
+            flip_y_axis(screen, corner).to_tuple() for corner in self.corners
         ]
         pygame.draw.polygon(screen, self.color, pygame_corners)
