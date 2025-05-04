@@ -49,7 +49,7 @@ class MainMenu(MenuScreen):
                 ),
             },
             {
-                "image_file_name": "sign_T6a.png",
+                "image_file_name": "sign_T6a_left.png",
                 "on_click_app_screen_generator": lambda: IntersectionI3ManoeuvresMenu(
                     previous_app_screen=self
                 ),
