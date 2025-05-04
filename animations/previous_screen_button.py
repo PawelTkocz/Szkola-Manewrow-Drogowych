@@ -1,8 +1,7 @@
 from pygame import Surface
 import pygame
-from animations.constants import IMAGES_DIR_PATH
 from application_screen import ApplicationScreen
-from constants import SCREEN_HEIGHT
+from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
 from utils import blit_surface

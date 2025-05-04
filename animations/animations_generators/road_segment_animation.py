@@ -13,7 +13,7 @@ from animations.animations_generators.constants import PLAYBACK_ANIMATIONS
 from animations.animations_generators.schemas import (
     AnimationCarDescription,
 )
-from animations.components.previous_screen_button import PreviousScreenButton
+from animations.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter

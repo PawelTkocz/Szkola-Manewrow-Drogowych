@@ -2,7 +2,7 @@ from enum import Enum
 import math
 
 import pygame
-from animations.constants import IMAGES_DIR_PATH
+from constants import IMAGES_DIR_PATH
 from geometry.direction import Direction
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter

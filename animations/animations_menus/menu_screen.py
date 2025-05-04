@@ -13,10 +13,9 @@ from animations.animations_menus.constants import (
 from animations.animations_menus.options_panel.menu_options_panel import (
     MenuOptionsPanel,
 )
-from animations.components.previous_screen_button import PreviousScreenButton
-from animations.constants import IMAGES_DIR_PATH
+from animations.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
-from constants import SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
 from utils import blit_surface
