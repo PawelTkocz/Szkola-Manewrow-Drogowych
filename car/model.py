@@ -21,8 +21,8 @@ class WheelsSpecification(TypedDict):
 class MotionSpecification(TypedDict):
     max_velocity: float
     acceleration: float
-    brake: float
-    resistance: float
+    brake_force: float
+    rolling_resistance: float
 
 
 class LightsSpecification(TypedDict):

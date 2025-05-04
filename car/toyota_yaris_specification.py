@@ -5,9 +5,9 @@ TOYOTA_YARIS_SPECIFICATION: CarModelSpecification = {
     "name": "Toyota Yaris",
     "motion": {
         "acceleration": 0.07,
-        "brake": 0.1,
+        "brake_force": 0.1,
         "max_velocity": 15,
-        "resistance": 0.015,
+        "rolling_resistance": 0.015,
     },
     "chassis": {"length": 90, "width": 50},
     "lights": {

@@ -86,7 +86,7 @@ class Car:
         )
 
     def brake(self) -> None:
-        self._slow_down(self.specification["motion"]["brake"])
+        self._slow_down(self.specification["motion"]["brake_force"])
 
     def acitvate_turn_signal(self, side: HorizontalDirection) -> None:
         self.lights.activate_turn_signal(side)
@@ -102,7 +102,7 @@ class Car:
         if self.velocity == 0:
             return
         self.chassis.move(self.velocity)
-        self._slow_down(self.specification["motion"]["resistance"])
+        self._slow_down(self.specification["motion"]["rolling_resistance"])
         self.body.update_position(self.chassis.front_middle, self.chassis.direction)
 
     def draw(self, road_elements_drafter: RoadElementsDrafter) -> None:
