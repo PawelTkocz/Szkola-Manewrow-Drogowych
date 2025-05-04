@@ -1,3 +1,6 @@
+from animations.animations_menus.interesction_manoeuvres_menus.intersection_I0_manoeuvres_menu import (
+    IntersectionI0ManoeuvresMenu,
+)
 from animations.animations_menus.interesction_manoeuvres_menus.intersection_I1_manoeuvres_menu import (
     IntersectionI1ManoeuvresMenu,
 )
@@ -13,9 +16,7 @@ from animations.animations_menus.interesction_manoeuvres_menus.intersection_I4_m
 from animations.animations_menus.interesction_manoeuvres_menus.intersection_I5_manoeuvres_menu import (
     IntersectionI5ManoeuvresMenu,
 )
-from animations.animations_menus.interesction_manoeuvres_menus.sign_A5_manoeuvres_menu import (
-    IntersectionI0ManoeuvresMenu,
-)
+
 from animations.animations_menus.menu_screen import MenuScreen
 from animations.animations_menus.options_panel.menu_tiles_options_panel import (
     MenuTilesOptionsPanel,
