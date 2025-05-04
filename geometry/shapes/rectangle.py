@@ -18,18 +18,11 @@ class Rectangle(Polygon):
         direction: Direction,
         color: str = "black",
     ):
-        """
-        Initialize directed rectangle
-
-        :param front_middle: position of front middle point of the rectangle
-        :param width: width of the rectangle (of front and rear sides)
-        :param length: length of the rectangle (of left and right sides)
-        :param direction: direction the rectangle is heading
-        :return: directed rectangle with specified width, length and position
-        """
         self._width = width
         self._length = length
-        self._calculate_corners_positions(front_middle, direction)
+        self._direction = direction.copy()
+        self._front_middle = front_middle.copy()
+        self._calculate_corners_positions()
         super().__init__(self.corners_list, color)
 
     @property
@@ -42,9 +35,6 @@ class Rectangle(Polygon):
 
     @property
     def direction(self) -> Direction:
-        """
-        Get the current direction of the rectangle.
-        """
         return self._direction.copy()
 
     @property
@@ -71,12 +61,8 @@ class Rectangle(Polygon):
     def rear_right(self) -> Point:
         return self._rear_right.copy()
 
-    def _calculate_corners_positions(
-        self, front_middle: Point, direction: Direction
-    ) -> None:
-        self._direction = direction.copy()
-        self._front_middle = front_middle.copy()
-        width_vec = direction.get_orthogonal_vector(
+    def _calculate_corners_positions(self) -> None:
+        width_vec = self.direction.get_orthogonal_vector(
             HorizontalDirection.RIGHT, self.width
         )
         length_vec = width_vec.get_orthogonal_vector(
@@ -92,9 +78,6 @@ class Rectangle(Polygon):
 
     @property
     def corners_list(self) -> list[Point]:
-        """
-        Get the list of corners coordinates.
-        """
         return [
             self.rear_left,
             self.rear_right,
@@ -104,33 +87,25 @@ class Rectangle(Polygon):
 
     @property
     def center(self) -> Point:
-        """
-        Get the center of rectangle.
-        """
         vector = Vector(self.rear_right, self.front_left).scale(0.5)
         return self.front_left.add_vector(vector)
 
-    def is_point_inside(self, p: Point) -> bool:
-        point = np.array([p.x, p.y])
-        rect = np.array([x.to_tuple() for x in self.corners_list])
-        vectors = [rect[(i + 1) % 4] - rect[i] for i in range(4)]
-        point_vectors = [point - rect[i] for i in range(4)]
-        cross_products = [np.cross(v, pv) for v, pv in zip(vectors, point_vectors)]
-        return all(cp >= 0 for cp in cross_products) or all(
-            cp <= 0 for cp in cross_products
+    def is_point_inside(self, point: Point) -> bool:
+        np_point = np.array([point.x, point.y])
+        corners = np.array([corner.to_tuple() for corner in self.corners_list])
+        vectors = [corners[(i + 1) % 4] - corners[i] for i in range(4)]
+        point_vectors = [np_point - corners[i] for i in range(4)]
+        cross_products = [
+            np.cross(vector, point_vector)
+            for vector, point_vector in zip(vectors, point_vectors)
+        ]
+        return all(cross_product >= 0 for cross_product in cross_products) or all(
+            cross_product <= 0 for cross_product in cross_products
         )
 
-    def collides(self, rec: "Rectangle") -> bool:
-        return any(self.is_point_inside(p) for p in rec.corners_list) or any(
-            rec.is_point_inside(p) for p in self.corners_list
-        )
-
-    def copy(self) -> Rectangle:
-        """
-        Get copy of a rectangle
-        """
-        return Rectangle(
-            self.front_middle, self.width, self.length, self.direction, self.color
+    def collides(self, rec: Rectangle) -> bool:
+        return any(self.is_point_inside(corner) for corner in rec.corners_list) or any(
+            rec.is_point_inside(corner) for corner in self.corners_list
         )
 
 
@@ -181,12 +156,8 @@ class AxisAlignedRectangle(Rectangle):
 
 
 class DynamicRectangle(Rectangle):
-    """
-    Class representing 'directed' rectangle in Cartesian coordinate system
-
-    'Directed' rectangle has its front, left and right side, and rear
-    """
-
     def update_position(self, front_middle: Point, direction: Direction) -> None:
-        self._calculate_corners_positions(front_middle, direction)
+        self._front_middle = front_middle
+        self._direction = direction
+        self._calculate_corners_positions()
         self.corners = self.corners_list

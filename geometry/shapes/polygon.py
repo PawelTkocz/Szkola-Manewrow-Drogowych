@@ -1,12 +1,13 @@
 from pygame import Surface
 import pygame
-from geometry.shapes.shape import Shape
 from geometry.vector import Point
 from utils import flip_y_axis
 
 
-class Polygon(Shape):
+class Polygon:
     def __init__(self, corners: list[Point], color: str) -> None:
+        if len(corners) < 3:
+            raise ValueError("Polygon must have at least 3 corners.")
         self.corners = corners
         self.color = color
 

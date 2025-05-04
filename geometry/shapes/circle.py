@@ -1,9 +1,10 @@
-from geometry.shapes.shape import Shape
 from geometry.vector import Point
 
 
-class Circle(Shape):
-    def __init__(self, center: Point, radius: float, color: str) -> None:
+class Circle:
+    def __init__(self, center: Point, radius: float) -> None:
         self.center = center.copy()
         self.radius = radius
-        self.color = color
+
+    def is_point_inside(self, point: Point) -> bool:
+        return self.center.distance(point) <= self.radius
