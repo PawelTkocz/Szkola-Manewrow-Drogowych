@@ -1,6 +1,6 @@
 from car.instruction_controlled_car import CarControlInstructions
 from car.model import CarModelSpecification
-from car.toyota_yaris import TOYOTA_YARIS_SPECIFICATION
+from car.toyota_yaris_specification import TOYOTA_YARIS_SPECIFICATION
 from geometry.vector import Point
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection

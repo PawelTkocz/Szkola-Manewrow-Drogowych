@@ -4,7 +4,7 @@ from animations.animations_generators.intersection_I5.intersection_I5_animations
 )
 from animations.animations_generators.schemas import IntersectionAnimationCarDescription
 from application_screen import ApplicationScreen
-from car.toyota_yaris import TOYOTA_YARIS_SPECIFICATION
+from car.toyota_yaris_specification import TOYOTA_YARIS_SPECIFICATION
 from schemas import CardinalDirection
 
 MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME = "go_straight"
