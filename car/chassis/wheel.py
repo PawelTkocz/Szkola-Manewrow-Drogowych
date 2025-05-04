@@ -1,4 +1,4 @@
-from car.car_part import CarPart
+from car.car_part import CarPart, get_car_point_position
 from car.schemas import CarPartPosition, CarPointPosition
 from geometry.direction import Direction
 from geometry.vector import Point
@@ -20,7 +20,7 @@ class Wheel(CarPart):
         self, car_front_middle: Point, car_direction: Direction, wheels_angle: float = 0
     ) -> None:
         super().update_position(car_front_middle, car_direction)
-        wheel_middle = self._get_car_point_position(
+        wheel_middle = get_car_point_position(
             car_front_middle, car_direction, self.center_position
         )
         rotated_corners: list[Point] = [

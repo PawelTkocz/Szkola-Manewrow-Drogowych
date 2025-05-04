@@ -1,3 +1,4 @@
+from car.car_part import get_car_point_position
 from car.chassis.schemas import (
     WheelsPositions,
 )
@@ -11,7 +12,7 @@ from car.model import (
 from car.schemas import ChassisColors
 from geometry.direction import Direction
 from geometry.shapes.rectangle import DynamicRectangle
-from geometry.vector import Point, Vector
+from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
 from schemas import HorizontalDirection
 
@@ -20,9 +21,9 @@ class Chassis(DynamicRectangle):
     def __init__(
         self,
         specification: ChassisSpecification,
-        coloristics: ChassisColors,
+        colors: ChassisColors,
         steering_system_specification: SteeringSystemSpecification,
-        wheel_specification: WheelsSpecification,
+        wheels_specification: WheelsSpecification,
         wheels_angle: float,
         front_middle: Point,
         direction: Direction,
@@ -32,28 +33,29 @@ class Chassis(DynamicRectangle):
             specification["width"],
             specification["length"],
             direction,
-            coloristics["chassis"],
+            colors["chassis"],
         )
         self.steering_system = SteeringSystem(
             steering_system_specification, wheels_angle
         )
         wheels_positions = self._get_wheels_positions(
-            wheel_specification["width"], wheel_specification["length"]
+            wheels_specification["width"], wheels_specification["length"]
         )
         self.left_wheel = Wheel(
             wheels_positions["left"]["corners"],
             wheels_positions["left"]["middle"],
-            coloristics["wheels"],
+            colors["wheels"],
             self.front_middle,
             self.direction,
         )
         self.right_wheel = Wheel(
             wheels_positions["right"]["corners"],
             wheels_positions["right"]["middle"],
-            coloristics["wheels"],
+            colors["wheels"],
             self.front_middle,
             self.direction,
         )
+        self.relative_axle_center_position = wheels_positions["axle_center"]
 
     def _get_wheels_positions(
         self, wheels_width: float, wheels_length: float
@@ -84,6 +86,7 @@ class Chassis(DynamicRectangle):
                     {"x": car_width / 2 - wheels_width, "y": -1 * wheels_length},
                 ],
             },
+            "axle_center": {"x": 0, "y": -0.5 * wheels_length},
         }
 
     @property
@@ -95,15 +98,19 @@ class Chassis(DynamicRectangle):
             self.direction
         ).scale_to_len(distance)
 
-        # this should not come from front_middle
-        new_front_middle = self.front_middle.add_vector(movement_vector)
-        length_vector = Vector(new_front_middle, self.rear_middle).scale_to_len(
-            self.length
+        axle_center = get_car_point_position(
+            self.front_middle, self.direction, self.relative_axle_center_position
         )
-        new_rear_middle = new_front_middle.copy().add_vector(
-            length_vector.get_negative_of_a_vector()
+        new_axle_center = axle_center.copy().add_vector(movement_vector)
+        new_direction = Direction(new_axle_center, self.rear_middle)
+        new_rear_middle = new_axle_center.copy().add_vector(
+            new_direction.get_negative_of_a_vector().scale_to_len(
+                axle_center.distance(self.rear_middle)
+            )
         )
-        new_direction = Direction(new_front_middle, new_rear_middle)
+        new_front_middle = new_rear_middle.add_vector(
+            new_direction.copy().scale_to_len(self.length)
+        )
         self.update_position(new_front_middle, new_direction)
         self._update_wheels_positions()
 

@@ -11,3 +11,4 @@ class WheelPosition(TypedDict):
 class WheelsPositions(TypedDict):
     left: WheelPosition
     right: WheelPosition
+    axle_center: CarPointPosition
