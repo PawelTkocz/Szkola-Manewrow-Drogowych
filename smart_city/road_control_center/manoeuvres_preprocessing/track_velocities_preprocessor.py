@@ -208,7 +208,7 @@ class TrackVelocitiesPreprocessor:
             if _car_simulation.velocity > min_velocity:
                 speed_instruction = SpeedInstruction.BRAKE
             elif _car_simulation.velocity + _car_simulation.acceleration < min_velocity:
-                speed_instruction = SpeedInstruction.ACCELERATE_FRONT
+                speed_instruction = SpeedInstruction.ACCELERATE_FORWARD
             _car_simulation.move(
                 {
                     "speed_instruction": speed_instruction,

@@ -24,9 +24,6 @@ class CarPart(Polygon):
         car_direction: Direction,
         corner_relative_position: CarPointPosition,
     ) -> Point:
-        """
-        Based on car point position, return current point position.
-        """
         width_vector = car_direction.get_orthogonal_vector(HorizontalDirection.RIGHT)
         length_position_vector = car_direction.copy().scale_to_len(
             corner_relative_position["y"]

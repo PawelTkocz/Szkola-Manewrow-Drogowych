@@ -38,6 +38,12 @@ class TurnSignals:
         }
 
     def activate(self, turn_signal_side: HorizontalDirection) -> None:
+        second_side = (
+            HorizontalDirection.LEFT
+            if turn_signal_side == HorizontalDirection.RIGHT
+            else HorizontalDirection.RIGHT
+        )
+        self.turn_signals[second_side].deactivate()
         self.turn_signals[turn_signal_side].activate()
 
     def deactivate(self) -> None:

@@ -7,37 +7,36 @@ class CarPointPosition(TypedDict):
     Representation of a point on a car.
 
     The (0, 0) point is the point in the middle of front bumper
-    (the car is directed UP, horizontally to the Y axis).
+    (the car is directed UP, paralelly to the Y axis).
     """
 
     x: float
     y: float
 
 
-# Position of a car part can be defined as list of points creating polygon
 CarPartPosition: TypeAlias = list[CarPointPosition]
 
 
-class CarBodyColoristics(TypedDict):
+class CarBodyColors(TypedDict):
     shell: str
     windows: str
     side_mirrors: str
 
 
-class ChassisColoristics(TypedDict):
+class ChassisColors(TypedDict):
     chassis: str
     wheels: str
 
 
-class LightsColoristics(TypedDict):
+class LightsColors(TypedDict):
     default: str
-    turn_singal: str
+    turn_signal: str
 
 
-class CarColoristics(TypedDict):
-    body: CarBodyColoristics
-    chassis: ChassisColoristics
-    lights: LightsColoristics
+class CarColors(TypedDict):
+    body: CarBodyColors
+    chassis: ChassisColors
+    lights: LightsColors
 
 
 class AccelerationDirection(Enum):

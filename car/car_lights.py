@@ -1,6 +1,6 @@
 from car.car_part import CarPart
 from car.model import LightsSpecification
-from car.schemas import CarPartPosition, LightsColoristics
+from car.schemas import CarPartPosition, LightsColors
 from car.turn_signals import TurnSignalType, TurnSignals
 from geometry.direction import Direction
 from geometry.vector import Point
@@ -25,25 +25,25 @@ class CarLights:
     def __init__(
         self,
         specification: LightsSpecification,
-        coloristics: LightsColoristics,
+        colors: LightsColors,
         car_front_middle: Point,
         car_direction: Direction,
     ) -> None:
         self.left_light = CarLight(
             specification["left"],
-            coloristics["default"],
+            colors["default"],
             car_front_middle,
             car_direction,
         )
         self.right_light = CarLight(
             specification["right"],
-            coloristics["default"],
+            colors["default"],
             car_front_middle,
             car_direction,
         )
         self.turn_signals = TurnSignals(specification["turn_signals_tick_interval"])
-        self.color = coloristics["default"]
-        self.turn_signal_color = coloristics["turn_singal"]
+        self.color = colors["default"]
+        self.turn_signal_color = colors["turn_signal"]
 
     def activate_turn_signal(self, turn_signal_side: HorizontalDirection) -> None:
         self.turn_signals.activate(turn_signal_side)

@@ -64,10 +64,10 @@ class CarSimulation:
         self._car.move()
 
     def collides(self, obj: Rectangle) -> bool:
-        return self._car.chassis.collides(obj)
+        return self._car.collides(obj)
 
     def is_point_inside(self, point: Point) -> bool:
-        return self._car.chassis.is_point_inside(point)
+        return self._car.is_point_inside(point)
 
     @property
     def velocity(self) -> float:
@@ -75,11 +75,11 @@ class CarSimulation:
 
     @property
     def front_middle(self) -> Point:
-        return self._car.chassis.front_middle
+        return self._car.front_middle
 
     @property
     def max_velocity(self) -> float:
-        return self._car.specification["motion"]["max_velocity"]
+        return self._car.max_velocity
 
     @property
     def body(self) -> Rectangle:
@@ -87,25 +87,25 @@ class CarSimulation:
 
     @property
     def direction(self) -> Direction:
-        return self._car.chassis.direction
+        return self._car.direction
 
     @property
     def acceleration(self) -> float:
-        return self._car.specification["motion"]["acceleration"]
+        return self._car.acceleration
 
     @property
     def wheels_angle(self) -> float:
-        return self._car.chassis.wheels_angle
+        return self._car.wheels_angle
 
     @property
     def body_safe_zone(self) -> Rectangle:
         return Rectangle(
-            self._car.chassis.front_middle.add_vector(
-                self._car.chassis.direction.scale_to_len(1.5 * self._car.chassis.length)
+            self._car.front_middle.add_vector(
+                self._car.direction.scale_to_len(1.5 * self._car.length)
             ),
-            self._car.chassis.width * 1.5,
-            self._car.chassis.length * 4,
-            self._car.chassis.direction,
+            self._car.width * 1.5,
+            self._car.length * 4,
+            self._car.direction,
         )
 
     def set_velocity(self, velocity: float) -> None:

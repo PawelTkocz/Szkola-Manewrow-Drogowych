@@ -6,7 +6,7 @@ from schemas import HorizontalDirection
 
 
 class SpeedInstruction(Enum):
-    ACCELERATE_FRONT = "ACCELERATE_FRONT"
+    ACCELERATE_FORWARD = "ACCELERATE_FRONT"
     NO_CHANGE = "NO_CHANGE"
     BRAKE = "BRAKE"
     ACCELERATE_REVERSE = "ACCELERATE_REVERSE"
@@ -50,7 +50,7 @@ class InstructionControlledCar(Car):
         self._apply_turn_instruction(movement_instruction["turn_instruction"])
 
     def _apply_speed_instruction(self, speed_instruction: SpeedInstruction) -> None:
-        if speed_instruction == SpeedInstruction.ACCELERATE_FRONT:
+        if speed_instruction == SpeedInstruction.ACCELERATE_FORWARD:
             self.accelerate(AccelerationDirection.FORWARD)
         elif speed_instruction == SpeedInstruction.NO_CHANGE:
             pass
@@ -73,6 +73,6 @@ class InstructionControlledCar(Car):
         if turn_signal_instruction == TurnSignalsInstruction.NO_SIGNALS_ON:
             self.deactivate_turn_signal()
         elif turn_signal_instruction == TurnSignalsInstruction.LEFT_SIGNAL_ON:
-            self.acitvate_turn_signal(HorizontalDirection.LEFT)
+            self.activate_turn_signal(HorizontalDirection.LEFT)
         elif turn_signal_instruction == TurnSignalsInstruction.RIGHT_SIGNAL_ON:
-            self.acitvate_turn_signal(HorizontalDirection.RIGHT)
+            self.activate_turn_signal(HorizontalDirection.RIGHT)

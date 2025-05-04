@@ -42,12 +42,12 @@ class PreprocessedManoeuvre:
         track_point_index = self.track.find_index_of_closest_point(
             live_car_data["live_state"]["front_middle"]
         )
-        turn_signal_instruction = self._get_turn_singal_instruction(track_point_index)
+        turn_signal_instruction = self._get_turn_signal_instruction(track_point_index)
         speed_instruction = self._get_speed_instruction(
             track_point_index, live_car_data
         )
         speed_instructions = [
-            SpeedInstruction.ACCELERATE_FRONT,
+            SpeedInstruction.ACCELERATE_FORWARD,
             SpeedInstruction.NO_CHANGE,
             SpeedInstruction.BRAKE,
         ]
@@ -76,7 +76,7 @@ class PreprocessedManoeuvre:
         speed_instruction = self._get_speed_instruction(
             track_point_index, live_car_data
         )
-        turn_signal_instruction = self._get_turn_singal_instruction(track_point_index)
+        turn_signal_instruction = self._get_turn_signal_instruction(track_point_index)
 
         return {
             "movement_instructions": {
@@ -101,10 +101,10 @@ class PreprocessedManoeuvre:
             + live_car_data["specification"]["model"]["motion"]["acceleration"]
             < max_safe_velocity
         ):
-            speed_instruction = SpeedInstruction.ACCELERATE_FRONT
+            speed_instruction = SpeedInstruction.ACCELERATE_FORWARD
         return speed_instruction
 
-    def _get_turn_singal_instruction(
+    def _get_turn_signal_instruction(
         self, track_point_index: int
     ) -> TurnSignalsInstruction:
         turn_signal = self.turn_signals[track_point_index]

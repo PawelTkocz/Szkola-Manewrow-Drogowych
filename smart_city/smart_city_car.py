@@ -1,10 +1,10 @@
-from car.car import DEFAULT_CAR_COLORISTICS
+from car.car import DEFAULT_CAR_COLORS
 from car.instruction_controlled_car import (
     CarControlInstructions,
     InstructionControlledCar,
 )
 from car.model import CarModelSpecification
-from car.schemas import CarColoristics
+from car.schemas import CarColors
 from geometry.direction import Direction
 from geometry.vector import Point
 from smart_city.schemas import IntersectionManoeuvreDescription, LiveCarData
@@ -20,7 +20,7 @@ class SmartCityCar(InstructionControlledCar):
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_angle: float = 0,
-        coloristics: CarColoristics = DEFAULT_CAR_COLORISTICS,
+        coloristics: CarColors = DEFAULT_CAR_COLORS,
         *,
         color: str | None = None,
         high_priority: bool = False,
@@ -33,7 +33,7 @@ class SmartCityCar(InstructionControlledCar):
             velocity,
             wheels_angle,
             coloristics,
-            color=color,
+            shell_color=color,
         )
         self.high_priority = high_priority
         self.manoeuvre_description: IntersectionManoeuvreDescription | None = None
@@ -74,11 +74,11 @@ class SmartCityCar(InstructionControlledCar):
                 "model": self.specification,
             },
             "live_state": {
-                "direction": self.chassis.direction,
-                "front_middle": self.chassis.front_middle,
+                "direction": self.direction,
+                "front_middle": self.front_middle,
                 "velocity": self.velocity,
                 "high_priority": self.high_priority,
-                "wheels_angle": self.chassis.wheels_angle,
+                "wheels_angle": self.wheels_angle,
                 "turn_signal": self.turn_signal,
             },
             "manoeuvre_description": self.manoeuvre_description,

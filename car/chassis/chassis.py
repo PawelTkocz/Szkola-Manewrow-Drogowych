@@ -8,7 +8,7 @@ from car.model import (
     SteeringSystemSpecification,
     WheelsSpecification,
 )
-from car.schemas import ChassisColoristics
+from car.schemas import ChassisColors
 from geometry.direction import Direction
 from geometry.shapes.rectangle import DynamicRectangle
 from geometry.vector import Point, Vector
@@ -20,7 +20,7 @@ class Chassis(DynamicRectangle):
     def __init__(
         self,
         specification: ChassisSpecification,
-        coloristics: ChassisColoristics,
+        coloristics: ChassisColors,
         steering_system_specification: SteeringSystemSpecification,
         wheel_specification: WheelsSpecification,
         wheels_angle: float,

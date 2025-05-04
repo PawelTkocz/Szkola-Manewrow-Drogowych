@@ -56,7 +56,7 @@ class PlaybackAnimation(AnimationStrategy):
             car_description["starting_position"]["direction"],
             car_description["velocity"],
             car_description["starting_position"]["wheels_angle"],
-            color=car_description["color"],
+            shell_color=car_description["color"],
         )
 
     def move_cars(self) -> list[Car]:
