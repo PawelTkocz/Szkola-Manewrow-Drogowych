@@ -84,7 +84,7 @@ class Intersection(RoadSegment):
         self.coloristics = colorisitcs
         self.traffic_lights = traffic_lights
         self.control_elements = self._set_positions_of_control_elements(
-            traffic_lights.get_ligths() if traffic_lights else {}, traffic_signs or {}
+            traffic_lights.get_lights() if traffic_lights else {}, traffic_signs or {}
         )
 
     @property

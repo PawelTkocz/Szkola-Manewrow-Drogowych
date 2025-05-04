@@ -12,21 +12,22 @@ class TrafficLightsCyclePhase(TypedDict):
 class IntersectionTrafficLightsCoordinator:
     def __init__(self, cycle: list[TrafficLightsCyclePhase]) -> None:
         if not cycle:
-            raise ValueError("Traffic list cycle must contain at least one phase")
+            raise ValueError("Traffic lights cycle must contain at least one phase")
         self.cycle = cycle
         self.cycle_duration = sum(cycle_phase["duration"] for cycle_phase in self.cycle)
-        cumulative_durations = [self.cycle[0]["duration"]]
+        self.phase_end_ticks = self._compute_phase_end_ticks()
+
+    def _compute_phase_end_ticks(self) -> list[int]:
+        phase_end_ticks = [self.cycle[0]["duration"]]
         for cycle_phase in self.cycle[1:]:
-            cumulative_durations.append(
-                cumulative_durations[-1] + cycle_phase["duration"]
-            )
-        self.cumulative_durations = cumulative_durations
+            phase_end_ticks.append(phase_end_ticks[-1] + cycle_phase["duration"])
+        return phase_end_ticks
 
     def get_states(
         self, tick_number: int
     ) -> dict[CardinalDirection, TrafficLightsState]:
         tick = tick_number % self.cycle_duration
         for i in range(len(self.cycle)):
-            if tick < self.cumulative_durations[i]:
+            if tick < self.phase_end_ticks[i]:
                 return self.cycle[i]["lights_states"]
-        raise ValueError("Failed to get current lights cycle phase")
+        raise RuntimeError("Tick does not match any phase")

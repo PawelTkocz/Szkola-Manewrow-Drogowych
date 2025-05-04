@@ -1,6 +1,4 @@
-from typing import Mapping
 from schemas import CardinalDirection
-from traffic_control_elements.traffic_control_element import TrafficControlElement
 from traffic_control_elements.traffic_lights.intersection.traffic_lights_coordinator import (
     IntersectionTrafficLightsCoordinator,
 )
@@ -18,7 +16,7 @@ class IntersectionTrafficLights:
         self._traffic_lights = traffic_lights
         self._traffic_lights_coordinator = traffic_lights_coordinator
 
-    def get_ligths(self) -> dict[CardinalDirection, TrafficLights]:
+    def get_lights(self) -> dict[CardinalDirection, TrafficLights]:
         return self._traffic_lights
 
     def get_lights_states(self) -> dict[CardinalDirection, TrafficLightsState]:
