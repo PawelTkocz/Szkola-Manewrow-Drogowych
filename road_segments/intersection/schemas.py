@@ -1,16 +1,16 @@
 from typing import TypedDict
 
-from geometry.shapes.rectangle import AxisAlignedRectangle, Rectangle
+from geometry.shapes.rectangle import Rectangle
 from schemas import CardinalDirection
 
 
-class IntersectionParts(TypedDict):
-    intersection_area: AxisAlignedRectangle
+class IntersectionComponents(TypedDict):
+    intersection_area: Rectangle
     incoming_lanes: dict[CardinalDirection, Rectangle]
     outcoming_lanes: dict[CardinalDirection, Rectangle]
 
 
-class IntersectionColoristics(TypedDict):
+class IntersectionColors(TypedDict):
     street: str
     pavement: str
     lines: str

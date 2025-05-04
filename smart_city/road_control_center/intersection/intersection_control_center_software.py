@@ -92,7 +92,7 @@ class IntersectionControlCenterSoftware:
         manoeuvre_info = cars_manoeuvre_info[registry_number]
         if manoeuvre_info["manoeuvre"].can_stop_before_zone(
             live_car_data,
-            self.intersection.intersection_parts["intersection_area"],
+            self.intersection.components["intersection_area"],
             car_control_instructions=car_control_instructions,
         ):
             return True
@@ -122,7 +122,7 @@ class IntersectionControlCenterSoftware:
             "manoeuvre"
         ].get_status_before_entering_zone(
             live_car_data,
-            self.intersection.intersection_parts["intersection_area"],
+            self.intersection.components["intersection_area"],
             car_control_instructions=car_control_instructions,
         )
         entering_intersection_time = (
@@ -348,8 +348,8 @@ class IntersectionControlCenterSoftware:
         manoeuvre_description = intersection_car_simulation["car_manoeuvre_info"][
             "manoeuvre"
         ].manoeuvre_description
-        intersection_area = self.intersection.intersection_parts["intersection_area"]
-        outcoming_lane = self.intersection.intersection_parts["outcoming_lanes"][
+        intersection_area = self.intersection.components["intersection_area"]
+        outcoming_lane = self.intersection.components["outcoming_lanes"][
             manoeuvre_description["ending_side"]
         ]
         return not car_simulation.body_safe_zone.collides(

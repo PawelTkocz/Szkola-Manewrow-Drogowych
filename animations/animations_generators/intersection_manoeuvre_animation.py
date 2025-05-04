@@ -57,10 +57,10 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
         self, manoeuvre_description: IntersectionManoeuvreDescription
     ) -> CarStartingPosition:
         starting_side = manoeuvre_description["starting_side"]
-        front_middle_position = self.intersection.intersection_parts["incoming_lanes"][
+        front_middle_position = self.intersection.components["incoming_lanes"][
             starting_side
         ].rear_middle
-        direction = self.intersection.intersection_parts["incoming_lanes"][
+        direction = self.intersection.components["incoming_lanes"][
             starting_side
         ].direction
         return {

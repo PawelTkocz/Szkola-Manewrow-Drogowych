@@ -88,9 +88,7 @@ class IntersectionManoeuvresManager:
     def register_track_type_variants(
         self, track_type: IntersectionTrackType, manoeuvre_track: ManoeuvreTrack
     ) -> None:
-        intersection_center = self.intersection.intersection_parts[
-            "intersection_area"
-        ].center
+        intersection_center = self.intersection.components["intersection_area"].center
         for index, variant in enumerate(IntersectionTrackVariant):
             variant_track_points = [
                 Point(*track_point).rotate_over_point(
