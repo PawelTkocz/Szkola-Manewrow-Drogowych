@@ -1,4 +1,3 @@
-from pygame import Surface
 from animations.animations_menus.interesction_manoeuvres_menus.intersection_I1_manoeuvres_menu import (
     IntersectionI1ManoeuvresMenu,
 )
@@ -55,13 +54,13 @@ class MainMenu(MenuScreen):
                 ),
             },
             {
-                "image_file_name": "traffic_lights.png",
+                "image_file_name": "standard_lights_red_yellow.png",
                 "on_click_app_screen_generator": lambda: IntersectionI4ManoeuvresMenu(
                     previous_app_screen=self
                 ),
             },
             {
-                "image_file_name": "traffic_lights_arrow.png",
+                "image_file_name": "arrow_lights_arrow_on.png",
                 "on_click_app_screen_generator": lambda: IntersectionI5ManoeuvresMenu(
                     previous_app_screen=self
                 ),

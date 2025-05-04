@@ -1,6 +1,6 @@
 from schemas import CardinalDirection
 from traffic_control_elements.traffic_lights.constants import (
-    BOTH_RED_LIGHTS_DURATION,
+    ALL_LIGHTS_RED_DURATION,
     RED_YELLOW_LIGHT_DURATION,
     YELLOW_LIGHT_DURATION,
 )
@@ -57,7 +57,7 @@ class TrafficLightsTL1Coordinator(IntersectionTrafficLightsCoordinator):
                 },
             },
             {
-                "duration": BOTH_RED_LIGHTS_DURATION,
+                "duration": ALL_LIGHTS_RED_DURATION,
                 "lights_states": {
                     side: TrafficLightsState.RED for side in CardinalDirection
                 },

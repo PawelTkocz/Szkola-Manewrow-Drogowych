@@ -9,11 +9,11 @@ HEIGHT = 68
 
 class ConditionalArrowTrafficLights(TrafficLights):
     def __init__(self, start_state: TrafficLightsState) -> None:
-        states_images_file_names: dict[TrafficLightsState, str] = {
-            TrafficLightsState.GREEN: "traffic_lights_with_arrow_green.png",
-            TrafficLightsState.YELLOW: "traffic_lights_with_arrow_yellow.png",
-            TrafficLightsState.RED: "traffic_lights_with_arrow_red0.png",
-            TrafficLightsState.RED_WITH_ARROW: "traffic_lights_with_arrow_red.png",
-            TrafficLightsState.RED_YELLOW: "traffic_lights_with_arrow_red_yellow.png",
+        state_image_filenames: dict[TrafficLightsState, str] = {
+            TrafficLightsState.GREEN: "arrow_lights_green.png",
+            TrafficLightsState.YELLOW: "arrow_lights_yellow.png",
+            TrafficLightsState.RED: "arrow_lights_red.png",
+            TrafficLightsState.RED_WITH_ARROW: "arrow_lights_arrow_on.png",
+            TrafficLightsState.RED_YELLOW: "arrow_lights_red_yellow.png",
         }
-        super().__init__(states_images_file_names, WIDTH, HEIGHT, start_state)
+        super().__init__(state_image_filenames, WIDTH, HEIGHT, start_state)

@@ -1,6 +1,6 @@
 from schemas import CardinalDirection
 from traffic_control_elements.traffic_lights.constants import (
-    BOTH_RED_LIGHTS_DURATION,
+    ALL_LIGHTS_RED_DURATION,
     RED_YELLOW_LIGHT_DURATION,
     YELLOW_LIGHT_DURATION,
 )
@@ -31,7 +31,7 @@ CYCLE: list[TrafficLightsCyclePhase] = [
         },
     },
     {
-        "duration": BOTH_RED_LIGHTS_DURATION,
+        "duration": ALL_LIGHTS_RED_DURATION,
         "lights_states": {
             CardinalDirection.LEFT: TrafficLightsState.RED,
             CardinalDirection.RIGHT: TrafficLightsState.RED,
@@ -67,7 +67,7 @@ CYCLE: list[TrafficLightsCyclePhase] = [
         },
     },
     {
-        "duration": BOTH_RED_LIGHTS_DURATION,
+        "duration": ALL_LIGHTS_RED_DURATION,
         "lights_states": {
             CardinalDirection.LEFT: TrafficLightsState.RED,
             CardinalDirection.RIGHT: TrafficLightsState.RED,

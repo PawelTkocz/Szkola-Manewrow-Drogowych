@@ -1,3 +1,4 @@
+import math
 import pygame
 from animations.constants import IMAGES_DIR_PATH
 from geometry.direction import Direction
@@ -12,7 +13,7 @@ from traffic_control_elements.traffic_lights.schemas import (
 class TrafficLights(TrafficControlElement):
     def __init__(
         self,
-        states_images_file_names: dict[TrafficLightsState, str],
+        state_image_filenames: dict[TrafficLightsState, str],
         width: float,
         height: float,
         start_state: TrafficLightsState,
@@ -20,12 +21,10 @@ class TrafficLights(TrafficControlElement):
         super().__init__(width, height)
         self.states_images = {
             state: pygame.transform.scale(
-                pygame.image.load(
-                    f"{IMAGES_DIR_PATH}/{states_images_file_names[state]}"
-                ),
+                pygame.image.load(f"{IMAGES_DIR_PATH}/{filename}"),
                 (width, height),
             )
-            for state in states_images_file_names
+            for state, filename in state_image_filenames.items()
         }
         self.rotated_states_images = self.states_images.copy()
         self.current_state = start_state
@@ -34,7 +33,7 @@ class TrafficLights(TrafficControlElement):
         super().update_position(front_middle, direction)
         for state in self.rotated_states_images:
             self.rotated_states_images[state] = pygame.transform.rotate(
-                self.states_images[state], self.rotation_angle
+                self.states_images[state], math.degrees(self.rotation_angle)
             )
 
     def set_state(self, state: TrafficLightsState) -> None:
@@ -45,5 +44,5 @@ class TrafficLights(TrafficControlElement):
 
     def draw_on_road(self, road_elements_drafter: RoadElementsDrafter) -> None:
         road_elements_drafter.blit_surface(
-            self.rotated_states_images[self.current_state], self._image_center
+            self.rotated_states_images[self.current_state], self.center
         )
