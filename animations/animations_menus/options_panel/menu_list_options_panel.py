@@ -29,12 +29,11 @@ class ListOption:
         self,
         list_option_description: ListOptionDescription,
         rectangle: AxisAlignedRectangle,
-    ):
+    ) -> None:
         self.rectangle = rectangle
         self.on_click_app_screen_generator = list_option_description[
             "on_click_app_screen_generator"
         ]
-        pygame.font.init()
         self.text_surface = pygame.font.SysFont(
             FONT_NAME, LIST_OPTION_FONT_SIZE
         ).render(list_option_description["text"], True, FONT_COLOR)
@@ -69,7 +68,6 @@ class MenuListOptionsPanel(MenuOptionsPanel):
             options_number * LIST_OPTION_HEIGHT
             + (options_number - 1) * LIST_OPTION_Y_SPACING
         )
-        pygame.font.init()
         font = pygame.font.SysFont(FONT_NAME, LIST_OPTION_FONT_SIZE)
         self.list_options_width = self._get_list_options_width(
             list_options_descriptions, font

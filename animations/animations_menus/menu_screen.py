@@ -36,7 +36,6 @@ class MenuScreen(ApplicationScreen):
             pygame.image.load(f"{IMAGES_DIR_PATH}/{BACKGROUND_IMAGE_FILE_NAME}"),
             (SCREEN_WIDTH, SCREEN_HEIGHT),
         )
-        pygame.font.init()
         self.title_surface = pygame.font.SysFont(FONT_NAME, TITLE_FONT_SIZE).render(
             title, True, FONT_COLOR
         )
@@ -71,7 +70,6 @@ class MenuScreen(ApplicationScreen):
     def render_frame(self, screen: pygame.Surface) -> None:
         blit_surface(screen, self.background_image, Point(0, SCREEN_HEIGHT))
         self.render_title(screen)
-        # generate new screen, pass options panel to draw on it, and later blit this screen
         self.options_panel.render(screen)
         if self.previous_screen_button:
             self.previous_screen_button.render(screen)

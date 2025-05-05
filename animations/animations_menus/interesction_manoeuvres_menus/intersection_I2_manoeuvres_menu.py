@@ -1,4 +1,3 @@
-from pygame import Surface
 from animations.animations_generators.intersection_I2.go_straight import (
     IntersectionI2GoStraightAnimation,
 )

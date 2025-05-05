@@ -8,6 +8,7 @@ from screen_manager import get_screen, init_screen
 from utils import flip_y_axis
 
 pygame.init()
+pygame.font.init()
 clock = pygame.time.Clock()
 init_screen(SCREEN_WIDTH, SCREEN_HEIGHT)
 

@@ -29,7 +29,7 @@ class OptionTile:
         self,
         tile_description: OptionTileDescription,
         rectangle: AxisAlignedRectangle,
-    ):
+    ) -> None:
         image_rectangle = AxisAlignedRectangle(
             rectangle.front_middle.add_vector(
                 Vector(Point(0, -1)).scale_to_len(OPTION_TILE_IMAGE_MARGIN)
