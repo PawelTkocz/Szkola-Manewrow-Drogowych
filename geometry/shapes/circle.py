@@ -6,5 +6,9 @@ class Circle:
         self.center = center.copy()
         self.radius = radius
 
+    @property
+    def diameter(self) -> float:
+        return 2 * self.radius
+
     def is_point_inside(self, point: Point) -> bool:
         return self.center.distance(point) <= self.radius
