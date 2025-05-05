@@ -4,6 +4,7 @@ from animations.animations_menus.constants import (
     OPTION_TILE_BACKGROUND_BORDER_RADIUS,
     OPTION_TILE_BACKGROUND_COLOR,
     OPTION_TILE_BACKGROUND_TRANSPARENCY,
+    OPTION_TILE_IMAGE_MARGIN,
     OPTION_TILE_SIDE,
     OPTION_TILE_X_SPACING,
     OPTION_TILE_Y_SPACING,
@@ -15,10 +16,11 @@ from animations.animations_menus.options_panel.menu_options_panel import (
 from animations.animations_menus.options_panel.schemas import (
     OptionTileDescription,
 )
+from animations.animations_menus.utils import get_fitted_surface_rectangle
 from application_screen import ApplicationScreen
 from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.shapes.rectangle import AxisAlignedRectangle
-from geometry.vector import Point
+from geometry.vector import Point, Vector
 from utils import blit_surface
 
 
@@ -28,11 +30,20 @@ class OptionTile:
         tile_description: OptionTileDescription,
         rectangle: AxisAlignedRectangle,
     ):
-        self.image = pygame.transform.scale(
-            pygame.image.load(
-                f"{IMAGES_DIR_PATH}/{tile_description['image_file_name']}"
+        image_rectangle = AxisAlignedRectangle(
+            rectangle.front_middle.add_vector(
+                Vector(Point(0, -1)).scale_to_len(OPTION_TILE_IMAGE_MARGIN)
             ),
-            (rectangle.width, rectangle.length),
+            rectangle.width - 2 * OPTION_TILE_IMAGE_MARGIN,
+            rectangle.length - 2 * OPTION_TILE_IMAGE_MARGIN,
+        )
+        image = pygame.image.load(
+            f"{IMAGES_DIR_PATH}/{tile_description['image_file_name']}"
+        )
+        self.image_position = get_fitted_surface_rectangle(image, image_rectangle)
+        self.image = pygame.transform.scale(
+            image,
+            (self.image_position.width, self.image_position.length),
         )
         self.rectangle = rectangle
         self.on_click_app_screen_generator = tile_description[
@@ -41,7 +52,7 @@ class OptionTile:
 
     def render(self, screen: pygame.Surface) -> None:
         self.rectangle.draw(screen)
-        blit_surface(screen, self.image, self.rectangle.front_left)
+        blit_surface(screen, self.image, self.image_position.front_left)
 
     def is_clicked(self, mouse_click_point: Point) -> bool:
         return self.rectangle.is_point_inside(mouse_click_point)
