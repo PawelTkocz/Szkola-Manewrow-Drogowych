@@ -9,7 +9,9 @@ from smart_city.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.ma
 )
 from smart_city.road_control_center.manoeuvres_preprocessing.schemas import TrackPath
 
-TURN_SHARPNESS = 0.7
+TURN_SHARPNESS = (
+    0.55  # according to https://spencermortensen.com/articles/bezier-circle/
+)
 
 
 def _cubic_bezier(
