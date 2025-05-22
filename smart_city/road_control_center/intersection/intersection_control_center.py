@@ -1,7 +1,5 @@
 from car.instruction_controlled_car import CarControlInstructions
 from car.model import CarModelSpecification
-from car.toyota_yaris_specification import TOYOTA_YARIS_SPECIFICATION
-from geometry.vector import Point
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
 from smart_city.road_control_center.intersection.intersection_control_center_software import (
@@ -12,7 +10,6 @@ from smart_city.road_control_center.intersection.intersection_manoeuvre import (
 )
 from smart_city.road_control_center.intersection.intersection_manoeuvres_manager import (
     IntersectionManoeuvresManager,
-    IntersectionTrackType,
 )
 from smart_city.road_control_center.intersection.intersection_rules import (
     IntersectionRules,
@@ -37,38 +34,29 @@ class IntersectionControlCenter(RoadControlCenter):
             intersection
         )
         self.software = IntersectionControlCenterSoftware(
-            intersection, intersection_rules, self._get_all_tracks()
+            intersection, intersection_rules
         )
         self.cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo] = {}
 
-    def _get_all_tracks(
-        self,
-    ) -> dict[
-        str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
-    ]:
-        result: dict[
-            str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
+    def get_car_model_tracks(
+        self, car_model_specification: CarModelSpecification
+    ) -> dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]:
+        tracks: dict[
+            CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]
         ] = {}
-        for registered_car_model in ["Toyota Yaris"]:
-            car_model_tracks: dict[
-                CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]
-            ] = {}
-            for starting_side in CardinalDirection:
-                starting_side_tracks: dict[
-                    CardinalDirection, IntersectionManoeuvre
-                ] = {}
-                for ending_side in CardinalDirection:
-                    if starting_side == ending_side:
-                        continue
-                    manoeuvre = IntersectionManoeuvre(
-                        TOYOTA_YARIS_SPECIFICATION,
-                        self.intersection,
-                        {"starting_side": starting_side, "ending_side": ending_side},
-                    )
-                    starting_side_tracks[ending_side] = manoeuvre
-                car_model_tracks[starting_side] = starting_side_tracks
-            result[registered_car_model] = car_model_tracks
-        return result
+        for starting_side in CardinalDirection:
+            starting_side_tracks: dict[CardinalDirection, IntersectionManoeuvre] = {}
+            for ending_side in CardinalDirection:
+                if starting_side == ending_side:
+                    continue
+                manoeuvre = IntersectionManoeuvre(
+                    car_model_specification,
+                    self.intersection,
+                    {"starting_side": starting_side, "ending_side": ending_side},
+                )
+                starting_side_tracks[ending_side] = manoeuvre
+            tracks[starting_side] = starting_side_tracks
+        return tracks
 
     def calculate_control_instructions(
         self, registry_number: str
@@ -116,6 +104,10 @@ class IntersectionControlCenter(RoadControlCenter):
     ) -> bool:
         self.intersection_manoeuvres_manager.register_track_velocities(
             car_model_specification
+        )
+        self.software.register_car_model_tracks(
+            car_model_specification["name"],
+            self.get_car_model_tracks(car_model_specification),
         )
         return True
 

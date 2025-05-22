@@ -127,17 +127,15 @@ class IntersectionManoeuvresManager:
     def register_track_velocities(
         self, car_model_specification: CarModelSpecification
     ) -> None:
-        pass
-        # for track_type, manoeuvre_track in self.tracks:
-        #     max_safe_velocities = TrackVelocitiesPreprocessor(
-        #         manoeuvre_track, car_model_specification
-        #     ).get_max_safe_velocities()
-        #     dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
-        #     self.dump_json(
-        #         dir_path,
-        #         f"{self.processed_car_model_name(car_model_specification['name'])}_velocities",
-        #         max_safe_velocities,
-        #     )
+        for track_type, manoeuvre_track in self.tracks:
+            dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
+            file_name = f"{self.processed_car_model_name(car_model_specification['name'])}_velocities"
+            if os.path.isfile(os.path.join(dir_path, f"{file_name}.json")):
+                continue
+            max_safe_velocities = TrackVelocitiesPreprocessor(
+                manoeuvre_track, car_model_specification
+            ).get_max_safe_velocities()
+            self.dump_json(dir_path, file_name, max_safe_velocities)
 
     def dump_json(self, dir_path: str, file_name: str, data: list[Any]) -> None:
         os.makedirs(dir_path, exist_ok=True)

@@ -32,16 +32,20 @@ class CarOnIntersectionSimulation(TypedDict):
 
 class IntersectionControlCenterSoftware:
     def __init__(
-        self,
-        intersection: Intersection,
-        intersection_rules: IntersectionRules,
-        manoeuvres_base: dict[
-            str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
-        ],
+        self, intersection: Intersection, intersection_rules: IntersectionRules
     ):
         self.intersection = intersection
         self.intersection_rules = intersection_rules
-        self.tracks = manoeuvres_base
+        self.tracks: dict[
+            str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
+        ] = {}
+
+    def register_car_model_tracks(
+        self,
+        car_model_name: str,
+        tracks: dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]],
+    ) -> None:
+        self.tracks[car_model_name] = tracks
 
     def get_default_movement_instruction(self) -> CarControlInstructions:
         return {

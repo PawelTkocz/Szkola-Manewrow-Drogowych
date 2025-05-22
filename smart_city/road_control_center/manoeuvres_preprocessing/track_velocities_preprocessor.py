@@ -20,8 +20,10 @@ from smart_city.road_control_center.car_simulation import CarSimulation
 MAX_DISTANCE_TO_TRACK = 3
 MIN_VELOCITY = 1
 MAX_SAFE_VELOCITY_ACCURACY = 0.5
+VELOCITY_SAFE_MARGIN = 0.9
 
 
+# measure distance not to front middle but to axle middle
 class TrackVelocitiesPreprocessor:
     def __init__(
         self,
@@ -89,14 +91,12 @@ class TrackVelocitiesPreprocessor:
                 }
         return start_states
 
-    def apply_safe_margin_to_velocity(self, vel: float) -> float:
-        return vel * 3 / 4
-
     def get_max_safe_velocity(
         self,
         start_point_index: int,
         end_point_index: int,
         car_simulation_controller: Callable[[CarSimulation, ManoeuvreTrack], None],
+        velocity_safe_margin: float,
     ) -> float:
         max_velocity = self.car_model_specification["motion"]["max_velocity"]
         start_car_state = self.car_start_states[start_point_index]
@@ -110,7 +110,7 @@ class TrackVelocitiesPreprocessor:
         if not self.will_go_off_track(
             car_simulation, car_simulation_controller, end_point_index
         ):
-            return self.apply_safe_margin_to_velocity(max_velocity)
+            return max_velocity * velocity_safe_margin
 
         min_velocity: float = MIN_VELOCITY
         while max_velocity - min_velocity > MAX_SAFE_VELOCITY_ACCURACY:
@@ -128,7 +128,7 @@ class TrackVelocitiesPreprocessor:
                 min_velocity = v
             else:
                 max_velocity = v
-        return self.apply_safe_margin_to_velocity(min_velocity)
+        return min_velocity * velocity_safe_margin
 
     def _get_track_segments_max_const_velocities(
         self,
@@ -159,6 +159,7 @@ class TrackVelocitiesPreprocessor:
                 cur_segment_start_index,
                 segment_cumulative_length - 1,
                 _car_simulation_controller,
+                0.75,
             )
             cur_segment_start_index = segment_cumulative_length
         return result
@@ -174,7 +175,6 @@ class TrackVelocitiesPreprocessor:
         """
         manoeuvre_track = self.manoeuvre_track
         end_point = Point(*manoeuvre_track.track_path[end_point_index])
-        # min velocity mozna wyznaczyc wyznaczajac max const velocity na calym odcinku
         while not car_simulation.is_point_inside(end_point):
             distance_to_track = manoeuvre_track.get_distance_to_point(
                 car_simulation.front_middle
@@ -222,6 +222,11 @@ class TrackVelocitiesPreprocessor:
 
         track_len = len(self.manoeuvre_track.track_path)
         return [
-            self.get_max_safe_velocity(i, track_len - 1, _car_simulation_controller)
+            (
+                print(i),
+                self.get_max_safe_velocity(
+                    i, track_len - 1, _car_simulation_controller, VELOCITY_SAFE_MARGIN
+                ),
+            )[1]
             for i in range(track_len)
         ]

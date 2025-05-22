@@ -14,7 +14,7 @@ class ManoeuvreTrackSegment:
         self,
         type: TrackSegmentType,
         track_path: TrackPath,
-        expected_min_velocity: float | None,
+        expected_min_velocity: float | None,  # do wywalenia
     ) -> None:
         self.type = type
         self.track_path = track_path
