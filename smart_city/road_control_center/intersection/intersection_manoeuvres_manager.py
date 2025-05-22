@@ -82,33 +82,36 @@ class IntersectionManoeuvresManager:
 
     def register_tracks(self) -> None:
         for track_type, manoeuvre_track in self.tracks:
-            self.register_track_type_variants(track_type, manoeuvre_track)
-            self.register_turn_signals(track_type, manoeuvre_track)
-
-    def register_track_type_variants(
-        self, track_type: IntersectionTrackType, manoeuvre_track: ManoeuvreTrack
-    ) -> None:
-        intersection_center = self.intersection.components["intersection_area"].center
-        for index, variant in enumerate(IntersectionTrackVariant):
-            variant_track_points = [
-                Point(*track_point).rotate_over_point(
-                    intersection_center, math.pi / 2 * index
-                )
-                for track_point in manoeuvre_track.track_path
-            ]
-            self.register_track_type_variant(track_type, variant, variant_track_points)
+            dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
+            for variant in IntersectionTrackVariant:
+                if not os.path.isfile(os.path.join(dir_path, f"{variant.value}.json")):
+                    self.register_track_type_variant(
+                        track_type, manoeuvre_track, variant
+                    )
+            if not os.path.isfile(
+                os.path.join(dir_path, f"{TURN_SIGNALS_FILE_NAME}.json")
+            ):
+                self.register_turn_signals(track_type, manoeuvre_track)
 
     def register_track_type_variant(
         self,
         track_type: IntersectionTrackType,
+        manoeuvre_track: ManoeuvreTrack,
         variant: IntersectionTrackVariant,
-        track: list[Point],
     ) -> None:
+        intersection_center = self.intersection.components["intersection_area"].center
+        variant_index = list(IntersectionTrackVariant).index(variant)
+        variant_track_points = [
+            Point(*track_point).rotate_over_point(
+                intersection_center, math.pi / 2 * variant_index
+            )
+            for track_point in manoeuvre_track.track_path
+        ]
         dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
         self.dump_json(
             dir_path,
             variant.value,
-            [point.to_tuple() for point in track],
+            [point.to_tuple() for point in variant_track_points],
         )
 
     def register_turn_signals(
