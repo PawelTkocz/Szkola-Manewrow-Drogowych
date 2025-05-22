@@ -33,7 +33,12 @@ def get_track_end_point(
 def get_track_start_point(
     intersection: Intersection, starting_side: CardinalDirection
 ) -> Point:
-    return intersection.components["incoming_lanes"][starting_side].rear_middle
+    incoming_lane = intersection.components["incoming_lanes"][starting_side]
+    return incoming_lane.rear_middle.add_vector(
+        incoming_lane.direction.get_negative_of_a_vector().scale_to_len(
+            TRACK_MARGIN_LENGTH
+        )
+    )
 
 
 def _get_turn_offset(

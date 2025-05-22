@@ -40,7 +40,7 @@ class PreprocessedManoeuvre:
         self, live_car_data: LiveCarData
     ) -> list[CarControlInstructions]:
         track_point_index = self.track.find_index_of_closest_point(
-            live_car_data["live_state"]["front_middle"]
+            CarSimulation.from_live_car_data(live_car_data).axle_center
         )
         turn_signal_instruction = self._get_turn_signal_instruction(track_point_index)
         speed_instruction = self._get_speed_instruction(
@@ -71,7 +71,7 @@ class PreprocessedManoeuvre:
         self, live_car_data: LiveCarData
     ) -> CarControlInstructions:
         track_point_index = self.track.find_index_of_closest_point(
-            live_car_data["live_state"]["front_middle"]
+            CarSimulation.from_live_car_data(live_car_data).axle_center
         )
         speed_instruction = self._get_speed_instruction(
             track_point_index, live_car_data

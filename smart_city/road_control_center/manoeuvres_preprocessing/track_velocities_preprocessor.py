@@ -20,10 +20,9 @@ from smart_city.road_control_center.car_simulation import CarSimulation
 MAX_DISTANCE_TO_TRACK = 3
 MIN_VELOCITY = 1
 MAX_SAFE_VELOCITY_ACCURACY = 0.5
-VELOCITY_SAFE_MARGIN = 0.9
+VELOCITY_SAFE_MARGIN = 0.8
 
 
-# measure distance not to front middle but to axle middle
 class TrackVelocitiesPreprocessor:
     def __init__(
         self,
@@ -32,9 +31,23 @@ class TrackVelocitiesPreprocessor:
     ) -> None:
         self.manoeuvre_track = manoeuvre_track
         self.car_model_specification = car_model_specification
+        self.first_track_point_index = self._get_first_track_point_index()
         self.car_start_states = self._get_car_start_states()
         self.track_segments_max_const_velocities: dict[ManoeuvreTrackSegment, float] = (
             self._get_track_segments_max_const_velocities()
+        )
+
+    def _get_first_track_point_index(self) -> int:
+        start_state = self.manoeuvre_track.start_car_state
+        car_simulation = CarSimulation(
+            start_state["front_middle"],
+            start_state["direction"],
+            start_state["wheels_angle"],
+            MIN_VELOCITY,
+            self.car_model_specification,
+        )
+        return self.manoeuvre_track.find_index_of_closest_point(
+            car_simulation.axle_center
         )
 
     def _get_car_start_states(
@@ -42,7 +55,7 @@ class TrackVelocitiesPreprocessor:
     ) -> dict[int, ManoeuvreStartCarState]:
         start_states: dict[int, ManoeuvreStartCarState] = {}
         start_state = self.manoeuvre_track.start_car_state
-        start_states[0] = start_state
+        start_states[self.first_track_point_index] = start_state
         car_simulation = CarSimulation(
             start_state["front_middle"],
             start_state["direction"],
@@ -53,19 +66,17 @@ class TrackVelocitiesPreprocessor:
 
         while not car_simulation.is_point_inside(self.manoeuvre_track.end_point):
             if (
-                self.manoeuvre_track.get_distance_to_point(car_simulation.front_middle)
+                self.manoeuvre_track.get_distance_to_point(car_simulation.axle_center)
                 > MAX_DISTANCE_TO_TRACK
             ):
                 raise ValueError("Not possible to complete the track")
 
             track_point_index = self.manoeuvre_track.find_index_of_closest_point(
-                car_simulation.front_middle
+                car_simulation.axle_center
             )
             start_states[track_point_index] = {
                 "direction": car_simulation.direction,
-                "front_middle": Point(
-                    *self.manoeuvre_track.track_path[track_point_index]
-                ),
+                "front_middle": car_simulation.front_middle,
                 "wheels_angle": car_simulation.wheels_angle,
             }
 
@@ -82,13 +93,11 @@ class TrackVelocitiesPreprocessor:
             )
             car_simulation.set_velocity(MIN_VELOCITY)
 
-        for index in range(1, len(self.manoeuvre_track.track_path)):
+        for index in range(
+            self.first_track_point_index + 1, len(self.manoeuvre_track.track_path)
+        ):
             if index not in start_states:
-                start_states[index] = {
-                    "direction": start_states[index - 1]["direction"],
-                    "wheels_angle": start_states[index - 1]["wheels_angle"],
-                    "front_middle": Point(*self.manoeuvre_track.track_path[index]),
-                }
+                start_states[index] = start_states[index - 1]
         return start_states
 
     def get_max_safe_velocity(
@@ -150,7 +159,7 @@ class TrackVelocitiesPreprocessor:
             )
             _car_simulation.set_velocity(current_speed)
 
-        cur_segment_start_index = 0
+        cur_segment_start_index = self.first_track_point_index
         result: dict[ManoeuvreTrackSegment, float] = {}
         for track_segment_data in self.manoeuvre_track.segments_data:
             track_segment = track_segment_data["track_segment"]
@@ -159,7 +168,7 @@ class TrackVelocitiesPreprocessor:
                 cur_segment_start_index,
                 segment_cumulative_length - 1,
                 _car_simulation_controller,
-                0.75,
+                VELOCITY_SAFE_MARGIN,
             )
             cur_segment_start_index = segment_cumulative_length
         return result
@@ -177,7 +186,7 @@ class TrackVelocitiesPreprocessor:
         end_point = Point(*manoeuvre_track.track_path[end_point_index])
         while not car_simulation.is_point_inside(end_point):
             distance_to_track = manoeuvre_track.get_distance_to_point(
-                car_simulation.front_middle
+                car_simulation.axle_center
             )
             if distance_to_track > MAX_DISTANCE_TO_TRACK:
                 return True
@@ -191,7 +200,7 @@ class TrackVelocitiesPreprocessor:
             _car_simulation: CarSimulation, _manoeuvre_track: ManoeuvreTrack
         ) -> None:
             track_point_index = _manoeuvre_track.find_index_of_closest_point(
-                _car_simulation.front_middle
+                _car_simulation.axle_center
             )
             incoming_segments_data = _manoeuvre_track.get_incoming_segments_data(
                 track_point_index
@@ -221,12 +230,16 @@ class TrackVelocitiesPreprocessor:
             )
 
         track_len = len(self.manoeuvre_track.track_path)
-        return [
-            (
-                print(i),
+        max_safe_velocities = []
+        for i in range(track_len):
+            if i < self.first_track_point_index:
+                max_safe_velocities.append(
+                    self.car_model_specification["motion"]["max_velocity"]
+                )
+                continue
+            max_safe_velocities.append(
                 self.get_max_safe_velocity(
                     i, track_len - 1, _car_simulation_controller, VELOCITY_SAFE_MARGIN
-                ),
-            )[1]
-            for i in range(track_len)
-        ]
+                )
+            )
+        return max_safe_velocities

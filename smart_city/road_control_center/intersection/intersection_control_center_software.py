@@ -267,6 +267,7 @@ class IntersectionControlCenterSoftware:
         if live_car_data["live_state"]["turn_signal"] != TurnSignalType.NO_SIGNAL:
             return [manoeuvre_description]
         result: list[IntersectionManoeuvreDescription] = []
+        axle_center = CarSimulation.from_live_car_data(live_car_data).axle_center
         for ending_side in CardinalDirection:
             if ending_side == starting_side:
                 continue
@@ -274,9 +275,7 @@ class IntersectionControlCenterSoftware:
                 starting_side
             ][ending_side]
             if (
-                manoeuvre.track.get_distance_to_point(
-                    live_car_data["live_state"]["front_middle"]
-                )
+                manoeuvre.track.get_distance_to_point(axle_center)
                 < max_distance_to_track
             ):
                 result.append(

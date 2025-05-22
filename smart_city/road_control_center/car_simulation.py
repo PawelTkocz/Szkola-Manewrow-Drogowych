@@ -78,6 +78,10 @@ class CarSimulation:
         return self._car.front_middle
 
     @property
+    def axle_center(self) -> Point:
+        return self._car.chassis.axle_center
+
+    @property
     def max_velocity(self) -> float:
         return self._car.max_velocity
 

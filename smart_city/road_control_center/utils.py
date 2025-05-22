@@ -21,7 +21,7 @@ def get_turn_instruction(
                 "turn_instruction": turn_instruction,
             },
         )
-        return track.get_distance_to_point(car_simulation.front_middle)
+        return track.get_distance_to_point(car_simulation.axle_center)
 
     if live_car_data["live_state"]["velocity"] == 0:
         return TurnInstruction.NO_CHANGE

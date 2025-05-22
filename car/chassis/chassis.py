@@ -56,6 +56,9 @@ class Chassis(DynamicRectangle):
             self.direction,
         )
         self.relative_axle_center_position = wheels_positions["axle_center"]
+        self._axle_center = get_car_point_position(
+            self.front_middle, self.direction, self.relative_axle_center_position
+        )
 
     def _get_wheels_positions(
         self, wheels_width: float, wheels_length: float
@@ -93,19 +96,20 @@ class Chassis(DynamicRectangle):
     def wheels_angle(self) -> float:
         return self.steering_system.wheels_angle
 
+    @property
+    def axle_center(self) -> Point:
+        return self._axle_center.copy()
+
     def move(self, distance: float) -> None:
         movement_vector = self.steering_system.get_wheels_direction(
             self.direction
         ).scale_to_len(distance)
 
-        axle_center = get_car_point_position(
-            self.front_middle, self.direction, self.relative_axle_center_position
-        )
-        new_axle_center = axle_center.copy().add_vector(movement_vector)
+        new_axle_center = self.axle_center.add_vector(movement_vector)
         new_direction = Direction(new_axle_center, self.rear_middle)
         new_rear_middle = new_axle_center.copy().add_vector(
             new_direction.get_negative_of_a_vector().scale_to_len(
-                axle_center.distance(self.rear_middle)
+                self.axle_center.distance(self.rear_middle)
             )
         )
         new_front_middle = new_rear_middle.add_vector(
@@ -113,6 +117,9 @@ class Chassis(DynamicRectangle):
         )
         self.update_position(new_front_middle, new_direction)
         self._update_wheels_positions()
+        self._axle_center = get_car_point_position(
+            self.front_middle, self.direction, self.relative_axle_center_position
+        )
 
     def turn(self, direction: HorizontalDirection) -> None:
         self.steering_system.turn(direction)
