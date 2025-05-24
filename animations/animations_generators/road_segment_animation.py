@@ -21,8 +21,10 @@ from application_screen import ApplicationScreen
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
 from screen_manager import get_screen
-from smart_city.road_control_center.road_control_center import RoadControlCenter
-from smart_city.traffic_control_center import TrafficControlCenter
+from traffic_control_system.road_control_center.road_control_center import (
+    RoadControlCenter,
+)
+from traffic_control_system.traffic_control_center import TrafficControlCenter
 
 
 class RoadSegmentAnimation(ApplicationScreen):

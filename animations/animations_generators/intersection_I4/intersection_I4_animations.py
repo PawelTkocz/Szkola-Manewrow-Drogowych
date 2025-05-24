@@ -3,7 +3,7 @@ from animations.animations_generators.intersection_manoeuvre_animation import (
 )
 from animations.animations_generators.schemas import IntersectionAnimationCarDescription
 from application_screen import ApplicationScreen
-from smart_city.road_control_center.intersection.intersection_I4_control_center import (
+from traffic_control_system.road_control_center.intersection.intersection_I4_control_center import (
     IntersectionI4ControlCenter,
 )
 

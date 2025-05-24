@@ -3,7 +3,7 @@ from typing import TypedDict
 from car.model import CarModelSpecification
 from geometry.direction import Direction
 from geometry.vector import Point
-from smart_city.schemas import IntersectionManoeuvreDescription
+from traffic_control_system.schemas import IntersectionManoeuvreDescription
 
 
 class CarStartingPosition(TypedDict):

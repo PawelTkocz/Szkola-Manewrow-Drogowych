@@ -14,8 +14,8 @@ from animations.animations_generators.schemas import (
 from car.car import Car
 from car.instruction_controlled_car import CarControlInstructions
 
-from smart_city.smart_city_car import SmartCityCar
-from smart_city.traffic_control_center import (
+from traffic_control_system.smart_city_car import SmartCityCar
+from traffic_control_system.traffic_control_center import (
     TrafficControlCenter,
 )
 
