@@ -105,10 +105,10 @@ class CarSimulation:
     def body_safe_zone(self) -> Rectangle:
         return Rectangle(
             self._car.front_middle.add_vector(
-                self._car.direction.scale_to_len(1.5 * self._car.length)
+                self._car.direction.scale_to_len(2 * self._car.length)
             ),
             self._car.width * 1.5,
-            self._car.length * 4,
+            self._car.length * 5,
             self._car.direction,
         )
 
