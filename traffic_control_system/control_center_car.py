@@ -20,9 +20,9 @@ class ControlCenterCar(InstructionControlledCar):
         direction: Direction = Direction(Point(1, 0)),
         velocity: float = 0,
         wheels_angle: float = 0,
-        coloristics: CarColors = DEFAULT_CAR_COLORS,
+        colors: CarColors = DEFAULT_CAR_COLORS,
         *,
-        color: str | None = None,
+        shell_color: str | None = None,
         high_priority: bool = False,
     ):
         super().__init__(
@@ -32,8 +32,8 @@ class ControlCenterCar(InstructionControlledCar):
             direction,
             velocity,
             wheels_angle,
-            coloristics,
-            shell_color=color,
+            colors,
+            shell_color=shell_color,
         )
         self.high_priority = high_priority
         self.manoeuvre_description: IntersectionManoeuvreDescription | None = None

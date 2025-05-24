@@ -53,7 +53,7 @@ class RuntimeAnimation(AnimationStrategy):
             car_description["starting_position"]["direction"],
             car_description["velocity"],
             car_description["starting_position"]["wheels_angle"],
-            color=car_description["color"],
+            shell_color=car_description["color"],
         )
         control_center_car.set_manoeuvre(car_description["manoeuvre_description"])
         return control_center_car
