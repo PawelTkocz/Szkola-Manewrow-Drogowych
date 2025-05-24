@@ -7,28 +7,28 @@ from animations.animations_generators.schemas import (
     IntersectionAnimationCarDescription,
 )
 from application_screen import ApplicationScreen
-from road_segments.intersection.intersection import Intersection
 from animations.animations_generators.constants import (
     CONTROL_INSTRUCTIONS_DIR as CONTROL_INSTRUCTIONS_DIR,
 )
-from smart_city.road_control_center.road_control_center import RoadControlCenter
+from smart_city.road_control_center.intersection.intersection_control_center import (
+    IntersectionControlCenter,
+)
 from smart_city.schemas import IntersectionManoeuvreDescription
 
 
 class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
     def __init__(
         self,
-        intersection: Intersection,
         cars_descriptions: list[IntersectionAnimationCarDescription],
         manoeuvre_control_instructions_dir_name: str,
-        road_control_center: RoadControlCenter,
+        intersection_control_center: IntersectionControlCenter,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ):
-        self.intersection = intersection
+        self.intersection = intersection_control_center.intersection
         control_instructions_dir_path = os.path.join(
             CONTROL_INSTRUCTIONS_DIR,
-            road_control_center.id,
+            intersection_control_center.id,
             manoeuvre_control_instructions_dir_name,
         )
         animation_cars_descriptions: list[AnimationCarDescription] = [
@@ -46,10 +46,9 @@ class IntersectionManoeuvreAnimation(RoadSegmentAnimation):
             for car_description in cars_descriptions
         ]
         super().__init__(
-            intersection,
             animation_cars_descriptions,
             control_instructions_dir_path,
-            road_control_center,
+            intersection_control_center,
             previous_app_screen=previous_app_screen,
         )
 

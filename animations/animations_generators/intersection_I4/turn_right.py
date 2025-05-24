@@ -1,4 +1,3 @@
-from pygame import Surface
 from animations.animations_generators.intersection_I4.intersection_I4_animations import (
     IntersectionI4Animation,
 )

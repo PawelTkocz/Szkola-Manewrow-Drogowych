@@ -17,7 +17,6 @@ from animations.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
-from road_segments.road_segment import RoadSegment
 from screen_manager import get_screen
 from smart_city.road_control_center.road_control_center import RoadControlCenter
 from smart_city.traffic_control_center import TrafficControlCenter
@@ -26,14 +25,12 @@ from smart_city.traffic_control_center import TrafficControlCenter
 class RoadSegmentAnimation(ApplicationScreen):
     def __init__(
         self,
-        road_segment: RoadSegment,
         cars_descriptions: list[AnimationCarDescription],
         control_instructions_dir_path: str,
         road_control_center: RoadControlCenter,
         *,
         previous_app_screen: ApplicationScreen | None = None,
     ) -> None:
-        self.road_segment = road_segment
         self.previous_screen_button = (
             PreviousScreenButton(previous_app_screen) if previous_app_screen else None
         )
@@ -47,6 +44,7 @@ class RoadSegmentAnimation(ApplicationScreen):
                 self.traffic_control_center,
             )
         )
+        self.road_segment = road_control_center.road_segment
         car_models = {
             car_description["model"]["name"] for car_description in cars_descriptions
         }
@@ -57,14 +55,12 @@ class RoadSegmentAnimation(ApplicationScreen):
                 self.traffic_control_center.register_car_model(car_model)
                 car_models.remove(car_model["name"])
         self.road_elements_drafter = RoadElementsDrafter(
-            road_segment.area, get_screen()
+            self.road_segment.area, get_screen()
         )
 
     def render_frame(self, screen: Surface) -> None:
-        self.road_segment.tick()
         self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
-        screen.fill("red")
         self.road_segment.draw(self.road_elements_drafter)
         for car in cars:
             car.draw(self.road_elements_drafter)
