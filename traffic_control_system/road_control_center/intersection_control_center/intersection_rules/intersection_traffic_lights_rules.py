@@ -19,10 +19,11 @@ class IntersectionTrafficLightsRules(IntersectionRules):
     ) -> bool:
         starting_side = car_info["manoeuvre_description"]["starting_side"]
         current_lights_state = self.traffic_lights.get_lights_states()[starting_side]
-        if (
-            current_lights_state
-            in [TrafficLightsState.RED, TrafficLightsState.RED_YELLOW]
-            or current_lights_state == TrafficLightsState.RED_WITH_ARROW
+        if current_lights_state in [
+            TrafficLightsState.RED,
+            TrafficLightsState.RED_YELLOW,
+        ] or (
+            current_lights_state == TrafficLightsState.RED_WITH_ARROW
             and car_info["velocity"] != 0
         ):
             return False
