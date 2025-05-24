@@ -8,11 +8,9 @@ from traffic_control_system.road_control_center.intersection_control_center.sche
 
 class PriorityToTheRightRule(IntersectionRules):
     def can_enter_intersection(
-        self, car_info: IntersectionPriorityCarInfo, time: int
+        self, car_info: IntersectionPriorityCarInfo, time_until_entry: int
     ) -> bool:
         return True
 
-    def is_on_road_with_priority(
-        self, car_info: IntersectionPriorityCarInfo, time: int
-    ) -> bool:
+    def is_on_road_with_priority(self, car_info: IntersectionPriorityCarInfo) -> bool:
         return False

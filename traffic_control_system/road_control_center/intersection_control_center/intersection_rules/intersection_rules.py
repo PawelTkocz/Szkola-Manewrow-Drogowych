@@ -12,9 +12,8 @@ class IntersectionRules(ABC):
         self,
         car1_info: IntersectionPriorityCarInfo,
         car2_info: IntersectionPriorityCarInfo,
-    ):
-        if car1_info["high_priority"] and not car2_info["high_priority"]:
-            return True
+    ) -> bool:
+        return car1_info["high_priority"] and not car2_info["high_priority"]
 
     def intersection_sides_passed_on_right(
         self, starting_side: CardinalDirection, ending_side: CardinalDirection
@@ -54,21 +53,18 @@ class IntersectionRules(ABC):
 
     @abstractmethod
     def can_enter_intersection(
-        self, car_info: IntersectionPriorityCarInfo, time: int
+        self, car_info: IntersectionPriorityCarInfo, time_until_entry: int
     ) -> bool:
         raise NotImplementedError
 
     @abstractmethod
-    def is_on_road_with_priority(
-        self, car_info: IntersectionPriorityCarInfo, time: int
-    ) -> bool:
+    def is_on_road_with_priority(self, car_info: IntersectionPriorityCarInfo) -> bool:
         raise NotImplementedError
 
     def must_yield_the_right_of_way(
         self,
         car1_info: IntersectionPriorityCarInfo,
         car2_info: IntersectionPriorityCarInfo,
-        time: int,
     ) -> bool:
         if not self.tracks_intersect(car1_info, car2_info):
             return False
@@ -76,8 +72,8 @@ class IntersectionRules(ABC):
             return True
         if self.has_emergency_priority(car1_info, car2_info):
             return False
-        car1_priority_road = self.is_on_road_with_priority(car1_info, time)
-        car2_priority_road = self.is_on_road_with_priority(car2_info, time)
+        car1_priority_road = self.is_on_road_with_priority(car1_info)
+        car2_priority_road = self.is_on_road_with_priority(car2_info)
         if car1_priority_road and not car2_priority_road:
             return False
         if car2_priority_road and not car1_priority_road:

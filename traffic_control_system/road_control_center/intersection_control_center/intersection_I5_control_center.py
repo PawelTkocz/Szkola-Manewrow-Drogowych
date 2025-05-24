@@ -6,9 +6,9 @@ from traffic_control_system.road_control_center.intersection_control_center.inte
     IntersectionTrafficLightsRules,
 )
 
-INTERSECTION_RULES = IntersectionTrafficLightsRules()
-
 
 class IntersectionI5ControlCenter(IntersectionControlCenter):
     def __init__(self) -> None:
-        super().__init__(IntersectionI5(), INTERSECTION_RULES, "Intersection_I5")
+        intersection = IntersectionI5()
+        rules = IntersectionTrafficLightsRules(intersection.traffic_lights)
+        super().__init__(IntersectionI5(), rules, "Intersection_I5")

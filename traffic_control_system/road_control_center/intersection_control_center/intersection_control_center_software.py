@@ -144,18 +144,8 @@ class IntersectionControlCenterSoftware:
                 "velocity": entering_intersection_live_car_data["live_state"][
                     "velocity"
                 ],
-                "traffic_lights_state": {
-                    "current": self.intersection.traffic_lights.get_lights_states()
-                    if self.intersection.traffic_lights
-                    else {},
-                    "entering_intersection_moment": self.intersection.traffic_lights.get_future_lights_states(
-                        entering_intersection_status["time_to_enter_zone"]
-                    )
-                    if self.intersection.traffic_lights
-                    else {},
-                },
             },
-            entering_intersection_time,
+            entering_intersection_status["time_to_enter_zone"],
         ):
             return False
 
@@ -219,16 +209,6 @@ class IntersectionControlCenterSoftware:
                         "velocity": live_cars_data[registry_number1]["live_state"][
                             "velocity"
                         ],
-                        "traffic_lights_state": {
-                            "current": self.intersection.traffic_lights.get_lights_states()
-                            if self.intersection.traffic_lights
-                            else {},
-                            "entering_intersection_moment": self.intersection.traffic_lights.get_future_lights_states(
-                                time
-                            )
-                            if self.intersection.traffic_lights
-                            else {},
-                        },
                     },
                     {
                         "high_priority": live_cars_data[registry_number2]["live_state"][
@@ -238,18 +218,7 @@ class IntersectionControlCenterSoftware:
                         "velocity": live_cars_data[registry_number2]["live_state"][
                             "velocity"
                         ],
-                        "traffic_lights_state": {
-                            "current": self.intersection.traffic_lights.get_lights_states()
-                            if self.intersection.traffic_lights
-                            else {},
-                            "entering_intersection_moment": self.intersection.traffic_lights.get_future_lights_states(
-                                time
-                            )
-                            if self.intersection.traffic_lights
-                            else {},
-                        },
                     },
-                    time,
                 )
                 for car2_possible_manoeuvre in car2_possible_manoeuvres
             ]

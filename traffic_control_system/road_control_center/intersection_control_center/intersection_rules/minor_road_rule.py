@@ -29,7 +29,7 @@ class MinorRoadRule(IntersectionRules):
         }
 
     def can_enter_intersection(
-        self, car_info: IntersectionPriorityCarInfo, time: int
+        self, car_info: IntersectionPriorityCarInfo, time_until_entry: int
     ) -> bool:
         starting_side = car_info["manoeuvre_description"]["starting_side"]
         if (
@@ -40,7 +40,5 @@ class MinorRoadRule(IntersectionRules):
             return False
         return True
 
-    def is_on_road_with_priority(
-        self, car_info: IntersectionPriorityCarInfo, time: int
-    ) -> bool:
+    def is_on_road_with_priority(self, car_info: IntersectionPriorityCarInfo) -> bool:
         return car_info["manoeuvre_description"]["starting_side"] in self.major_roads
