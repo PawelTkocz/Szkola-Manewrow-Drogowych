@@ -2,7 +2,7 @@ from road_segments.intersection.intersection_I0 import IntersectionI0
 from traffic_control_system.road_control_center.intersection_control_center.intersection_control_center import (
     IntersectionControlCenter,
 )
-from traffic_control_system.road_control_center.intersection_control_center.priority_to_the_right_rule import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules.priority_to_the_right_rule import (
     PriorityToTheRightRule,
 )
 

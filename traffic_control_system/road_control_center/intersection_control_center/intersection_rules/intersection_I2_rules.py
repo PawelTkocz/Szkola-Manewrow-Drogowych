@@ -1,9 +1,9 @@
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection_control_center.minor_road_rule import (
+from traffic_control_elements.traffic_signs.traffic_sign import TrafficSignName
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules.minor_road_rule import (
     MinorRoadDescription,
     MinorRoadRule,
 )
-from traffic_control_elements.traffic_signs.traffic_sign import TrafficSignName
 
 
 class IntersectionI2Rules(MinorRoadRule):

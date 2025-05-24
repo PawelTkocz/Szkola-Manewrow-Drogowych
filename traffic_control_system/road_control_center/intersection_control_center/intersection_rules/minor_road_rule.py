@@ -1,6 +1,6 @@
 from typing import TypedDict
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection_control_center.intersection_rules import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules.intersection_rules import (
     IntersectionRules,
 )
 from traffic_control_system.road_control_center.intersection_control_center.schemas import (

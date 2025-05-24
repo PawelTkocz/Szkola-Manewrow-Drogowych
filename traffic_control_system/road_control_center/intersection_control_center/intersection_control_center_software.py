@@ -7,13 +7,12 @@ from car.instruction_controlled_car import (
 )
 
 from car.turn_signals import TurnSignalType
-from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
 from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
-from traffic_control_system.road_control_center.intersection_control_center.intersection_rules import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules.intersection_rules import (
     IntersectionRules,
 )
 from traffic_control_system.road_control_center.intersection_control_center.schemas import (
@@ -21,7 +20,6 @@ from traffic_control_system.road_control_center.intersection_control_center.sche
 )
 
 from traffic_control_system.road_control_center.car_simulation import CarSimulation
-from traffic_control_system.road_control_center.track import Track
 from traffic_control_system.schemas import IntersectionManoeuvreDescription, LiveCarData
 
 
