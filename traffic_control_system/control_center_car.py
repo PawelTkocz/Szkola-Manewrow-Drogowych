@@ -11,7 +11,7 @@ from traffic_control_system.schemas import IntersectionManoeuvreDescription, Liv
 from traffic_control_system.traffic_control_center import TrafficControlCenter
 
 
-class SmartCityCar(InstructionControlledCar):
+class ControlCenterCar(InstructionControlledCar):
     def __init__(
         self,
         registry_number: str,

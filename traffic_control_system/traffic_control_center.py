@@ -32,7 +32,6 @@ class TrafficControlCenter:
     def _get_current_road_control_center(
         self, live_car_data: LiveCarData
     ) -> RoadControlCenter | None:
-        """Based on car position, determine which road control center should give it movement instruction."""
         return (
             self._road_control_center
             if self._road_control_center.is_car_inside_control_area(live_car_data)

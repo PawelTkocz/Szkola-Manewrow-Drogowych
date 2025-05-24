@@ -31,8 +31,6 @@ class MinorRoadRule(IntersectionRules):
     def can_enter_intersection(
         self, car_info: IntersectionPriorityCarInfo, time: int
     ) -> bool:
-        """Determine if car can enter intersection (traffic lights, stop sign)"""
-        # there are no stop signs, no traffic lights
         starting_side = car_info["manoeuvre_description"]["starting_side"]
         if (
             starting_side in self.minor_roads

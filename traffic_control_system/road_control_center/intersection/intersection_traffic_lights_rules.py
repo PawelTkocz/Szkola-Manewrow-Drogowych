@@ -11,7 +11,6 @@ class IntersectionTrafficLightsRules(IntersectionRules):
     def can_enter_intersection(
         self, car_info: IntersectionPriorityCarInfo, time: int
     ) -> bool:
-        """Determine if car can enter intersection (traffic lights, stop sign)"""
         starting_side = car_info["manoeuvre_description"]["starting_side"]
         current_lights_state = car_info["traffic_lights_state"]["current"][
             starting_side

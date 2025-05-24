@@ -7,14 +7,10 @@ from geometry.direction import Direction
 from geometry.shapes.rectangle import Rectangle
 from geometry.vector import Point
 from traffic_control_system.schemas import LiveCarData
-import traffic_control_system.smart_city_car as smart_city_car
+import traffic_control_system.control_center_car as control_center_car
 
 
 class CarSimulation:
-    """
-    Class simulating smart city car.
-    """
-
     def __init__(
         self,
         front_middle: Point,
@@ -26,10 +22,7 @@ class CarSimulation:
         registry_number: str = "",
         high_priority: bool = False,
     ) -> None:
-        """
-        Initialize car simulation.
-        """
-        self._car = smart_city_car.SmartCityCar(
+        self._car = control_center_car.ControlCenterCar(
             registry_number,
             model_specification,
             front_middle,

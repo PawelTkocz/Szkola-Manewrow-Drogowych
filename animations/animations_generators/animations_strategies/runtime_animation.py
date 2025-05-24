@@ -14,14 +14,14 @@ from animations.animations_generators.schemas import (
 from car.car import Car
 from car.instruction_controlled_car import CarControlInstructions
 
-from traffic_control_system.smart_city_car import SmartCityCar
+from traffic_control_system.control_center_car import ControlCenterCar
 from traffic_control_system.traffic_control_center import (
     TrafficControlCenter,
 )
 
 
 class RuntimeAnimationCarInfo(TypedDict):
-    car: SmartCityCar
+    car: ControlCenterCar
     start_frame_number: int
 
 
@@ -43,8 +43,10 @@ class RuntimeAnimation(AnimationStrategy):
         ]
         self.frame_number = 0
 
-    def _generate_car(self, car_description: AnimationCarDescription) -> SmartCityCar:
-        smart_city_car = SmartCityCar(
+    def _generate_car(
+        self, car_description: AnimationCarDescription
+    ) -> ControlCenterCar:
+        control_center_car = ControlCenterCar(
             car_description["registry_number"],
             car_description["model"],
             car_description["starting_position"]["front_middle"],
@@ -53,8 +55,8 @@ class RuntimeAnimation(AnimationStrategy):
             car_description["starting_position"]["wheels_angle"],
             color=car_description["color"],
         )
-        smart_city_car.set_manoeuvre(car_description["manoeuvre_description"])
-        return smart_city_car
+        control_center_car.set_manoeuvre(car_description["manoeuvre_description"])
+        return control_center_car
 
     def move_cars(self) -> list[Car]:
         for car in self._get_cars_that_start_movement():

@@ -179,9 +179,6 @@ class TrackVelocitiesPreprocessor:
         car_simulation_controller: Callable[[CarSimulation, ManoeuvreTrack], None],
         end_point_index: int,
     ) -> bool:
-        """
-        Check if car will go off track.
-        """
         manoeuvre_track = self.manoeuvre_track
         end_point = Point(*manoeuvre_track.track_path[end_point_index])
         while not car_simulation.is_point_inside(end_point):

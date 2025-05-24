@@ -18,10 +18,6 @@ from traffic_control_system.schemas import LiveCarData
 
 
 class PreprocessedManoeuvre:
-    """
-    Class representing preporcessed manoeuvre.
-    """
-
     def __init__(
         self,
         manoeuvre_track_points: list[ManoeuvreTrackPoint],

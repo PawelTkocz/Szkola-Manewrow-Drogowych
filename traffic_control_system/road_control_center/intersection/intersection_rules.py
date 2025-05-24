@@ -56,7 +56,6 @@ class IntersectionRules(ABC):
     def can_enter_intersection(
         self, car_info: IntersectionPriorityCarInfo, time: int
     ) -> bool:
-        """Determine if car can enter intersection (traffic lights, stop sign, ambulance and so on)"""
         raise NotImplementedError
 
     @abstractmethod
