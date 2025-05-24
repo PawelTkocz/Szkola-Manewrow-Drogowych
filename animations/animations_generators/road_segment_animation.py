@@ -9,7 +9,10 @@ from animations.animations_generators.animations_strategies.playback_animation i
 from animations.animations_generators.animations_strategies.runtime_animation import (
     RuntimeAnimation,
 )
-from animations.animations_generators.constants import PLAYBACK_ANIMATIONS
+from animations.animations_generators.constants import (
+    BACKGROUND_COLOR,
+    PLAYBACK_ANIMATIONS,
+)
 from animations.animations_generators.schemas import (
     AnimationCarDescription,
 )
@@ -45,22 +48,26 @@ class RoadSegmentAnimation(ApplicationScreen):
             )
         )
         self.road_segment = road_control_center.road_segment
-        car_models = {
-            car_description["model"]["name"] for car_description in cars_descriptions
-        }
-        for car_model in [
-            car_description["model"] for car_description in cars_descriptions
-        ]:
-            if car_model["name"] in car_models:
-                self.traffic_control_center.register_car_model(car_model)
-                car_models.remove(car_model["name"])
+        self._register_car_models(cars_descriptions)
         self.road_elements_drafter = RoadElementsDrafter(
             self.road_segment.area, get_screen()
         )
 
+    def _register_car_models(
+        self, cars_descriptions: list[AnimationCarDescription]
+    ) -> None:
+        registered_models = set()
+        for car_description in cars_descriptions:
+            model = car_description["model"]
+            name = model["name"]
+            if name not in registered_models:
+                self.traffic_control_center.register_car_model(model)
+                registered_models.add(name)
+
     def render_frame(self, screen: Surface) -> None:
         self.traffic_control_center.tick()
         cars = self.animation_strategy.move_cars()
+        screen.fill(BACKGROUND_COLOR)
         self.road_segment.draw(self.road_elements_drafter)
         for car in cars:
             car.draw(self.road_elements_drafter)
