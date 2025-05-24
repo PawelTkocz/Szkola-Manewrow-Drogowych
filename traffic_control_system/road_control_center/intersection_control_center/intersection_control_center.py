@@ -2,19 +2,19 @@ from car.instruction_controlled_car import CarControlInstructions
 from car.model import CarModelSpecification
 from schemas import CardinalDirection
 from road_segments.intersection.intersection import Intersection
-from traffic_control_system.road_control_center.intersection.intersection_control_center_software import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_control_center_software import (
     IntersectionControlCenterSoftware,
 )
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvres_manager import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvres_manager import (
     IntersectionManoeuvresManager,
 )
-from traffic_control_system.road_control_center.intersection.intersection_rules import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules import (
     IntersectionRules,
 )
-from traffic_control_system.road_control_center.intersection.schemas import (
+from traffic_control_system.road_control_center.intersection_control_center.schemas import (
     IntersectionCarManoeuvreInfo,
 )
 from traffic_control_system.road_control_center.road_control_center import (

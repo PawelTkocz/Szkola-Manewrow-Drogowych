@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre import (
     IntersectionManoeuvre,
 )
 from traffic_control_system.schemas import IntersectionManoeuvreDescription

@@ -1,7 +1,7 @@
 from car.turn_signals import TurnSignalType
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection, HorizontalDirection
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre_tracks.utils import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre_tracks.utils import (
     get_starting_position,
     get_track_end_point,
     get_track_start_point,

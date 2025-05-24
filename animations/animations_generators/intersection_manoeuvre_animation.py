@@ -10,7 +10,7 @@ from application_screen import ApplicationScreen
 from animations.animations_generators.constants import (
     CONTROL_INSTRUCTIONS_DIR as CONTROL_INSTRUCTIONS_DIR,
 )
-from traffic_control_system.road_control_center.intersection.intersection_control_center import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_control_center import (
     IntersectionControlCenter,
 )
 from traffic_control_system.schemas import IntersectionManoeuvreDescription

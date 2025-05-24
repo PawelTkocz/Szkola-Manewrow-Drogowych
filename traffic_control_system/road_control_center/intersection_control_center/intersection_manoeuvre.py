@@ -1,6 +1,6 @@
 from car.model import CarModelSpecification
 from road_segments.intersection.intersection import Intersection
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvres_manager import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvres_manager import (
     IntersectionManoeuvresManager,
 )
 from traffic_control_system.road_control_center.manoeuvres_preprocessing.preprocessed_manoeuvre import (

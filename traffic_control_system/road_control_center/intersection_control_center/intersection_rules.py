@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection.schemas import (
+from traffic_control_system.road_control_center.intersection_control_center.schemas import (
     IntersectionPriorityCarInfo,
 )
 from utils import clockwise_direction_shift

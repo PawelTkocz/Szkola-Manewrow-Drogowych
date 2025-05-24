@@ -1,7 +1,7 @@
-from traffic_control_system.road_control_center.intersection.intersection_rules import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_rules import (
     IntersectionRules,
 )
-from traffic_control_system.road_control_center.intersection.schemas import (
+from traffic_control_system.road_control_center.intersection_control_center.schemas import (
     IntersectionPriorityCarInfo,
 )
 

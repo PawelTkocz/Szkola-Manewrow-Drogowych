@@ -8,13 +8,13 @@ from car.turn_signals import TurnSignalType
 from geometry.vector import Point
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre_tracks.go_straight_track import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre_tracks.go_straight_track import (
     IntersectionGoStraightManoeuvreTrack,
 )
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre_tracks.turn_left_track import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre_tracks.turn_left_track import (
     IntersectionTurnLeftManoeuvreTrack,
 )
-from traffic_control_system.road_control_center.intersection.intersection_manoeuvre_tracks.turn_right_track import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_manoeuvre_tracks.turn_right_track import (
     IntersectionTurnRightManoeuvreTrack,
 )
 from traffic_control_system.road_control_center.manoeuvres_preprocessing.manoeuvre_tracks.manoeuvre_track import (

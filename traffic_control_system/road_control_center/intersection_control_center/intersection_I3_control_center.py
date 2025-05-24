@@ -1,8 +1,8 @@
 from road_segments.intersection.intersection_I3 import IntersectionI3
-from traffic_control_system.road_control_center.intersection.intersection_I3_rules import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_I3_rules import (
     IntersectionI3Rules,
 )
-from traffic_control_system.road_control_center.intersection.intersection_control_center import (
+from traffic_control_system.road_control_center.intersection_control_center.intersection_control_center import (
     IntersectionControlCenter,
 )
 

@@ -1,5 +1,5 @@
 from schemas import CardinalDirection
-from traffic_control_system.road_control_center.intersection.minor_road_rule import (
+from traffic_control_system.road_control_center.intersection_control_center.minor_road_rule import (
     MinorRoadDescription,
     MinorRoadRule,
 )
