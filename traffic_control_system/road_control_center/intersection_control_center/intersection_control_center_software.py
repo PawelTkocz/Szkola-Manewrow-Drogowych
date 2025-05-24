@@ -6,6 +6,7 @@ from car.instruction_controlled_car import (
     TurnSignalsInstruction,
 )
 
+from car.model import CarModelSpecification
 from car.turn_signals import TurnSignalType
 from road_segments.intersection.intersection import Intersection
 from schemas import CardinalDirection
@@ -22,10 +23,12 @@ from traffic_control_system.road_control_center.intersection_control_center.sche
 from traffic_control_system.road_control_center.car_simulation import CarSimulation
 from traffic_control_system.schemas import IntersectionManoeuvreDescription, LiveCarData
 
+MAX_DISTANCE_TO_POTENTIAL_MANOEUVRE_TRACK = 30
+
 
 class CarOnIntersectionSimulation(TypedDict):
     car_simulation: CarSimulation
-    car_manoeuvre_info: IntersectionCarManoeuvreInfo
+    manoeuvre: IntersectionManoeuvre
 
 
 class IntersectionControlCenterSoftware:
@@ -34,16 +37,30 @@ class IntersectionControlCenterSoftware:
     ):
         self.intersection = intersection
         self.intersection_rules = intersection_rules
-        self.tracks: dict[
+        self.car_models_tracks: dict[
             str, dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]
         ] = {}
 
-    def register_car_model_tracks(
+    def add_car_model_tracks(
         self,
-        car_model_name: str,
-        tracks: dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]],
+        car_model_specification: CarModelSpecification,
     ) -> None:
-        self.tracks[car_model_name] = tracks
+        model_tracks: dict[
+            CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]
+        ] = {}
+        for starting_side in CardinalDirection:
+            starting_side_tracks: dict[CardinalDirection, IntersectionManoeuvre] = {}
+            for ending_side in CardinalDirection:
+                if starting_side == ending_side:
+                    continue
+                manoeuvre = IntersectionManoeuvre(
+                    car_model_specification,
+                    self.intersection,
+                    {"starting_side": starting_side, "ending_side": ending_side},
+                )
+                starting_side_tracks[ending_side] = manoeuvre
+            model_tracks[starting_side] = starting_side_tracks
+        self.car_models_tracks[car_model_specification["name"]] = model_tracks
 
     def get_default_movement_instruction(self) -> CarControlInstructions:
         return {
@@ -54,17 +71,11 @@ class IntersectionControlCenterSoftware:
             "turn_signals_instruction": TurnSignalsInstruction.NO_SIGNALS_ON,
         }
 
-    def follow_track_movement_instruction(
-        self, live_car_data: LiveCarData, manoeuvre: IntersectionManoeuvre
-    ) -> CarControlInstructions:
-        return manoeuvre.get_car_control_instructions(live_car_data)
-
     def approach_intersection_movement_instruction(
         self,
         registry_number: str,
         live_cars_data: dict[str, LiveCarData],
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
-        time: int,
     ) -> CarControlInstructions:
         live_car_data = live_cars_data[registry_number]
         manoeuvre = cars_manoeuvre_info[registry_number]["manoeuvre"]
@@ -77,7 +88,6 @@ class IntersectionControlCenterSoftware:
                 live_cars_data,
                 car_control_instructions,
                 cars_manoeuvre_info,
-                time,
             ):
                 return car_control_instructions
         return all_car_control_instructions[-1]
@@ -88,7 +98,6 @@ class IntersectionControlCenterSoftware:
         live_cars_data: dict[str, LiveCarData],
         car_control_instructions: CarControlInstructions,
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
-        time: int,
     ) -> bool:
         live_car_data = live_cars_data[registry_number]
         manoeuvre_info = cars_manoeuvre_info[registry_number]
@@ -103,7 +112,6 @@ class IntersectionControlCenterSoftware:
             live_cars_data,
             car_control_instructions,
             cars_manoeuvre_info,
-            time,
         )
         cars_manoeuvre_info[registry_number]["manoeuvre_status"][
             "can_safely_cross_intersection"
@@ -116,7 +124,6 @@ class IntersectionControlCenterSoftware:
         live_cars_data: dict[str, LiveCarData],
         car_control_instructions: CarControlInstructions,
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
-        time: int,
     ) -> bool:
         manoeuvre_info = cars_manoeuvre_info[registry_number]
         live_car_data = live_cars_data[registry_number]
@@ -126,9 +133,6 @@ class IntersectionControlCenterSoftware:
             live_car_data,
             self.intersection.components["intersection_area"],
             car_control_instructions=car_control_instructions,
-        )
-        entering_intersection_time = (
-            entering_intersection_status["time_to_enter_zone"] + time
         )
         entering_intersection_live_car_data = entering_intersection_status[
             "live_car_data"
@@ -151,7 +155,6 @@ class IntersectionControlCenterSoftware:
 
         cars_with_priority = self.get_cars_with_priority(
             registry_number,
-            entering_intersection_time,
             live_cars_data,
             cars_manoeuvre_info,
         )
@@ -166,7 +169,6 @@ class IntersectionControlCenterSoftware:
     def get_cars_with_priority(
         self,
         registry_number: str,
-        time: int,
         live_cars_data: dict[str, LiveCarData],
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
     ) -> list[str]:
@@ -176,7 +178,6 @@ class IntersectionControlCenterSoftware:
             if self.must_yield_the_right_of_way(
                 registry_number,
                 _registry_number,
-                time,
                 live_cars_data,
                 cars_manoeuvre_info,
             )
@@ -186,13 +187,12 @@ class IntersectionControlCenterSoftware:
         self,
         registry_number1: str,
         registry_number2: str,
-        time: int,
         live_cars_data: dict[str, LiveCarData],
         cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo],
     ) -> bool:
         if registry_number1 == registry_number2:
             return False
-        car2_possible_manoeuvres = self.get_all_possible_manoeuvres(
+        car2_possible_manoeuvres = self.get_currently_possible_manoeuvres(
             live_cars_data[registry_number2],
             cars_manoeuvre_info[registry_number2]["manoeuvre"].manoeuvre_description,
         )
@@ -224,12 +224,11 @@ class IntersectionControlCenterSoftware:
             ]
         )
 
-    def get_all_possible_manoeuvres(
+    def get_currently_possible_manoeuvres(
         self,
         live_car_data: LiveCarData,
         manoeuvre_description: IntersectionManoeuvreDescription,
     ) -> list[IntersectionManoeuvreDescription]:
-        max_distance_to_track = 30
         starting_side = manoeuvre_description["starting_side"]
         if live_car_data["live_state"]["turn_signal"] != TurnSignalType.NO_SIGNAL:
             return [manoeuvre_description]
@@ -238,12 +237,12 @@ class IntersectionControlCenterSoftware:
         for ending_side in CardinalDirection:
             if ending_side == starting_side:
                 continue
-            manoeuvre = self.tracks[live_car_data["specification"]["model"]["name"]][
-                starting_side
-            ][ending_side]
+            manoeuvre = self.car_models_tracks[
+                live_car_data["specification"]["model"]["name"]
+            ][starting_side][ending_side]
             if (
                 manoeuvre.track.get_distance_to_point(axle_center)
-                < max_distance_to_track
+                < MAX_DISTANCE_TO_POTENTIAL_MANOEUVRE_TRACK
             ):
                 result.append(
                     {"starting_side": starting_side, "ending_side": ending_side}
@@ -268,20 +267,15 @@ class IntersectionControlCenterSoftware:
                         "car_simulation": CarSimulation.from_live_car_data(
                             live_cars_data[_registry_number]
                         ),
-                        "car_manoeuvre_info": {
-                            "manoeuvre_status": cars_manoeuvre_info[_registry_number][
-                                "manoeuvre_status"
-                            ],
-                            "manoeuvre": self.tracks[
-                                live_cars_data[_registry_number]["specification"][
-                                    "model"
-                                ]["name"]
-                            ][manoeuvre_description["starting_side"]][
-                                manoeuvre_description["ending_side"]
-                            ],
-                        },
+                        "manoeuvre": self.car_models_tracks[
+                            live_cars_data[_registry_number]["specification"]["model"][
+                                "name"
+                            ]
+                        ][manoeuvre_description["starting_side"]][
+                            manoeuvre_description["ending_side"]
+                        ],
                     }
-                    for manoeuvre_description in self.get_all_possible_manoeuvres(
+                    for manoeuvre_description in self.get_currently_possible_manoeuvres(
                         live_cars_data[_registry_number],
                         cars_manoeuvre_info[_registry_number][
                             "manoeuvre"
@@ -293,7 +287,7 @@ class IntersectionControlCenterSoftware:
             "car_simulation": CarSimulation.from_live_car_data(
                 live_cars_data[registry_number]
             ),
-            "car_manoeuvre_info": cars_manoeuvre_info[registry_number],
+            "manoeuvre": cars_manoeuvre_info[registry_number]["manoeuvre"],
         }
         car_simulation["car_simulation"].move(
             car_control_instructions["movement_instructions"]
@@ -306,7 +300,7 @@ class IntersectionControlCenterSoftware:
                 priority_cars,
             ):
                 return False
-            for car in priority_cars + [car_simulation]:
+            for car in [*priority_cars, car_simulation]:
                 self._move_car_simulation(car)
         return True
 
@@ -315,7 +309,7 @@ class IntersectionControlCenterSoftware:
         intersection_car_simulation: CarOnIntersectionSimulation,
     ) -> bool:
         car_simulation = intersection_car_simulation["car_simulation"]
-        manoeuvre_description = intersection_car_simulation["car_manoeuvre_info"][
+        manoeuvre_description = intersection_car_simulation[
             "manoeuvre"
         ].manoeuvre_description
         intersection_area = self.intersection.components["intersection_area"]
@@ -330,10 +324,10 @@ class IntersectionControlCenterSoftware:
         self,
         intersection_car_simulation: CarOnIntersectionSimulation,
     ) -> None:
-        manoeuvre = intersection_car_simulation["car_manoeuvre_info"]["manoeuvre"]
+        manoeuvre = intersection_car_simulation["manoeuvre"]
         car_simulation = intersection_car_simulation["car_simulation"]
-        car_control_instructions = self.follow_track_movement_instruction(
-            car_simulation.get_live_data(), manoeuvre
+        car_control_instructions = manoeuvre.get_car_control_instructions(
+            car_simulation.get_live_data()
         )
         car_simulation.move(car_control_instructions["movement_instructions"])
 

@@ -40,40 +40,20 @@ class IntersectionControlCenter(RoadControlCenter):
         )
         self.cars_manoeuvre_info: dict[str, IntersectionCarManoeuvreInfo] = {}
 
-    def get_car_model_tracks(
-        self, car_model_specification: CarModelSpecification
-    ) -> dict[CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]]:
-        tracks: dict[
-            CardinalDirection, dict[CardinalDirection, IntersectionManoeuvre]
-        ] = {}
-        for starting_side in CardinalDirection:
-            starting_side_tracks: dict[CardinalDirection, IntersectionManoeuvre] = {}
-            for ending_side in CardinalDirection:
-                if starting_side == ending_side:
-                    continue
-                manoeuvre = IntersectionManoeuvre(
-                    car_model_specification,
-                    self.intersection,
-                    {"starting_side": starting_side, "ending_side": ending_side},
-                )
-                starting_side_tracks[ending_side] = manoeuvre
-            tracks[starting_side] = starting_side_tracks
-        return tracks
-
     def calculate_control_instructions(
         self, registry_number: str
-    ) -> CarControlInstructions:  # decide when to turn on/off turn signal
+    ) -> CarControlInstructions:
         if registry_number not in self.cars_manoeuvre_info:
             return self.software.get_default_movement_instruction()
 
         manoeuvre_info = self.cars_manoeuvre_info[registry_number]
         live_car_data = self.live_cars_data[registry_number]
         if manoeuvre_info["manoeuvre_status"]["can_safely_cross_intersection"]:
-            return self.software.follow_track_movement_instruction(
-                live_car_data, manoeuvre_info["manoeuvre"]
+            return manoeuvre_info["manoeuvre"].get_car_control_instructions(
+                live_car_data
             )
         return self.software.approach_intersection_movement_instruction(
-            registry_number, self.live_cars_data, self.cars_manoeuvre_info, self.time
+            registry_number, self.live_cars_data, self.cars_manoeuvre_info
         )
 
     def update_active_cars_on_road(self, registry_numbers: list[str]) -> None:
@@ -107,10 +87,7 @@ class IntersectionControlCenter(RoadControlCenter):
         self.intersection_manoeuvres_manager.register_track_velocities(
             car_model_specification
         )
-        self.software.register_car_model_tracks(
-            car_model_specification["name"],
-            self.get_car_model_tracks(car_model_specification),
-        )
+        self.software.add_car_model_tracks(car_model_specification)
         return True
 
     def register_tracks(self) -> bool:
