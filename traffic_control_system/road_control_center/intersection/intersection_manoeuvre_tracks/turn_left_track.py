@@ -23,7 +23,6 @@ from traffic_control_system.road_control_center.manoeuvres_preprocessing.manoeuv
 )
 from utils import clockwise_direction_shift
 
-EXPECTED_MIN_TURN_VELOCITY = 3
 END_TURN_SIGNAL_DISTANCE = 150
 START_TURN_SIGNAL_DISTANCE = 350
 
@@ -49,12 +48,7 @@ class IntersectionTurnLeftManoeuvreTrack(ManoeuvreTrack):
         end_point = get_track_end_point(intersection, ending_side)
         return [
             StraightPath(start_point, start_turn_point),
-            RightAngleTurn(
-                start_turn_point,
-                end_turn_point,
-                HorizontalDirection.LEFT,
-                EXPECTED_MIN_TURN_VELOCITY,
-            ),
+            RightAngleTurn(start_turn_point, end_turn_point, HorizontalDirection.LEFT),
             StraightPath(end_turn_point, end_point),
         ]
 

@@ -16,7 +16,7 @@ TURN_SHARPNESS = (
 )
 
 
-def _cubic_bezier(
+def _get_cubic_bezier(
     t: float, p0: Point, p1: Point, p2: Point, p3: Point
 ) -> tuple[float, float]:
     x = (
@@ -40,7 +40,6 @@ class RightAngleTurn(ManoeuvreTrackSegment):
         start_point: Point,
         end_point: Point,
         turn_direction: HorizontalDirection,
-        expected_min_velocity: float,
     ) -> None:
         track_segment_type = (
             TrackSegmentType.TURN_LEFT
@@ -52,7 +51,6 @@ class RightAngleTurn(ManoeuvreTrackSegment):
             self.calculate_track_path(
                 start_point, end_point, turn_direction, TURN_SHARPNESS
             ),
-            expected_min_velocity,
         )
 
     def calculate_track_path(
@@ -67,18 +65,18 @@ class RightAngleTurn(ManoeuvreTrackSegment):
         turn_corner = middle_point.copy().add_vector(
             track_vector.get_orthogonal_vector(turn_direction).scale(0.5)
         )
-        control_points = [
-            start_point,
-            start_point.copy().add_vector(
-                Vector(turn_corner, start_point).scale(turn_sharpness)
-            ),
-            end_point.copy().add_vector(
-                Vector(turn_corner, end_point).scale(turn_sharpness)
-            ),
-            end_point,
-        ]
-        p0, p1, p2, p3 = control_points
+        control_point1 = start_point
+        control_point2 = start_point.copy().add_vector(
+            Vector(turn_corner, start_point).scale(turn_sharpness)
+        )
+        control_point3 = end_point.copy().add_vector(
+            Vector(turn_corner, end_point).scale(turn_sharpness)
+        )
+        control_point4 = end_point
         points_on_track = int(math.sqrt(2) * start_point.distance(end_point))
         return [
-            _cubic_bezier(t, p0, p1, p2, p3) for t in np.linspace(0, 1, points_on_track)
+            _get_cubic_bezier(
+                t, control_point1, control_point2, control_point3, control_point4
+            )
+            for t in np.linspace(0, 1, points_on_track)
         ]

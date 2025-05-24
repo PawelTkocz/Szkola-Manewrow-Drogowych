@@ -16,11 +16,9 @@ class ManoeuvreTrackSegment:
         self,
         type: TrackSegmentType,
         track_path: TrackPath,
-        expected_min_velocity: float | None,  # do wywalenia
     ) -> None:
         self.type = type
         self.track_path = track_path
-        self.expected_min_velocity = expected_min_velocity
 
     @property
     def start_point(self) -> Point:

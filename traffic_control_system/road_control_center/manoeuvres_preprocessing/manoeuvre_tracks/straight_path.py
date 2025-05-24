@@ -18,7 +18,6 @@ class StraightPath(ManoeuvreTrackSegment):
         super().__init__(
             TrackSegmentType.STRAIGHT_PATH,
             self.calculate_track_path(start_point, end_point),
-            None,
         )
 
     def calculate_track_path(self, start_point: Point, end_point: Point) -> TrackPath:

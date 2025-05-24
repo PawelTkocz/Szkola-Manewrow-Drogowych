@@ -69,7 +69,7 @@ class TrackVelocitiesPreprocessor:
                 self.manoeuvre_track.get_distance_to_point(car_simulation.axle_center)
                 > MAX_DISTANCE_TO_TRACK
             ):
-                raise ValueError("Not possible to complete the track")
+                raise ValueError("It's not possible to complete the track")
 
             track_point_index = self.manoeuvre_track.find_index_of_closest_point(
                 car_simulation.axle_center
@@ -105,7 +105,6 @@ class TrackVelocitiesPreprocessor:
         start_point_index: int,
         end_point_index: int,
         car_simulation_controller: Callable[[CarSimulation, ManoeuvreTrack], None],
-        velocity_safe_margin: float,
     ) -> float:
         max_velocity = self.car_model_specification["motion"]["max_velocity"]
         start_car_state = self.car_start_states[start_point_index]
@@ -119,7 +118,7 @@ class TrackVelocitiesPreprocessor:
         if not self.will_go_off_track(
             car_simulation, car_simulation_controller, end_point_index
         ):
-            return max_velocity * velocity_safe_margin
+            return max_velocity * VELOCITY_SAFE_MARGIN
 
         min_velocity: float = MIN_VELOCITY
         while max_velocity - min_velocity > MAX_SAFE_VELOCITY_ACCURACY:
@@ -137,7 +136,7 @@ class TrackVelocitiesPreprocessor:
                 min_velocity = v
             else:
                 max_velocity = v
-        return min_velocity * velocity_safe_margin
+        return min_velocity * VELOCITY_SAFE_MARGIN
 
     def _get_track_segments_max_const_velocities(
         self,
@@ -168,7 +167,6 @@ class TrackVelocitiesPreprocessor:
                 cur_segment_start_index,
                 segment_cumulative_length - 1,
                 _car_simulation_controller,
-                VELOCITY_SAFE_MARGIN,
             )
             cur_segment_start_index = segment_cumulative_length
         return result
@@ -235,8 +233,6 @@ class TrackVelocitiesPreprocessor:
                 )
                 continue
             max_safe_velocities.append(
-                self.get_max_safe_velocity(
-                    i, track_len - 1, _car_simulation_controller, VELOCITY_SAFE_MARGIN
-                )
+                self.get_max_safe_velocity(i, track_len - 1, _car_simulation_controller)
             )
         return max_safe_velocities
