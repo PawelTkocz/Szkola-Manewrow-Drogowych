@@ -53,7 +53,7 @@ class CarSimulation:
         self, movement_instructions: CarMovementInstructions | None = None
     ) -> None:
         if movement_instructions:
-            self._car._apply_movement_instructions(movement_instructions)
+            self._car.apply_movement_instructions(movement_instructions)
         self._car.move()
 
     def collides(self, obj: Rectangle) -> bool:

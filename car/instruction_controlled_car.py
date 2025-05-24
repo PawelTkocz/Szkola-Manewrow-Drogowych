@@ -38,18 +38,18 @@ class InstructionControlledCar(Car):
     def apply_control_instructions(
         self, control_instructions: CarControlInstructions
     ) -> None:
-        self._apply_movement_instructions(control_instructions["movement_instructions"])
-        self._apply_turn_signal_instruction(
+        self.apply_movement_instructions(control_instructions["movement_instructions"])
+        self.apply_turn_signal_instruction(
             control_instructions["turn_signals_instruction"]
         )
 
-    def _apply_movement_instructions(
+    def apply_movement_instructions(
         self, movement_instruction: CarMovementInstructions
     ) -> None:
-        self._apply_speed_instruction(movement_instruction["speed_instruction"])
-        self._apply_turn_instruction(movement_instruction["turn_instruction"])
+        self.apply_speed_instruction(movement_instruction["speed_instruction"])
+        self.apply_turn_instruction(movement_instruction["turn_instruction"])
 
-    def _apply_speed_instruction(self, speed_instruction: SpeedInstruction) -> None:
+    def apply_speed_instruction(self, speed_instruction: SpeedInstruction) -> None:
         if speed_instruction == SpeedInstruction.ACCELERATE_FORWARD:
             self.accelerate(AccelerationDirection.FORWARD)
         elif speed_instruction == SpeedInstruction.NO_CHANGE:
@@ -59,7 +59,7 @@ class InstructionControlledCar(Car):
         elif speed_instruction == SpeedInstruction.ACCELERATE_REVERSE:
             self.accelerate(AccelerationDirection.REVERSE)
 
-    def _apply_turn_instruction(self, turn_instruction: TurnInstruction) -> None:
+    def apply_turn_instruction(self, turn_instruction: TurnInstruction) -> None:
         if turn_instruction == TurnInstruction.TURN_LEFT:
             self.turn(HorizontalDirection.LEFT)
         elif turn_instruction == TurnInstruction.NO_CHANGE:
@@ -67,7 +67,7 @@ class InstructionControlledCar(Car):
         elif turn_instruction == TurnInstruction.TURN_RIGHT:
             self.turn(HorizontalDirection.RIGHT)
 
-    def _apply_turn_signal_instruction(
+    def apply_turn_signal_instruction(
         self, turn_signal_instruction: TurnSignalsInstruction
     ) -> None:
         if turn_signal_instruction == TurnSignalsInstruction.NO_SIGNALS_ON:
