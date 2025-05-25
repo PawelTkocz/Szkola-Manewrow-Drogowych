@@ -1,3 +1,7 @@
+from animations.animations_generators.constants import (
+    PRIMARY_CAR_COLOR,
+    SECONDARY_CAR_COLOR,
+)
 from animations.animations_generators.intersection_I0.intersection_I0_animations import (
     IntersectionI0Animation,
 )
@@ -10,36 +14,36 @@ MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME = "go_straight"
 CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
     {
         "registry_number": "DW001",
-        "color": "red",
+        "color": SECONDARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.DOWN,
             "ending_side": CardinalDirection.RIGHT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 15,
+        "start_frame_number": 20,
         "velocity": 0,
     },
     {
         "registry_number": "DW002",
-        "color": "pink",
+        "color": PRIMARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.LEFT,
             "ending_side": CardinalDirection.RIGHT,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
-        "start_frame_number": 10,
+        "start_frame_number": 5,
         "velocity": 0,
     },
     {
         "registry_number": "DW003",
-        "color": "purple",
+        "color": SECONDARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.RIGHT,
             "ending_side": CardinalDirection.DOWN,
         },
         "model": TOYOTA_YARIS_SPECIFICATION,
         "start_frame_number": 0,
-        "velocity": 0,
+        "velocity": 1,
     },
 ]
 
