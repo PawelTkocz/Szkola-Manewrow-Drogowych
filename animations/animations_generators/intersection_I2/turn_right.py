@@ -1,3 +1,7 @@
+from animations.animations_generators.constants import (
+    PRIMARY_CAR_COLOR,
+    SECONDARY_CAR_COLOR,
+)
 from animations.animations_generators.intersection_I2.intersection_I2_animations import (
     IntersectionI2Animation,
 )
@@ -10,7 +14,7 @@ MANOEUVRE_CONTROL_INSTRUCTIONS_DIR_NAME = "turn_right"
 CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
     {
         "registry_number": "DW001",
-        "color": "red",
+        "color": PRIMARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.LEFT,
             "ending_side": CardinalDirection.DOWN,
@@ -21,7 +25,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
     },
     {
         "registry_number": "DW002",
-        "color": "pink",
+        "color": SECONDARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.RIGHT,
             "ending_side": CardinalDirection.DOWN,
@@ -32,7 +36,7 @@ CARS_DESCRIPTIONS: list[IntersectionAnimationCarDescription] = [
     },
     {
         "registry_number": "DW003",
-        "color": "purple",
+        "color": SECONDARY_CAR_COLOR,
         "manoeuvre_description": {
             "starting_side": CardinalDirection.UP,
             "ending_side": CardinalDirection.DOWN,
