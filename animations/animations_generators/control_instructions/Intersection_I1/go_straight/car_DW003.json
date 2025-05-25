@@ -267,261 +267,6 @@
     {
         "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -805,8 +550,648 @@
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "BRAKE",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "NO_CHANGE",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
         "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -871,27 +1256,7 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -931,197 +1296,17 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -1136,7 +1321,22 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -1151,7 +1351,12 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
+        "turn_instruction": "NO_CHANGE",
+        "turn_signals_instruction": "LEFT_SIGNAL_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
     {
@@ -1196,66 +1401,6 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "LEFT_SIGNAL_ON"
     },
@@ -1271,92 +1416,7 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "LEFT_SIGNAL_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
@@ -1376,12 +1436,7 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
+        "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
@@ -1411,57 +1466,22 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "NO_SIGNALS_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_LEFT",
+        "turn_signals_instruction": "NO_SIGNALS_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
+        "turn_instruction": "TURN_RIGHT",
+        "turn_signals_instruction": "NO_SIGNALS_ON"
+    },
+    {
+        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
@@ -1512,31 +1532,6 @@
     {
         "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
@@ -1646,52 +1641,12 @@
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
         "speed_instruction": "ACCELERATE_FRONT",
         "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "NO_CHANGE",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_LEFT",
-        "turn_signals_instruction": "NO_SIGNALS_ON"
-    },
-    {
-        "speed_instruction": "ACCELERATE_FRONT",
-        "turn_instruction": "TURN_RIGHT",
         "turn_signals_instruction": "NO_SIGNALS_ON"
     },
     {
