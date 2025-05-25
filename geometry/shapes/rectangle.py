@@ -103,10 +103,31 @@ class Rectangle(Polygon):
             cross_product <= 0 for cross_product in cross_products
         )
 
-    def collides(self, rec: Rectangle) -> bool:
-        return any(self.is_point_inside(corner) for corner in rec.corners_list) or any(
-            rec.is_point_inside(corner) for corner in self.corners_list
-        )
+    def collides(self, rectangle: Rectangle) -> bool:
+        def _project_rectangle(rect: Rectangle, axis: Vector) -> tuple[float, float]:
+            projections = [
+                Vector(corner).dot_product(axis) for corner in rect.corners_list
+            ]
+            return min(projections), max(projections)
+
+        def _projections_overlap(
+            min1: float, max1: float, min2: float, max2: float
+        ) -> bool:
+            return max1 >= min2 and max2 >= min1
+
+        def _get_axes(rect: Rectangle) -> list[Vector]:
+            return [
+                rect.direction,
+                rect.direction.get_orthogonal_vector(HorizontalDirection.LEFT),
+            ]
+
+        axes = _get_axes(self) + _get_axes(rectangle)
+        for axis in axes:
+            min1, max1 = _project_rectangle(self, axis)
+            min2, max2 = _project_rectangle(rectangle, axis)
+            if not _projections_overlap(min1, max1, min2, max2):
+                return False
+        return True
 
 
 class AxisAlignedRectangle(Rectangle):

@@ -79,5 +79,8 @@ class Vector(Point):
         self.y += vector.y
         return self
 
+    def dot_product(self, vector: Vector) -> float:
+        return self.x * vector.x + self.y * vector.y
+
     def copy(self) -> Vector:
         return Vector(self)
