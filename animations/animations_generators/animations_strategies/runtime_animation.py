@@ -66,7 +66,11 @@ class RuntimeAnimation(AnimationStrategy):
                 continue
             car["car"].tick()
         self.frame_number += 1
-        return [car["car"] for car in self.cars]
+        return [
+            car["car"]
+            for car in self.cars
+            if car["start_frame_number"] < self.frame_number
+        ]
 
     def _get_cars_that_start_movement(self) -> list[RuntimeAnimationCarInfo]:
         return [

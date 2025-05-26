@@ -71,7 +71,11 @@ class PlaybackAnimation(AnimationStrategy):
                 car["car"].apply_control_instructions(control_instructions)
             car["car"].tick()
         self.frame_number += 1
-        return [car["car"] for car in self.cars]
+        return [
+            car["car"]
+            for car in self.cars
+            if car["start_frame_number"] < self.frame_number
+        ]
 
     def _load_control_instructions(
         self, registry_number: str

@@ -8,6 +8,7 @@ from traffic_control_system.road_control_center.intersection_control_center.sche
     IntersectionPriorityCarInfo,
 )
 from traffic_control_elements.traffic_lights.schemas import TrafficLightsState
+from utils import clockwise_direction_shift
 
 
 class IntersectionTrafficLightsRules(IntersectionRules):
@@ -18,15 +19,9 @@ class IntersectionTrafficLightsRules(IntersectionRules):
         self, car_info: IntersectionPriorityCarInfo, time_until_entry: int
     ) -> bool:
         starting_side = car_info["manoeuvre_description"]["starting_side"]
+        ending_side = car_info["manoeuvre_description"]["ending_side"]
         current_lights_state = self.traffic_lights.get_lights_states()[starting_side]
-        if current_lights_state in [
-            TrafficLightsState.RED,
-            TrafficLightsState.RED_YELLOW,
-        ] or (
-            current_lights_state == TrafficLightsState.RED_WITH_ARROW
-            and car_info["velocity"] != 0
-        ):
-            return False
+
         if current_lights_state == TrafficLightsState.GREEN:
             return True
         if (
@@ -34,7 +29,13 @@ class IntersectionTrafficLightsRules(IntersectionRules):
             and self.traffic_lights.get_future_lights_states(time_until_entry)[
                 starting_side
             ]
-            != TrafficLightsState.RED
+            == TrafficLightsState.YELLOW
+        ):
+            return True
+        if (
+            current_lights_state == TrafficLightsState.RED_WITH_ARROW
+            and clockwise_direction_shift(starting_side, 3) == ending_side
+            and car_info["velocity"] == 0
         ):
             return True
         return False

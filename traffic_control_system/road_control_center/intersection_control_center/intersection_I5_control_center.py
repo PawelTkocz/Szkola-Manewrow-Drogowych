@@ -11,4 +11,4 @@ class IntersectionI5ControlCenter(IntersectionControlCenter):
     def __init__(self) -> None:
         intersection = IntersectionI5()
         rules = IntersectionTrafficLightsRules(intersection.traffic_lights)
-        super().__init__(IntersectionI5(), rules, "Intersection_I5")
+        super().__init__(intersection, rules, "Intersection_I5")
