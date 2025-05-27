@@ -1,6 +1,5 @@
 import math
 import pygame
-from constants import IMAGES_DIR_PATH
 from geometry.direction import Direction
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
@@ -8,6 +7,7 @@ from traffic_control_elements.traffic_control_element import TrafficControlEleme
 from traffic_control_elements.traffic_lights.schemas import (
     TrafficLightsState,
 )
+from utils import load_image
 
 
 class TrafficLights(TrafficControlElement):
@@ -21,7 +21,7 @@ class TrafficLights(TrafficControlElement):
         super().__init__(width, height)
         self.states_images = {
             state: pygame.transform.scale(
-                pygame.image.load(f"{IMAGES_DIR_PATH}/{filename}"),
+                load_image(filename),
                 (width, height),
             )
             for state, filename in state_image_filenames.items()

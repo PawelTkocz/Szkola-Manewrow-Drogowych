@@ -15,10 +15,10 @@ from animations.animations_menus.options_panel.menu_options_panel import (
 )
 from animations.previous_screen_button import PreviousScreenButton
 from application_screen import ApplicationScreen
-from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
-from utils import blit_surface
+from utils import blit_surface, load_image
 
 
 class MenuScreen(ApplicationScreen):
@@ -33,7 +33,7 @@ class MenuScreen(ApplicationScreen):
             PreviousScreenButton(previous_app_screen) if previous_app_screen else None
         )
         self.background_image = pygame.transform.scale(
-            pygame.image.load(f"{IMAGES_DIR_PATH}/{BACKGROUND_IMAGE_FILE_NAME}"),
+            load_image(BACKGROUND_IMAGE_FILE_NAME),
             (SCREEN_WIDTH, SCREEN_HEIGHT),
         )
         self.title_surface = pygame.font.SysFont(FONT_NAME, TITLE_FONT_SIZE).render(

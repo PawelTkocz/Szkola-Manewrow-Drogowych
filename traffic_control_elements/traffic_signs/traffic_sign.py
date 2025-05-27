@@ -2,11 +2,11 @@ from enum import Enum
 import math
 
 import pygame
-from constants import IMAGES_DIR_PATH
 from geometry.direction import Direction
 from geometry.vector import Point
 from road_elements_drafter import RoadElementsDrafter
 from traffic_control_elements.traffic_control_element import TrafficControlElement
+from utils import load_image
 
 
 class TrafficSignName(Enum):
@@ -35,9 +35,7 @@ class TrafficSign(TrafficControlElement):
         self.name = name
 
     def _get_image(self, image_file_name: str) -> pygame.Surface:
-        image = pygame.image.load(
-            f"{IMAGES_DIR_PATH}/{image_file_name}"
-        ).convert_alpha()
+        image = load_image(image_file_name).convert_alpha()
         sign_height = image.get_height() * SIGN_WIDTH / image.get_width()
         return pygame.transform.scale(image, (SIGN_WIDTH, sign_height))
 

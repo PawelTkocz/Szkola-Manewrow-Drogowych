@@ -1,10 +1,10 @@
 from pygame import Surface
 import pygame
 from application_screen import ApplicationScreen
-from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT
+from constants import SCREEN_HEIGHT
 from geometry.shapes.circle import Circle
 from geometry.vector import Point
-from utils import blit_surface
+from utils import blit_surface, load_image
 
 
 class PreviousScreenButton:
@@ -14,7 +14,7 @@ class PreviousScreenButton:
         circle: Circle = Circle(Point(50, SCREEN_HEIGHT - 50), 50),
     ) -> None:
         self.image = pygame.transform.scale(
-            pygame.image.load(f"{IMAGES_DIR_PATH}/previous_screen_button.png"),
+            load_image("previous_screen_button.png"),
             (circle.diameter, circle.diameter),
         )
         self.previous_app_screen = previous_app_screen

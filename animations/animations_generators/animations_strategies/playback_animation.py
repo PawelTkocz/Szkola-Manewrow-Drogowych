@@ -19,6 +19,7 @@ from car.instruction_controlled_car import (
     TurnInstruction,
     TurnSignalsInstruction,
 )
+from utils import resource_path
 
 
 class PlaybackAnimationCarInfo(TypedDict):
@@ -80,9 +81,11 @@ class PlaybackAnimation(AnimationStrategy):
     def _load_control_instructions(
         self, registry_number: str
     ) -> list[CarControlInstructions]:
-        file_path = os.path.join(
-            self.control_instructions_dir_path,
-            f"car_{registry_number}.json",
+        file_path = resource_path(
+            os.path.join(
+                self.control_instructions_dir_path,
+                f"car_{registry_number}.json",
+            )
         )
         with open(file_path, "r") as file:
             control_instructions: list[CarControlInstructionsJSON] = json.load(file)

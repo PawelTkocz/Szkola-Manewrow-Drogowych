@@ -27,7 +27,7 @@ from traffic_control_system.road_control_center.manoeuvres_preprocessing.track_v
     TrackVelocitiesPreprocessor,
 )
 from traffic_control_system.schemas import IntersectionManoeuvreDescription
-from utils import clockwise_direction_shift
+from utils import clockwise_direction_shift, resource_path
 
 TURN_SIGNALS_FILE_NAME = "turn_signals"
 
@@ -84,12 +84,14 @@ class IntersectionManoeuvresManager:
         for track_type, manoeuvre_track in self.tracks:
             dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
             for variant in IntersectionTrackVariant:
-                if not os.path.isfile(os.path.join(dir_path, f"{variant.value}.json")):
+                if not os.path.isfile(
+                    resource_path(os.path.join(dir_path, f"{variant.value}.json"))
+                ):
                     self.register_track_type_variant(
                         track_type, manoeuvre_track, variant
                     )
             if not os.path.isfile(
-                os.path.join(dir_path, f"{TURN_SIGNALS_FILE_NAME}.json")
+                resource_path(os.path.join(dir_path, f"{TURN_SIGNALS_FILE_NAME}.json"))
             ):
                 self.register_turn_signals(track_type, manoeuvre_track)
 
@@ -133,7 +135,9 @@ class IntersectionManoeuvresManager:
         for track_type, manoeuvre_track in self.tracks:
             dir_path = os.path.join(self.dir_with_tracks_data, track_type.value)
             file_name = f"{self.processed_car_model_name(car_model_specification['name'])}_velocities"
-            if os.path.isfile(os.path.join(dir_path, f"{file_name}.json")):
+            if os.path.isfile(
+                resource_path(os.path.join(dir_path, f"{file_name}.json"))
+            ):
                 continue
             max_safe_velocities = TrackVelocitiesPreprocessor(
                 manoeuvre_track, car_model_specification
@@ -182,10 +186,12 @@ class IntersectionManoeuvresManager:
     def load_track_velocities(
         self, track_type: IntersectionTrackType, car_model_name: str
     ) -> list[float]:
-        file_path = os.path.join(
-            self.dir_with_tracks_data,
-            track_type.value,
-            f"{self.processed_car_model_name(car_model_name)}_velocities.json",
+        file_path = resource_path(
+            os.path.join(
+                self.dir_with_tracks_data,
+                track_type.value,
+                f"{self.processed_car_model_name(car_model_name)}_velocities.json",
+            )
         )
         with open(file_path, "r") as file:
             track_velocities: list[float] = json.load(file)
@@ -194,10 +200,12 @@ class IntersectionManoeuvresManager:
     def load_track_points(
         self, track_type: IntersectionTrackType, starting_side: CardinalDirection
     ) -> list[Point]:
-        file_path = os.path.join(
-            self.dir_with_tracks_data,
-            track_type.value,
-            f"{INTERSECTION_SIDES_TO_VARIANTS[starting_side].value}.json",
+        file_path = resource_path(
+            os.path.join(
+                self.dir_with_tracks_data,
+                track_type.value,
+                f"{INTERSECTION_SIDES_TO_VARIANTS[starting_side].value}.json",
+            )
         )
         with open(file_path, "r") as file:
             track_points: list[tuple[float, float]] = json.load(file)
@@ -206,10 +214,12 @@ class IntersectionManoeuvresManager:
     def load_turn_signals(
         self, track_type: IntersectionTrackType
     ) -> list[TurnSignalType]:
-        file_path = os.path.join(
-            self.dir_with_tracks_data,
-            track_type.value,
-            f"{TURN_SIGNALS_FILE_NAME}.json",
+        file_path = resource_path(
+            os.path.join(
+                self.dir_with_tracks_data,
+                track_type.value,
+                f"{TURN_SIGNALS_FILE_NAME}.json",
+            )
         )
         with open(file_path, "r") as file:
             turn_signals: list[str] = json.load(file)

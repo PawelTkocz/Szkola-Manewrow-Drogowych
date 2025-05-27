@@ -18,10 +18,10 @@ from animations.animations_menus.options_panel.schemas import (
 )
 from animations.animations_menus.utils import get_fitted_surface_rectangle
 from application_screen import ApplicationScreen
-from constants import IMAGES_DIR_PATH, SCREEN_HEIGHT, SCREEN_WIDTH
+from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point, Vector
-from utils import blit_surface
+from utils import blit_surface, load_image
 
 
 class OptionTile:
@@ -37,9 +37,7 @@ class OptionTile:
             rectangle.width - 2 * OPTION_TILE_IMAGE_MARGIN,
             rectangle.length - 2 * OPTION_TILE_IMAGE_MARGIN,
         )
-        image = pygame.image.load(
-            f"{IMAGES_DIR_PATH}/{tile_description['image_file_name']}"
-        )
+        image = load_image(tile_description["image_file_name"])
         self.image_position = get_fitted_surface_rectangle(image, image_rectangle)
         self.image = pygame.transform.scale(
             image,

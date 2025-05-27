@@ -1,3 +1,4 @@
+import sys
 import pygame
 
 from animations.animations_menus.interesction_manoeuvres_menus.main_menu import MainMenu
@@ -33,7 +34,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            exit()
+            sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             intersection_manoeuvres_application.handle_click(pygame.mouse.get_pos())
     intersection_manoeuvres_application.render_frame()
