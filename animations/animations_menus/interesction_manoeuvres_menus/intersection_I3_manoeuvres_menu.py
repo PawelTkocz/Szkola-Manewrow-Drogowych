@@ -21,7 +21,7 @@ class IntersectionI3ManoeuvresMenu(MenuScreen):
     def __init__(self, *, previous_app_screen: ApplicationScreen | None = None) -> None:
         list_options_descriptions: list[ListOptionDescription] = [
             {
-                "text": "Skret w prawo",
+                "text": "Skręt w prawo",
                 "on_click_app_screen_generator": lambda: IntersectionI3TurnRightAnimation(
                     previous_app_screen=self
                 ),
@@ -33,7 +33,7 @@ class IntersectionI3ManoeuvresMenu(MenuScreen):
                 ),
             },
             {
-                "text": "Skret w lewo",
+                "text": "Skręt w lewo",
                 "on_click_app_screen_generator": lambda: IntersectionI3TurnLeftAnimation(
                     previous_app_screen=self
                 ),

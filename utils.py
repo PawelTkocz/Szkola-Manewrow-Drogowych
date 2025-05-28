@@ -2,7 +2,7 @@ import os
 import sys
 from pygame import Surface
 import pygame
-from constants import IMAGES_DIR_PATH
+from constants import FONTS_DIR_PATH, IMAGES_DIR_PATH
 from geometry.vector import Point
 from schemas import CardinalDirection
 
@@ -40,10 +40,16 @@ def resource_path(relative_path: str) -> str:
     try:
         base_path = sys._MEIPASS
     except AttributeError:
-        base_path = os.path.abspath(".")
+        base_path = os.path.dirname(__file__)
 
     return os.path.join(base_path, relative_path)
 
 
-def load_image(file_name: str):
+def load_image(file_name: str) -> Surface:
     return pygame.image.load(resource_path(os.path.join(IMAGES_DIR_PATH, file_name)))
+
+
+def load_font(font_file_name: str, size: int) -> pygame.font.Font:
+    return pygame.font.Font(
+        resource_path(os.path.join(FONTS_DIR_PATH, font_file_name)), size
+    )

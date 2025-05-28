@@ -2,7 +2,7 @@ import pygame
 from animations.animations_menus.constants import (
     BACKGROUND_IMAGE_FILE_NAME,
     FONT_COLOR,
-    FONT_NAME,
+    FONT_FILENAME,
     TITLE_BACKGROUND_BORDER_RADIUS,
     TITLE_BACKGROUND_COLOR,
     TITLE_BACKGROUND_MARGIN,
@@ -18,7 +18,7 @@ from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point
-from utils import blit_surface, load_image
+from utils import blit_surface, load_font, load_image
 
 
 class MenuScreen(ApplicationScreen):
@@ -36,7 +36,7 @@ class MenuScreen(ApplicationScreen):
             load_image(BACKGROUND_IMAGE_FILE_NAME),
             (SCREEN_WIDTH, SCREEN_HEIGHT),
         )
-        self.title_surface = pygame.font.SysFont(FONT_NAME, TITLE_FONT_SIZE).render(
+        self.title_surface = load_font(FONT_FILENAME, TITLE_FONT_SIZE).render(
             title, True, FONT_COLOR
         )
         title_width = self.title_surface.get_width()

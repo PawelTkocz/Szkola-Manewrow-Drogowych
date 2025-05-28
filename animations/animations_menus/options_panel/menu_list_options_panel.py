@@ -1,7 +1,7 @@
 import pygame
 from animations.animations_menus.constants import (
     FONT_COLOR,
-    FONT_NAME,
+    FONT_FILENAME,
     LIST_OPTION_BACKGROUND_BORDER_RADIUS,
     LIST_OPTION_BACKGROUND_COLOR,
     LIST_OPTION_BACKGROUND_TRANSPARENCY,
@@ -21,7 +21,7 @@ from application_screen import ApplicationScreen
 from constants import SCREEN_HEIGHT
 from geometry.shapes.rectangle import AxisAlignedRectangle
 from geometry.vector import Point, Vector
-from utils import blit_surface
+from utils import blit_surface, load_font
 
 
 class ListOption:
@@ -29,14 +29,15 @@ class ListOption:
         self,
         list_option_description: ListOptionDescription,
         rectangle: AxisAlignedRectangle,
+        font: pygame.font.Font,
     ) -> None:
         self.rectangle = rectangle
         self.on_click_app_screen_generator = list_option_description[
             "on_click_app_screen_generator"
         ]
-        self.text_surface = pygame.font.SysFont(
-            FONT_NAME, LIST_OPTION_FONT_SIZE
-        ).render(list_option_description["text"], True, FONT_COLOR)
+        self.text_surface = font.render(
+            list_option_description["text"], True, FONT_COLOR
+        )
         self.text_surface_top_left = rectangle.front_left.add_vector(
             Vector(Point(0, -1))
             .scale_to_len((self.rectangle.length - self.text_surface.get_height()) // 2)
@@ -68,7 +69,7 @@ class MenuListOptionsPanel(MenuOptionsPanel):
             options_number * LIST_OPTION_HEIGHT
             + (options_number - 1) * LIST_OPTION_Y_SPACING
         )
-        font = pygame.font.SysFont(FONT_NAME, LIST_OPTION_FONT_SIZE)
+        font = load_font(FONT_FILENAME, LIST_OPTION_FONT_SIZE)
         self.list_options_width = self._get_list_options_width(
             list_options_descriptions, font
         )
@@ -86,6 +87,7 @@ class MenuListOptionsPanel(MenuOptionsPanel):
             ListOption(
                 list_option_description,
                 self._calculate_list_option_rectangle(list_option_index),
+                font,
             )
             for list_option_index, list_option_description in enumerate(
                 list_options_descriptions
