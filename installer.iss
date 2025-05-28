@@ -4,7 +4,7 @@ AppVersion=1.0
 DefaultDirName={autopf}\Szkola manewrow drogowych
 DefaultGroupName=Szkoła manewrów drogowych
 OutputDir=.
-OutputBaseFilename=SzkołaManewrówDrogowych_1.0
+OutputBaseFilename=SzkolaManewrowDrogowych_1.0
 Compression=lzma
 SolidCompression=yes
 
